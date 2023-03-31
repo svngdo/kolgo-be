@@ -36,8 +36,8 @@ public class SecurityConfig {
                 .requestMatchers("/demo").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/mail/**").permitAll()
-                .requestMatchers("/demo/user").hasAuthority(Role.USER.getAuthority())
-                .requestMatchers("/demo/admin").hasAuthority(Role.ADMIN.getAuthority())
+                .requestMatchers("/demo/kol").hasAuthority(Role.KOL.getAuthority())
+                .requestMatchers("/demo/enterprise").hasAuthority(Role.ENTERPRISE.getAuthority())
                 // Disallow everything else..
                 .anyRequest().authenticated();
 

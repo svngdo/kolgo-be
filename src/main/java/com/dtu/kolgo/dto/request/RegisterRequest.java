@@ -10,14 +10,11 @@ import lombok.Data;
 public class RegisterRequest {
 
     @NotNull
-    @Size(min = 3, max = 20)
-    private String username;
-    @NotNull
-    @Size(min = 6, max = 36)
-    private String password;
-    @NotNull
     @NotBlank
     @Email
     private String email;
+    @NotNull
+    @Size(min = 6, max = 36)
+    private String password;
 
 }

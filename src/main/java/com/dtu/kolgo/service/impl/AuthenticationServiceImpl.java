@@ -10,13 +10,11 @@ import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.exception.UserException;
-import com.dtu.kolgo.exception.ValidationException;
 import com.dtu.kolgo.model.MailDetails;
 import com.dtu.kolgo.model.Role;
 import com.dtu.kolgo.model.Token;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.TokenRepository;
-import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.AuthenticationService;
 import com.dtu.kolgo.service.MailService;
@@ -32,9 +30,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -46,36 +43,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtProvider jwtProvider;
     private final MailService mailService;
     private final UserService userService;
-    private final UserRepository userRepo;
     private final TokenRepository tokenRepo;
 
     @Override
-    public WebResponse register(RegisterRequest request) {
-        Map<String, Object> error = new HashMap<>();
-        if (userRepo.existsByUsername(request.getUsername())) {
-            error.put("username", "Already in use");
-        }
-        if (userRepo.existsByEmail(request.getEmail())) {
-            error.put("email", "Already in use");
-        }
-        if (!error.isEmpty()) {
-            throw new ValidationException(error);
-        }
-
-        User user = User.builder()
+    public User register(RegisterRequest request) {
+        return userService.save(User.builder()
                 .email(request.getEmail())
-                .username(request.getUsername())
+                .username(UUID.randomUUID().toString())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roles(List.of(Role.USER))
-                .build();
-        userRepo.save(user);
-
-        return new WebResponse("Registered successfully");
+                .roles(Collections.singletonList(Role.ENTERPRISE))
+                .build());
     }
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        User user = userService.get(request.getUserInput());
+        User user = userService.fetch(request.getUserInput());
 
         authenticate(user.getId(), request.getPassword());
 
@@ -89,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
 
         return LoginResponse.builder()
-                .token(new RefreshTokenResponse(newAccessToken, TokenType.BEARER, newRefreshToken))
+                .token(new RefreshTokenResponse(newAccessToken, TokenType.BEARER.toString(), newRefreshToken))
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -120,7 +102,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
 
         // get user from token
-        User user = userService.get(jwtProvider.extractUserId(refreshToken));
+        User user = userService.fetch(jwtProvider.extractUserId(refreshToken));
 
         if (tokenRepo.existsByValue(refreshToken)) {
             tokenRepo.deleteByValue(refreshToken);
@@ -143,11 +125,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
 
         // return new RefreshTokenResponse
-        return new RefreshTokenResponse(newAccessToken, TokenType.BEARER, newRefreshToken);
+        return new RefreshTokenResponse(newAccessToken, TokenType.BEARER.toString(), newRefreshToken);
     }
 
     public WebResponse resetPassword(ResetPasswordRequest request) {
-        User user = userService.get(request.getEmail());
+        User user = userService.fetch(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
         String url = String.format("http://%s:%s%s/auth/update-password?reset_password_token=%s",
@@ -176,12 +158,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         // Get user
-        String userId = jwtProvider.extractUserId(resetPasswordToken);
-        User user = userRepo.findById(Integer.parseInt(userId))
-                .orElseThrow(() -> new NotFoundException("User ID not found: " + userId));
+        int userId = jwtProvider.extractUserId(resetPasswordToken);
+        User user = userService.fetch(userId);
 
         // Update password
-        return userService.updatePassword(user, request.getNewPassword());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userService.save(user);
+
+        return new WebResponse("Update password successfully!!");
     }
 
 }

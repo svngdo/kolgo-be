@@ -45,7 +45,7 @@ public class JwtProvider {
                 .setSubject(sub)
                 .setExpiration(exp)
                 .setIssuedAt(iat)
-                .claim(JwtKey.GRANT_TYPE.toString(), grantType.toString())
+                .claim(JwtKey.GRANT_TYPE.toString(), grantType)
                 .addClaims(extraClaims)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
@@ -100,8 +100,8 @@ public class JwtProvider {
     }
 
     public boolean validateGrantType(String token, GrantType type) {
-        GrantType grantType = GrantType.valueOf(extractGrantType(token));
-        if (grantType.equals(type)) {
+        String grantType = extractGrantType(token);
+        if (grantType.equals(type.name())) {
             return true;
         }
         throw new InvalidException("Invalid token type");
@@ -120,8 +120,8 @@ public class JwtProvider {
         return claimsResolver.apply(claims);
     }
 
-    public String extractUserId(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public int extractUserId(String token) {
+        return Integer.parseInt(extractClaim(token, Claims::getSubject));
     }
 
     public String extractPassword(String token) {

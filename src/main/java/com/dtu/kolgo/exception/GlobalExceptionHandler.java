@@ -1,36 +1,20 @@
 package com.dtu.kolgo.exception;
 
 import com.dtu.kolgo.dto.response.WebResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-
-    public static void createHttpServletResponse(
-            HttpServletResponse res,
-            HttpStatus httpStatus,
-            String msg
-    ) throws IOException {
-        final ObjectMapper mapper = new ObjectMapper();
-        WebResponse body = new WebResponse(httpStatus, msg);
-        res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        res.setStatus(httpStatus.value());
-        mapper.writeValue(res.getOutputStream(), body);
-    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -1,10 +1,11 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.Token;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.TokenRepository;
+import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.TokenService;
+import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +14,21 @@ import org.springframework.stereotype.Service;
 public class TokenServiceImpl implements TokenService {
 
     private final TokenRepository repo;
+    private final UserService userService;
+    private final JwtProvider jwtProvider;
 
     @Override
-    public Token get(String value) {
-        return repo.findByValue(value)
-                .orElseThrow(() -> new NotFoundException("Token not found: " + value));
-    }
-
-    @Override
-    public Token get(User user) {
-        return repo.findByUser(user)
-                .orElseThrow(() -> new NotFoundException("Token not found: User ID " + user.getId()));
+    public void revoke(String value) {
+        if (repo.existsByValue(value)) {
+            repo.deleteByValue(value);
+            System.out.println("Delete single token: " + value);
+        } else {
+            int userId = jwtProvider.extractUserId(value);
+            User user = userService.fetch(userId);
+            repo.deleteAllByUser(user);
+            System.out.println("Delete all tokens of user " + user.getUsername());
+            throw new NotFoundException("Token not found: " + value);
+        }
     }
 
 }

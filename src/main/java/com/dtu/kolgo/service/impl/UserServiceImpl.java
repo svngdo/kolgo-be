@@ -23,49 +23,42 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User get(String input) {
-        User user;
-        try {
-            int id = Integer.parseInt(input);
-            user = repo.findById(id)
-                    .orElseThrow(() -> new NotFoundException("User ID not found: " + input));
-        } catch (NumberFormatException e) {
-            if (input.contains("@")) {
-                user = repo.findByEmail(input)
-                        .orElseThrow(() -> new NotFoundException("Email not found: " + input));
-            } else {
-                user = repo.findByUsername(input)
-                        .orElseThrow(() -> new NotFoundException("Username not found: " + input));
-            }
-        }
-        return user;
+    public User save(User user) {
+        return repo.save(user);
+    }
+
+    @Override
+    public User fetch(int id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("User ID not found: " + id));
+    }
+
+    @Override
+    public User fetch(String email) {
+        return repo.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Email not found: " + email));
     }
 
     @Override
     public WebResponse changePassword(Principal principal, ChangePasswordRequest request) {
         String userId = principal.getName();
-        User user = repo.findById(Integer.parseInt(userId))
-                .orElseThrow(() -> new NotFoundException("User ID not found: " + userId));
+        User user = fetch(Integer.parseInt(userId));
 
         Map<String, Object> error = new HashMap<>();
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            error.put("new_password", "Not match");
+            error.put("new_password", "not match");
         }
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            error.put("user_password", "Incorrect");
+            error.put("user_password", "incorrect");
         }
         if (!error.isEmpty()) {
             throw new ValidationException(error);
         }
 
-        return updatePassword(user, request.getNewPassword());
-    }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        save(user);
 
-    @Override
-    public WebResponse updatePassword(User user, String password) {
-        user.setPassword(passwordEncoder.encode(password));
-        repo.save(user);
-        return new WebResponse("Update password successfully!!");
+        return new WebResponse("Change password successfully!!");
     }
 
 }
