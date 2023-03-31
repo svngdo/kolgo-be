@@ -1,12 +1,10 @@
 package com.dtu.kolgo.config;
 
 import com.dtu.kolgo.util.env.Server;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class ApplicationStartupRunner implements CommandLineRunner {
 
     @Override

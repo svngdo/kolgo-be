@@ -1,8 +1,13 @@
 package com.dtu.kolgo.util.constant;
 
-public class JwtKey {
+public enum JwtKey {
 
-    public static final String PASSWORD = "password";
-    public static final String GRANT_TYPE = "grant_type";
+    PASSWORD,
+    GRANT_TYPE;
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 
 }
