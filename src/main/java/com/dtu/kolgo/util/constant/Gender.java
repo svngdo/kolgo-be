@@ -1,8 +1,10 @@
 package com.dtu.kolgo.util.constant;
 
-public enum HeaderKey {
+public enum Gender {
 
-    AUTHORIZATION;
+    MALE,
+    FEMALE,
+    OTHERS;
 
     @Override
     public String toString() {

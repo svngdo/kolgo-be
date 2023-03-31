@@ -1,7 +1,12 @@
 package com.dtu.kolgo.util.constant;
 
-public class TokenType {
+public enum TokenType {
 
-    public static final String BEARER = "Bearer";
+    BEARER;
+
+    @Override
+    public String toString() {
+        return name().charAt(0) + name().substring(1).toLowerCase();
+    }
 
 }

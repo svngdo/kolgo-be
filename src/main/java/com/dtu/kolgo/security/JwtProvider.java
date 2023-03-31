@@ -37,7 +37,7 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(key64UrlBytes);
     }
 
-    public String generateToken(String sub, long ttlMillis, String tokenType, Map<String, Object> extraClaims) {
+    public String generateToken(String sub, long ttlMillis, GrantType grantType, Map<String, Object> extraClaims) {
         long nowMillis = System.currentTimeMillis();
         Date iat = new Date(nowMillis);
         Date exp = new Date(iat.getTime() + ttlMillis);
@@ -45,13 +45,13 @@ public class JwtProvider {
                 .setSubject(sub)
                 .setExpiration(exp)
                 .setIssuedAt(iat)
-                .claim(JwtKey.GRANT_TYPE, tokenType)
+                .claim(JwtKey.GRANT_TYPE.toString(), grantType.toString())
                 .addClaims(extraClaims)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    public String generateToken(String sub, long ttlMillis, String tokenType) {
-        return generateToken(sub, ttlMillis, tokenType, new HashMap<>());
+    public String generateToken(String sub, long ttlMillis, GrantType grantType) {
+        return generateToken(sub, ttlMillis, grantType, new HashMap<>());
     }
 
     public String generateAccessToken(User user) {
@@ -72,7 +72,7 @@ public class JwtProvider {
 
     public String generateResetPasswordToken(User user) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(JwtKey.PASSWORD, user.getPassword());
+        extraClaims.put(JwtKey.PASSWORD.toString(), user.getPassword());
         return generateToken(
                 String.valueOf(user.getId()),
                 Jwt.RESET_PASSWORD_TOKEN_EXPIRATION,
@@ -99,8 +99,9 @@ public class JwtProvider {
         }
     }
 
-    public boolean validateGrantType(String token, String type) {
-        if (extractGrantType(token).equals(type)) {
+    public boolean validateGrantType(String token, GrantType type) {
+        GrantType grantType = GrantType.valueOf(extractGrantType(token));
+        if (grantType.equals(type)) {
             return true;
         }
         throw new InvalidException("Invalid token type");
@@ -125,12 +126,12 @@ public class JwtProvider {
 
     public String extractPassword(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.PASSWORD, String.class);
+        return claims.get(JwtKey.PASSWORD.toString(), String.class);
     }
 
     public String extractGrantType(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.GRANT_TYPE, String.class);
+        return claims.get(JwtKey.GRANT_TYPE.toString(), String.class);
     }
 
 }

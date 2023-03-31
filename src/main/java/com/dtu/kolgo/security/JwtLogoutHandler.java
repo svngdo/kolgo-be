@@ -33,7 +33,7 @@ public class JwtLogoutHandler implements LogoutHandler {
             Authentication authentication
     ) {
         String accessToken = jwtProvider.resolveToken(request);
-        String refreshToken = request.getParameter(GrantType.REFRESH_TOKEN);
+        String refreshToken = request.getParameter(GrantType.REFRESH_TOKEN.toString());
 
         // validate access token & refresh token
         jwtProvider.validate(accessToken);
