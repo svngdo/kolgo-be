@@ -19,27 +19,38 @@ public class AuthenticationController {
     private final AuthenticationServiceImpl service;
 
     @PostMapping("register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest dto) {
-        return new ResponseEntity<>(service.register(dto), HttpStatus.OK);
+    public ResponseEntity<?> register(
+            @RequestBody RegisterRequest request
+    ) {
+        return new ResponseEntity<>(
+                service.register(request),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("login")
     public ResponseEntity<?> authenticate(@RequestBody @Valid LoginRequest request) {
-        return new ResponseEntity<>(service.login(request), HttpStatus.OK);
+        return new ResponseEntity<>(
+                service.login(request),
+                HttpStatus.OK);
     }
 
     @GetMapping("refresh-token")
     public ResponseEntity<?> token(
             @RequestParam(value = "token") String refreshToken
     ) {
-        return new ResponseEntity<>(service.refreshToken(refreshToken), HttpStatus.OK);
+        return new ResponseEntity<>(
+                service.refreshToken(refreshToken),
+                HttpStatus.OK);
     }
 
     @PostMapping("reset-password")
     public ResponseEntity<?> resetPassword(
             @RequestBody @Valid ResetPasswordRequest request
     ) {
-        return new ResponseEntity<>(service.resetPassword(request), HttpStatus.OK);
+        return new ResponseEntity<>(
+                service.resetPassword(request),
+                HttpStatus.OK);
     }
 
     @PostMapping("update-password")

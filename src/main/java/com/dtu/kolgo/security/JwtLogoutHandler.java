@@ -1,10 +1,9 @@
 package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.dto.response.WebResponse;
-import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.TokenRepository;
-import com.dtu.kolgo.repository.UserRepository;
+import com.dtu.kolgo.service.TokenService;
+import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.util.constant.GrantType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,8 +21,9 @@ import org.springframework.stereotype.Component;
 public class JwtLogoutHandler implements LogoutHandler {
 
     private final JwtProvider jwtProvider;
-    private final UserRepository userRepo;
     private final TokenRepository tokenRepo;
+    private final TokenService tokenService;
+    private final UserService userService;
 
     @SneakyThrows
     @Override
@@ -41,17 +41,8 @@ public class JwtLogoutHandler implements LogoutHandler {
         jwtProvider.validate(refreshToken);
         jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
 
-        if (tokenRepo.existsByValue(refreshToken)) {
-            tokenRepo.deleteByValue(refreshToken);
-            System.out.println("Delete single token: " + refreshToken);
-        } else {
-            String userId = jwtProvider.extractUserId(refreshToken);
-            User user = userRepo.findById(Integer.parseInt(userId))
-                    .orElseThrow(() -> new NotFoundException("User ID not found: " + userId));
-            tokenRepo.deleteAllByUser(user);
-            System.out.println("Delete all tokens of user " + user.getUsername());
-            throw new NotFoundException("Token not found: " + refreshToken);
-        }
+        tokenService.revoke(refreshToken);
+
         SecurityContextHolder.clearContext();
         System.out.println("Cleared security context");
 

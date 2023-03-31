@@ -7,10 +7,11 @@ import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
 import com.dtu.kolgo.dto.response.LoginResponse;
 import com.dtu.kolgo.dto.response.RefreshTokenResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.model.User;
 
 public interface AuthenticationService {
 
-    WebResponse register(RegisterRequest request);
+    User register(RegisterRequest request);
 
     LoginResponse login(LoginRequest request);
 

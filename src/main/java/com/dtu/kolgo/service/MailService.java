@@ -4,7 +4,7 @@ import com.dtu.kolgo.model.MailDetails;
 
 public interface MailService {
 
-    String sendSimpleMail(MailDetails details);
+    void sendSimpleMail(MailDetails details);
 
     String sendMailWithAttachment(MailDetails details);
 

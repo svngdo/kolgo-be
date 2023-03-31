@@ -16,7 +16,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"token", "id", "username", "email", "roles"})
+@JsonPropertyOrder({
+        "token",
+        "id",
+        "username",
+        "email",
+        "name",
+        "roles"
+})
 public class LoginResponse {
 
     @JsonProperty("token")
@@ -27,6 +34,8 @@ public class LoginResponse {
     private String username;
     @JsonProperty("email")
     private String email;
+    @JsonProperty("name")
+    private String name;
     @JsonProperty("roles")
     private List<Role> roles;
 

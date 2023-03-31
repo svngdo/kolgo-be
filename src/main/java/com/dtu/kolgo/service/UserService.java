@@ -8,10 +8,12 @@ import java.security.Principal;
 
 public interface UserService {
 
-    User get(String input);
+    User save(User user);
+
+    User fetch(int id);
+
+    User fetch(String email);
 
     WebResponse changePassword(Principal principal, ChangePasswordRequest request);
-
-    WebResponse updatePassword(User user, String password);
 
 }
