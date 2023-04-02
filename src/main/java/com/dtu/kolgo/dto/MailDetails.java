@@ -1,13 +1,13 @@
-package com.dtu.kolgo.model;
+package com.dtu.kolgo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
 public class MailDetails {
 

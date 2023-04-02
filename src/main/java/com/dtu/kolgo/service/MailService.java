@@ -1,6 +1,6 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.model.MailDetails;
+import com.dtu.kolgo.dto.MailDetails;
 
 public interface MailService {
 

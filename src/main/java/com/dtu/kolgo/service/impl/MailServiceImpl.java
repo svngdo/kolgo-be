@@ -1,6 +1,6 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.model.MailDetails;
+import com.dtu.kolgo.dto.MailDetails;
 import com.dtu.kolgo.service.MailService;
 import com.dtu.kolgo.util.env.Mail;
 import jakarta.mail.internet.MimeMessage;

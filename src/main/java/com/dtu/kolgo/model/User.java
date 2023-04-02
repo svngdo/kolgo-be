@@ -12,12 +12,12 @@ import java.util.Collection;
 import java.util.List;
 
 
-@Entity
-@Table(name = "users")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
+@Entity
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
@@ -25,18 +25,18 @@ public class User implements UserDetails {
     private int id;
     @Column(unique = true, nullable = false)
     private String username;
-
     @Column(nullable = false)
     private String password;
     @Column(unique = true, nullable = false)
     private String email;
-
+    @Column(columnDefinition = "varchar(20)")
+    private String phoneNumber;
     @Column(name = "role")
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Token> tokens;
 
     @Override

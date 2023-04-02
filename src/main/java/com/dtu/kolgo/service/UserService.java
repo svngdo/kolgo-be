@@ -14,6 +14,8 @@ public interface UserService {
 
     User fetch(String email);
 
+    void delete(int id);
+
     WebResponse changePassword(Principal principal, ChangePasswordRequest request);
 
 }

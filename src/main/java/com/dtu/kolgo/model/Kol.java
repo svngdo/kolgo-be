@@ -2,40 +2,48 @@ package com.dtu.kolgo.model;
 
 import com.dtu.kolgo.util.constant.Gender;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity
-@Table(name = "kols")
-@Data
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
-public class Kol {
+@Entity
+@Table(name = "kols")
+public class Kol extends Base {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column
+    @Column(columnDefinition = "varchar(50)")
     private String firstName;
-    @Column
+    @Column(columnDefinition = "varchar(50)")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column
-    private String phoneNumber;
-    @Column
-    private String background;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "city_id")
+    private City city;
     @Column
     private String speciality;
     @Column
-    private String location;
+    private String facebookUrl;
     @Column
-    private String platform;
-    @OneToOne(fetch = FetchType.EAGER)
+    private String instagramUrl;
+    @Column
+    private String tiktokUrl;
+    @Column
+    private String youtubeUrl;
+    @Column
+    private String previousCollaboration;
+    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
+    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    private List<Payment> payments;
+    @ManyToMany(mappedBy = "kols")
+    private List<Campaign> campaigns;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 

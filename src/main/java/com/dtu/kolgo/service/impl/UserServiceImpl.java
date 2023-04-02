@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void delete(int id) {
+        repo.deleteById(id);
+    }
+
+    @Override
     public WebResponse changePassword(Principal principal, ChangePasswordRequest request) {
         String userId = principal.getName();
         User user = fetch(Integer.parseInt(userId));

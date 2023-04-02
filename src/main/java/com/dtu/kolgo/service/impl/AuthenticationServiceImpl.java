@@ -10,7 +10,7 @@ import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.exception.UserException;
-import com.dtu.kolgo.model.MailDetails;
+import com.dtu.kolgo.dto.MailDetails;
 import com.dtu.kolgo.model.Role;
 import com.dtu.kolgo.model.Token;
 import com.dtu.kolgo.model.User;
