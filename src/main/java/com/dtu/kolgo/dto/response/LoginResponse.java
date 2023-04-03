@@ -2,7 +2,6 @@ package com.dtu.kolgo.dto.response;
 
 import com.dtu.kolgo.model.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,24 +18,18 @@ import java.util.List;
 @JsonPropertyOrder({
         "token",
         "id",
-        "username",
+        "firstName",
+        "lastName",
         "email",
-        "name",
         "roles"
 })
 public class LoginResponse {
 
-    @JsonProperty("token")
     private RefreshTokenResponse token;
-    @JsonProperty("id")
     private int id;
-    @JsonProperty("username")
-    private String username;
-    @JsonProperty("email")
+    private String firstName;
+    private String lastName;
     private String email;
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("roles")
     private List<Role> roles;
 
 }

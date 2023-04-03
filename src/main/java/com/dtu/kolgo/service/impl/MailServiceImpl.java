@@ -22,7 +22,7 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
 
-    public void sendSimpleMail(MailDetails details) {
+    public void send(MailDetails details, boolean isHtml) {
         // Creating a mime message
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
@@ -30,11 +30,11 @@ public class MailServiceImpl implements MailService {
         // Try block to check for exceptions
         try {
 
-            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+            mimeMessageHelper = new MimeMessageHelper(mimeMessage);
             mimeMessageHelper.setFrom(Mail.SENDER, Mail.DISPLAY_NAME);
             mimeMessageHelper.setTo(details.getRecipient());
             mimeMessageHelper.setSubject(details.getSubject());
-            mimeMessageHelper.setText(details.getBody());
+            mimeMessageHelper.setText(details.getBody(), isHtml);
 
             mailSender.send(mimeMessage);
         }

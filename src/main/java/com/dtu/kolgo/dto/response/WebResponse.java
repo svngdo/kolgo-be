@@ -2,7 +2,6 @@ package com.dtu.kolgo.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +23,7 @@ public class WebResponse {
     private int code;
     @JsonIgnore
     private String status;
-    @JsonProperty("error")
     private Map<String, Object> error;
-    @JsonProperty("message")
     private String message;
 
     public WebResponse(HttpStatus status) {

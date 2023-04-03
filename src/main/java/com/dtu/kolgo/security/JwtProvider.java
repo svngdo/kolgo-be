@@ -79,7 +79,64 @@ public class JwtProvider {
                 GrantType.RESET_PASSWORD_TOKEN,
                 extraClaims
         );
+    }
 
+    public String generateVerifyAccountToken(
+            String firstName, String lastName, String email, String password
+    ) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put(JwtKey.FIRST_NAME.toString(), firstName);
+        extraClaims.put(JwtKey.LAST_NAME.toString(), lastName);
+        extraClaims.put(JwtKey.EMAIL.toString(), email);
+        extraClaims.put(JwtKey.PASSWORD.toString(), password);
+        return generateToken(
+                "0",
+                Jwt.VERIFY_ACCOUNT_TOKEN_EXPIRATION,
+                GrantType.VERIFY_ACCOUNT_TOKEN,
+                extraClaims
+        );
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    public long extractUserId(String token) {
+        return Long.parseLong(extractClaim(token, Claims::getSubject));
+    }
+
+    public String extractEmail(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get(JwtKey.EMAIL.toString(), String.class);
+    }
+
+    public String extractPassword(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get(JwtKey.PASSWORD.toString(), String.class);
+    }
+
+    public String extractFirstName(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get(JwtKey.FIRST_NAME.toString(), String.class);
+    }
+
+    public String extractLastName(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get(JwtKey.LAST_NAME.toString(), String.class);
+    }
+
+    public String extractGrantType(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get(JwtKey.GRANT_TYPE.toString(), String.class);
     }
 
     public boolean validate(String token) {
@@ -105,33 +162,6 @@ public class JwtProvider {
             return true;
         }
         throw new InvalidException("Invalid token type");
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    public int extractUserId(String token) {
-        return Integer.parseInt(extractClaim(token, Claims::getSubject));
-    }
-
-    public String extractPassword(String token) {
-        Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.PASSWORD.toString(), String.class);
-    }
-
-    public String extractGrantType(String token) {
-        Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.GRANT_TYPE.toString(), String.class);
     }
 
 }

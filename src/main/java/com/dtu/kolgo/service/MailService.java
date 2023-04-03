@@ -4,7 +4,7 @@ import com.dtu.kolgo.dto.MailDetails;
 
 public interface MailService {
 
-    void sendSimpleMail(MailDetails details);
+    void send(MailDetails details, boolean isHtml);
 
     String sendMailWithAttachment(MailDetails details);
 

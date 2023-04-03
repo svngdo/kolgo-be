@@ -1,6 +1,8 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.request.ChangePasswordRequest;
+import com.dtu.kolgo.dto.request.ResetPasswordRequest;
+import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.model.User;
 
@@ -10,11 +12,13 @@ public interface UserService {
 
     User save(User user);
 
-    User fetch(int id);
+    User fetch(long id);
 
     User fetch(String email);
 
-    void delete(int id);
+    WebResponse resetPassword(ResetPasswordRequest request);
+
+    WebResponse updatePassword(String resetPasswordToken, UpdatePasswordRequest request);
 
     WebResponse changePassword(Principal principal, ChangePasswordRequest request);
 

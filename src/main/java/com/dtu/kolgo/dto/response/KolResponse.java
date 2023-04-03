@@ -1,7 +1,7 @@
 package com.dtu.kolgo.dto.response;
 
+import com.dtu.kolgo.model.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,39 +17,33 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "id",
-        "name",
+        "firstName",
+        "lastName",
+        "email",
         "gender",
-        "phone_number",
+        "phoneNumber",
         "speciality",
-        "location",
-        "social_media",
+        "city",
+        "facebookUrl",
+        "instagramUrl",
+        "tiktokUrl",
+        "youtubeUrl",
         "roles"
 })
 public class KolResponse {
 
-    @JsonProperty("id")
-    private int id;
-    @JsonProperty("first_name")
+    private Long id;
     private String firstName;
-    @JsonProperty("last_name")
     private String lastName;
-    @JsonProperty("gender")
+    private String email;
     private String gender;
-    @JsonProperty("phone_number")
     private String phoneNumber;
-    @JsonProperty("speciality")
     private String speciality;
-    @JsonProperty("location")
-    private String location;
-    @JsonProperty("facebook_url")
+    private String city;
     private String facebookUrl;
-    @JsonProperty("instagram_url")
     private String instagramUrl;
-    @JsonProperty("tiktok_url")
     private String tiktokUrl;
-    @JsonProperty("youtube_url")
     private String youtubeUrl;
-    @JsonProperty("roles")
-    private List<String> roles;
+    private List<Role> roles;
 
 }

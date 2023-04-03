@@ -23,14 +23,18 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(unique = true, nullable = false)
+    @Column(columnDefinition = "varchar(64)", unique = true, nullable = false)
     private String username;
-    @Column(nullable = false)
-    private String password;
-    @Column(unique = true, nullable = false)
-    private String email;
+    @Column(columnDefinition = "varchar(20)", nullable = false)
+    private String firstName;
+    @Column(columnDefinition = "varchar(20)", nullable = false)
+    private String lastName;
     @Column(columnDefinition = "varchar(20)")
     private String phoneNumber;
+    @Column(columnDefinition = "varchar(45)", unique = true, nullable = false)
+    private String email;
+    @Column(columnDefinition = "varchar(64)", nullable = false)
+    private String password;
     @Column(name = "role")
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @ElementCollection(fetch = FetchType.EAGER)

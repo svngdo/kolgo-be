@@ -16,4 +16,10 @@ public class MailDetails {
     private String body;
     private String attachment;
 
+    public MailDetails(String recipient, String subject, String body) {
+        this.recipient = recipient;
+        this.subject = subject;
+        this.body = body;
+    }
+
 }

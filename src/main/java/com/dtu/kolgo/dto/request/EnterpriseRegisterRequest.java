@@ -5,14 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class KolRegisterRequest {
+public class EnterpriseRegisterRequest {
 
     @NotNull
     @NotBlank
-    private String firstName;
-    @NotNull
-    @NotBlank
-    private String lastName;
+    private String name;
     @NotNull
     @NotBlank
     private String email;

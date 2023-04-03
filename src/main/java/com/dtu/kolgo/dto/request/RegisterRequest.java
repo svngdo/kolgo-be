@@ -11,10 +11,18 @@ public class RegisterRequest {
 
     @NotNull
     @NotBlank
+    private String firstName;
+    @NotNull
+    @NotBlank
+    private String lastName;
+    @NotNull
+    @NotBlank
     @Email
     private String email;
     @NotNull
     @Size(min = 6, max = 36)
     private String password;
+    @NotNull
+    private boolean biz;
 
 }

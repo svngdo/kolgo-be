@@ -4,7 +4,8 @@ public enum GrantType {
 
     ACCESS_TOKEN,
     REFRESH_TOKEN,
-    RESET_PASSWORD_TOKEN;
+    RESET_PASSWORD_TOKEN,
+    VERIFY_ACCOUNT_TOKEN;
 
     @Override
     public String toString() {

@@ -1,6 +1,5 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.KolRegisterRequest;
 import com.dtu.kolgo.dto.request.KolUpdateRequest;
 import com.dtu.kolgo.service.KolService;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class KolController {
 
     private final KolService service;
-
-    @PostMapping
-    public ResponseEntity<?> save(
-            @RequestBody KolRegisterRequest request
-    ) {
-        return new ResponseEntity<>(
-                service.save(request),
-                HttpStatus.OK
-        );
-    }
 
     @GetMapping
     public ResponseEntity<?> fetchAll() {

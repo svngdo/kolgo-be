@@ -58,4 +58,16 @@ public class GlobalExceptionHandler {
         return new WebResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ExistsException.class)
+    public WebResponse handleExistsException(ExistsException e) {
+        return new WebResponse(HttpStatus.CONFLICT, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.GONE)
+    @ExceptionHandler(ExpiredException.class)
+    public WebResponse handleExpiredException(ExpiredException e) {
+        return new WebResponse(HttpStatus.GONE, e.getMessage());
+    }
+
 }

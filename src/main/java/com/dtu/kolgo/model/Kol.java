@@ -15,16 +15,8 @@ import java.util.List;
 @Table(name = "kols")
 public class Kol extends Base {
 
-    @Column(columnDefinition = "varchar(50)")
-    private String firstName;
-    @Column(columnDefinition = "varchar(50)")
-    private String lastName;
-    @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "city_id")
-    private City city;
     @Column
     private String speciality;
     @Column

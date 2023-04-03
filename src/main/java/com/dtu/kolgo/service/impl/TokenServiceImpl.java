@@ -23,7 +23,7 @@ public class TokenServiceImpl implements TokenService {
             repo.deleteByValue(value);
             System.out.println("Delete single token: " + value);
         } else {
-            int userId = jwtProvider.extractUserId(value);
+            long userId = jwtProvider.extractUserId(value);
             User user = userService.fetch(userId);
             repo.deleteAllByUser(user);
             System.out.println("Delete all tokens of user " + user.getUsername());
