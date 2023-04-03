@@ -33,11 +33,20 @@ public class SecurityConfig {
 
         // Entry points
         http.authorizeHttpRequests()
-                .requestMatchers("/demo").permitAll()
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/mail/**").permitAll()
-                .requestMatchers("/demo/kol").hasAuthority(Role.KOL.getAuthority())
-                .requestMatchers("/demo/enterprise").hasAuthority(Role.ENTERPRISE.getAuthority())
+                .requestMatchers(
+                        "/demo",
+                        "/auth/**",
+                        "/user/reset_password",
+                        "/user/update_password"
+                ).permitAll()
+                .requestMatchers(
+                        "/demo/kol",
+                        "/kol/**"
+                ).hasAuthority(Role.KOL.getAuthority())
+                .requestMatchers(
+                        "/demo/enterprise",
+                        "/enterprise/**"
+                ).hasAuthority(Role.ENTERPRISE.getAuthority())
                 // Disallow everything else..
                 .anyRequest().authenticated();
 

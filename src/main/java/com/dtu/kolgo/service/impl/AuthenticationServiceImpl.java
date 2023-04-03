@@ -50,7 +50,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public WebResponse register(RegisterRequest request) {
-        System.out.println(request.isBiz());
         if (userRepo.existsByEmail(request.getEmail())) {
             throw new ExistsException("Email already in use");
         }
@@ -163,11 +162,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userService.fetch(jwtProvider.extractUserId(refreshToken));
 
         if (tokenRepo.existsByValue(refreshToken)) {
+            // remove single token
             tokenRepo.deleteByValue(refreshToken);
-            System.out.println("Delete single token: " + refreshToken);
         } else {
+            // remove all token of user
             tokenRepo.deleteAllByUser(user);
-            System.out.println("Delete all tokens of user " + user.getUsername());
             throw new NotFoundException("Refresh token not found: " + refreshToken);
         }
 
