@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,6 +21,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final String[] AUTH_WHITELIST = {
+            "/demo",
+            "/auth/**",
+            "/user/reset_password",
+            "/user/update_password",
+    };
     private final FilterChainExceptionHandler filterChainExceptionHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -39,12 +46,7 @@ public class SecurityConfig {
 
         // Entry points
         http.authorizeHttpRequests()
-                .requestMatchers(
-                        "/demo",
-                        "/auth/**",
-                        "/user/reset_password",
-                        "/user/update_password"
-                ).permitAll()
+                .requestMatchers(AUTH_WHITELIST).permitAll()
                 .requestMatchers(
                         "/demo/kol",
                         "/kol/**"
@@ -85,5 +87,15 @@ public class SecurityConfig {
                         .exposedHeaders("x-auth-token");
             }
         };
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
+                "/v3/api-docs/**",
+                "/v3/api-docs.yaml",
+                "/swagger-ui/**",
+                "/swagger-ui.html"
+        );
     }
 }
