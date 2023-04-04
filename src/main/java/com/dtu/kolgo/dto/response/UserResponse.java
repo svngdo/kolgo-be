@@ -25,7 +25,7 @@ import java.util.List;
 })
 public class UserResponse {
 
-    private RefreshTokenResponse token;
+    private TokenResponse token;
     private int id;
     private String firstName;
     private String lastName;

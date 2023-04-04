@@ -3,13 +3,13 @@ package com.dtu.kolgo.service.impl;
 import com.dtu.kolgo.dto.MailDetails;
 import com.dtu.kolgo.dto.request.LoginRequest;
 import com.dtu.kolgo.dto.request.RegisterRequest;
-import com.dtu.kolgo.dto.response.LoginResponse;
-import com.dtu.kolgo.dto.response.RefreshTokenResponse;
+import com.dtu.kolgo.dto.request.ResetPasswordRequest;
+import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
+import com.dtu.kolgo.dto.response.KolResponse;
+import com.dtu.kolgo.dto.response.UserResponse;
+import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
-import com.dtu.kolgo.exception.ExistsException;
-import com.dtu.kolgo.exception.ExpiredException;
-import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.exception.UserException;
+import com.dtu.kolgo.exception.*;
 import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.repository.KolRepository;
@@ -17,6 +17,7 @@ import com.dtu.kolgo.repository.TokenRepository;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.AuthenticationService;
+import com.dtu.kolgo.service.KolService;
 import com.dtu.kolgo.service.MailService;
 import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.util.constant.GrantType;
@@ -46,6 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepo;
     private final TokenRepository tokenRepo;
     private final KolRepository kolRepo;
+    private final KolService kolService;
     private final EnterpriseRepository enterpriseRepo;
 
     @Override
@@ -111,8 +113,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public LoginResponse login(LoginRequest request) {
-        User user = userService.fetch(request.getEmail());
+    public Object login(LoginRequest request) {
+        User user = userService.get(request.getEmail());
 
         authenticate(user.getId(), request.getPassword());
 
@@ -125,8 +127,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .user(user)
                 .build());
 
-        return LoginResponse.builder()
-                .token(new RefreshTokenResponse(newAccessToken, TokenType.BEARER.toString(), newRefreshToken))
+        if (user.getRoles().contains(Role.KOL)) {
+            Kol kol = kolService.get(user);
+            return KolResponse.builder()
+                    .token(new TokenResponse(newAccessToken, TokenType.BEARER.toString(), newRefreshToken))
+                    .id(kol.getId())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .phoneNumber(user.getPhoneNumber())
+                    .roles(user.getRoles())
+                    .gender(kol.getGender())
+                    .speciality(kol.getSpeciality())
+                    .address(kol.getAddress())
+                    .facebookUrl(kol.getFacebookUrl())
+                    .instagramUrl(kol.getInstagramUrl())
+                    .tiktokUrl(kol.getTiktokUrl())
+                    .youtubeUrl(kol.getYoutubeUrl())
+                    .build();
+        } else if (user.getRoles().contains(Role.ENTERPRISE)) {
+//            Enterprise enterprise = enterpriseService.get
+            // for enterprise login
+        }
+
+        return UserResponse.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -153,13 +177,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public RefreshTokenResponse refreshToken(String refreshToken) {
+    public TokenResponse refreshToken(String refreshToken) {
         // validate refresh token
         jwtProvider.validate(refreshToken);
         jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
 
         // get user from token
-        User user = userService.fetch(jwtProvider.extractUserId(refreshToken));
+        User user = userService.get(jwtProvider.extractUserId(refreshToken));
 
         if (tokenRepo.existsByValue(refreshToken)) {
             // remove single token
@@ -182,8 +206,51 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
 
         // return new RefreshTokenResponse
-        return new RefreshTokenResponse(newAccessToken, TokenType.BEARER.toString(), newRefreshToken);
+        return new TokenResponse(newAccessToken, TokenType.BEARER.toString(), newRefreshToken);
     }
 
+    public WebResponse resetPassword(ResetPasswordRequest request) {
+        User user = userService.get(request.getEmail());
+
+        String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
+        String url = String.format("http://%s:%s%s/auth/update_password?reset_password_token=%s",
+                Server.HOST, Server.PORT, Server.CONTEXT_PATH, resetPasswordToken);
+        String subject = "Reset password";
+        String body = """
+                Dear [[name]],<br><br>
+                Please click the link below to reset your password<br>
+                <h3><a href="[[url]]" target="_blank">RESET PASSWORD</a></h3>
+                Thank you,<br><br>
+                KOLgo.
+                """;
+        body = body.replace("[[name]]", user.getUsername());
+        body = body.replace("[[url]]", url);
+
+        mailService.send(new MailDetails(request.getEmail(), subject, body), true);
+
+        return new WebResponse("A reset password email was sent to " + request.getEmail());
+    }
+
+    @Override
+    public WebResponse updatePassword(String resetPasswordToken, UpdatePasswordRequest request) {
+        // Validate token
+        jwtProvider.validate(resetPasswordToken);
+        jwtProvider.validateGrantType(resetPasswordToken, GrantType.RESET_PASSWORD_TOKEN);
+
+        // Validate password
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new InvalidException("Password not match");
+        }
+
+        // Get user
+        long userId = jwtProvider.extractUserId(resetPasswordToken);
+        User user = userService.get(userId);
+
+        // Update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userService.save(user);
+
+        return new WebResponse("Update password successfully!!");
+    }
 
 }

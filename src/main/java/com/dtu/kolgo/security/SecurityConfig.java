@@ -23,9 +23,7 @@ public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/demo",
-            "/auth/**",
-            "/user/reset_password",
-            "/user/update_password",
+            "/auth/**"
     };
     private final FilterChainExceptionHandler filterChainExceptionHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
