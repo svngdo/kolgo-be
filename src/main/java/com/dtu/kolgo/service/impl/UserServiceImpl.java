@@ -23,18 +23,18 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User save(User user) {
-        return repo.save(user);
+    public void save(User user) {
+        repo.save(user);
     }
 
     @Override
-    public User get(long id) {
+    public User getById(long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("User ID not found: " + id));
     }
 
     @Override
-    public User get(String email) {
+    public User getByEmail(String email) {
         return repo.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Email not found: " + email));
     }
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public WebResponse changePassword(Principal principal, ChangePasswordRequest request) {
         String userId = principal.getName();
-        User user = get(Long.parseLong(userId));
+        User user = getById(Long.parseLong(userId));
 
         Map<String, Object> error = new HashMap<>();
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {

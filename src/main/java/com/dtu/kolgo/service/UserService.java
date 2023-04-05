@@ -8,11 +8,11 @@ import java.security.Principal;
 
 public interface UserService {
 
-    User save(User user);
+    void save(User user);
 
-    User get(long id);
+    User getById(long id);
 
-    User get(String email);
+    User getByEmail(String email);
 
     WebResponse changePassword(Principal principal, ChangePasswordRequest request);
 

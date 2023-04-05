@@ -5,6 +5,7 @@ import com.dtu.kolgo.dto.request.RegisterRequest;
 import com.dtu.kolgo.dto.request.ResetPasswordRequest;
 import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
 import com.dtu.kolgo.dto.response.TokenResponse;
+import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 
 public interface AuthenticationService {
@@ -13,7 +14,7 @@ public interface AuthenticationService {
 
     WebResponse verify(String token, boolean isBiz);
 
-    Object login(LoginRequest request);
+    UserResponse login(LoginRequest request);
 
     void authenticate(long id, String password);
 

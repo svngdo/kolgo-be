@@ -5,9 +5,8 @@ import com.dtu.kolgo.dto.request.LoginRequest;
 import com.dtu.kolgo.dto.request.RegisterRequest;
 import com.dtu.kolgo.dto.request.ResetPasswordRequest;
 import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
-import com.dtu.kolgo.dto.response.KolResponse;
-import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.TokenResponse;
+import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.*;
 import com.dtu.kolgo.model.*;
@@ -113,8 +112,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Object login(LoginRequest request) {
-        User user = userService.get(request.getEmail());
+    public UserResponse login(LoginRequest request) {
+        User user = userService.getByEmail(request.getEmail());
 
         authenticate(user.getId(), request.getPassword());
 
@@ -127,28 +126,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .user(user)
                 .build());
 
-        if (user.getRoles().contains(Role.KOL)) {
-            Kol kol = kolService.get(user);
-            return KolResponse.builder()
-                    .token(new TokenResponse(newAccessToken, TokenType.BEARER.toString(), newRefreshToken))
-                    .id(kol.getId())
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .email(user.getEmail())
-                    .phoneNumber(user.getPhoneNumber())
-                    .roles(user.getRoles())
-                    .gender(kol.getGender())
-                    .speciality(kol.getSpeciality())
-                    .address(kol.getAddress())
-                    .facebookUrl(kol.getFacebookUrl())
-                    .instagramUrl(kol.getInstagramUrl())
-                    .tiktokUrl(kol.getTiktokUrl())
-                    .youtubeUrl(kol.getYoutubeUrl())
-                    .build();
-        } else if (user.getRoles().contains(Role.ENTERPRISE)) {
-//            Enterprise enterprise = enterpriseService.get
-            // for enterprise login
-        }
+
 
         return UserResponse.builder()
                 .id(user.getId())
@@ -183,7 +161,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
 
         // get user from token
-        User user = userService.get(jwtProvider.extractUserId(refreshToken));
+        User user = userService.getById(jwtProvider.extractUserId(refreshToken));
 
         if (tokenRepo.existsByValue(refreshToken)) {
             // remove single token
@@ -210,7 +188,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     public WebResponse resetPassword(ResetPasswordRequest request) {
-        User user = userService.get(request.getEmail());
+        User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
         String url = String.format("http://%s:%s%s/auth/update_password?reset_password_token=%s",
@@ -244,7 +222,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         // Get user
         long userId = jwtProvider.extractUserId(resetPasswordToken);
-        User user = userService.get(userId);
+        User user = userService.getById(userId);
 
         // Update password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));

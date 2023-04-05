@@ -16,6 +16,8 @@ public class Enterprise extends Base {
 
     @Column
     private String name;
+    @Column(columnDefinition = "varchar(20)")
+    private String phoneNumber;
     @Column
     private String taxIdentificationNumber;
     @OneToOne(cascade = CascadeType.ALL)

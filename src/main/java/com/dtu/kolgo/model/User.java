@@ -29,8 +29,6 @@ public class User implements UserDetails {
     private String firstName;
     @Column(columnDefinition = "varchar(20)", nullable = false)
     private String lastName;
-    @Column(columnDefinition = "varchar(20)")
-    private String phoneNumber;
     @Column(columnDefinition = "varchar(45)", unique = true, nullable = false)
     private String email;
     @Column(columnDefinition = "varchar(64)", nullable = false)
