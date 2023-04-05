@@ -3,87 +3,93 @@ package com.dtu.kolgo.service.impl;
 import com.dtu.kolgo.dto.request.KolUpdateRequest;
 import com.dtu.kolgo.dto.response.KolResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.exception.NotFoundException;
+import com.dtu.kolgo.model.Kol;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.KolRepository;
-import com.dtu.kolgo.repository.UserRepository;
-import com.dtu.kolgo.security.JwtProvider;
-import com.dtu.kolgo.service.CityService;
 import com.dtu.kolgo.service.KolService;
-import com.dtu.kolgo.service.MailService;
 import com.dtu.kolgo.service.UserService;
+import com.dtu.kolgo.util.constant.Gender;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class KolServiceImpl implements KolService {
 
     private final KolRepository repo;
-    private final UserRepository userRepo;
     private final UserService userService;
-    private final CityService cityService;
-    private final MailService mailService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
 
     @Override
-    public KolResponse update(KolUpdateRequest request) {
-//        User user = userService.save(User.builder()
-//                .username(UUID.randomUUID().toString())
-//                .email(request.getEmail())
-//                .password(passwordEncoder.encode(request.getPassword()))
-//                .phoneNumber(request.getPhoneNumber())
-//                .roles(Collections.singletonList(Role.KOL))
-//                .build());
-//        Kol kol = Kol.builder()
-//                .firstName(request.getFirstName())
-//                .lastName(request.getLastName())
-//                .gender(request.getGender() == null ? null : Gender.valueOf(request.getGender().toUpperCase()))
-//                .speciality(request.getSpeciality())
-//                .city(request.getCity() == null ? null : cityService.get(request.getCity()))
-//                .facebookUrl(request.getFacebookUrl())
-//                .instagramUrl(request.getInstagramUrl())
-//                .tiktokUrl(request.getTiktokUrl())
-//                .youtubeUrl(request.getYoutubeUrl())
-//                .user(user)
-//                .build();
-//        return KolResponse.builder()
-//                .id(user.getId())
-//                .firstName(kol.getFirstName())
-//                .lastName(kol.getLastName())
-//                .gender(kol.getGender() == null ? null : kol.getGender().toString())
-//                .phoneNumber(user.getPhoneNumber())
-//                .speciality(kol.getSpeciality())
-//                .city(kol.getGender() == null ? null : kol.getCity().toString())
-//                .facebookUrl(kol.getFacebookUrl())
-//                .instagramUrl(kol.getInstagramUrl())
-//                .tiktokUrl(kol.getTiktokUrl())
-//                .youtubeUrl(kol.getYoutubeUrl())
-//                .roles(user.getRoles())
-//                .build();
-        return null;
+    public List<KolResponse> getAll() {
+        List<Kol> kols = repo.findAll();
+        return kols.stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<KolResponse> fetchAll() {
-        return null;
+    public Kol getByUserID(long userId) {
+        User user = userService.getById(userId);
+        return repo.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("Not found user with ID: " + userId));
     }
 
     @Override
-    public KolResponse fetch(int id) {
-        return null;
+    public KolResponse getResponseByUserId(long userId) {
+        Kol kol = getByUserID(userId);
+        return mapEntityToDto(kol);
     }
 
     @Override
-    public KolResponse update(int id, KolUpdateRequest request) {
-        return null;
+    public WebResponse update(long userId, KolUpdateRequest request) {
+        User user = userService.getById(userId);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+
+        Kol kol = getByUserID(userId);
+        kol.setPhoneNumber(request.getPhoneNumber());
+        kol.setCity(request.getCity());
+        kol.setGender(request.getGender() != null ? Gender.valueOf(request.getGender()) : null);
+        kol.setSpeciality(request.getSpeciality());
+        kol.setFacebookUrl(request.getFacebookUrl());
+        kol.setInstagramUrl(request.getInstagramUrl());
+        kol.setTiktokUrl(request.getTiktokUrl());
+        kol.setYoutubeUrl(request.getYoutubeUrl());
+
+        userService.save(user);
+        repo.save(kol);
+
+        return new WebResponse("Update KOL successfully !!");
     }
 
     @Override
-    public WebResponse delete(int id) {
-        return null;
+    public WebResponse delete(long userId) {
+        User user = userService.getById(userId);
+        repo.deleteByUser(user);
+        return new WebResponse("Delete KOL successfully !!");
+    }
+
+    @Override
+    public KolResponse mapEntityToDto(Kol kol) {
+        return KolResponse.builder()
+                .id(kol.getId())
+                .firstName(kol.getUser().getFirstName())
+                .lastName(kol.getUser().getLastName())
+                .email(kol.getUser().getEmail())
+                .roles(kol.getUser().getRoles())
+                .gender(kol.getGender())
+                .speciality(kol.getSpeciality())
+                .phoneNumber(kol.getPhoneNumber())
+                .city(kol.getCity())
+                .facebookUrl(kol.getFacebookUrl())
+                .instagramUrl(kol.getInstagramUrl())
+                .tiktokUrl(kol.getTiktokUrl())
+                .youtubeUrl(kol.getYoutubeUrl())
+                .build();
     }
 
 }

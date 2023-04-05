@@ -15,40 +15,40 @@ public class KolController {
     private final KolService service;
 
     @GetMapping
-    public ResponseEntity<?> fetchAll() {
+    public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.fetchAll(),
+                service.getAll(),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> fetch(
-            @PathVariable("id") int id
+    public ResponseEntity<?> get(
+            @PathVariable("id") long userId
     ) {
         return new ResponseEntity<>(
-                service.fetch(id),
+                service.getByUserID(userId),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @PathVariable("id") int id,
+            @PathVariable("id") int userId,
             @RequestBody KolUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.update(id, request),
+                service.update(userId, request),
                 HttpStatus.OK
         );
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(
-            @PathVariable("id") int id
+            @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
-                service.delete(id),
+                service.delete(userId),
                 HttpStatus.OK
         );
     }

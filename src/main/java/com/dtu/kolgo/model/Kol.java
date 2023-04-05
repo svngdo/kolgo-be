@@ -15,6 +15,10 @@ import java.util.List;
 @Table(name = "kols")
 public class Kol extends Base {
 
+    @Column(columnDefinition = "varchar(20)")
+    private String phoneNumber;
+    @Column(columnDefinition = "varchar(64)")
+    private String city;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column
@@ -27,8 +31,6 @@ public class Kol extends Base {
     private String tiktokUrl;
     @Column
     private String youtubeUrl;
-    @Column
-    private String previousCollaboration;
     @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
     private List<Booking> bookings;
     @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)

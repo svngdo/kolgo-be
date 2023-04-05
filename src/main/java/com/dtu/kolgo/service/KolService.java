@@ -3,19 +3,22 @@ package com.dtu.kolgo.service;
 import com.dtu.kolgo.dto.request.KolUpdateRequest;
 import com.dtu.kolgo.dto.response.KolResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.model.Kol;
 
 import java.util.List;
 
 public interface KolService {
 
-    KolResponse update(KolUpdateRequest request);
+    List<KolResponse> getAll();
 
-    List<KolResponse> fetchAll();
+    Kol getByUserID(long userId);
 
-    KolResponse fetch(int id);
+    KolResponse getResponseByUserId(long userId);
 
-    KolResponse update(int id, KolUpdateRequest request);
+    WebResponse update(long userId, KolUpdateRequest request);
 
-    WebResponse delete(int id);
+    WebResponse delete(long userId);
+
+    KolResponse mapEntityToDto(Kol kol);
 
 }
