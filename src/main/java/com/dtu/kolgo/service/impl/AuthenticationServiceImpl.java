@@ -185,8 +185,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
-        String url = String.format("http://%s:%s%s/auth/update_password?reset_password_token=%s",
-                Server.HOST, Server.PORT, Server.CONTEXT_PATH, resetPasswordToken);
+        String url = String.format("http://%s:3000/update_password?reset_password_token=%s",
+                Server.HOST, resetPasswordToken);
         String subject = "Reset password";
         String body = """
                 Dear [[name]],<br><br>
