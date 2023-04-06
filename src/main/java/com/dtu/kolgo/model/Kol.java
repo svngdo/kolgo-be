@@ -1,6 +1,5 @@
 package com.dtu.kolgo.model;
 
-import com.dtu.kolgo.util.constant.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,14 +12,16 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "kols")
-public class Kol extends Base {
+public class Kol extends BaseInt {
 
-    @Column(columnDefinition = "varchar(20)")
-    private String phoneNumber;
-    @Column(columnDefinition = "varchar(64)")
-    private String city;
-    @Enumerated(EnumType.STRING)
+    @OneToOne
+    @JoinColumn(name = "gender_id")
     private Gender gender;
+    @Column
+    private String phoneNumber;
+    @OneToOne
+    @JoinColumn(name = "city_id")
+    private City city;
     @Column
     private String speciality;
     @Column
@@ -33,6 +34,8 @@ public class Kol extends Base {
     private String youtubeUrl;
     @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
     private List<Booking> bookings;
+    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks;
     @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
     private List<Payment> payments;
     @ManyToMany(mappedBy = "kols")

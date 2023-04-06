@@ -10,9 +10,11 @@ public interface UserService {
 
     void save(User user);
 
-    User getById(long id);
+    User getById(int id);
 
     User getByEmail(String email);
+
+    User getByUsername(String username);
 
     WebResponse changePassword(Principal principal, ChangePasswordRequest request);
 

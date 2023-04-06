@@ -11,12 +11,12 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "payments")
-public class Payment extends Base {
+public class Payment extends BaseInt {
 
-    @Column
-    private String amountPaid;
-    @Column
-    private String referenceNumber;
+    @Column(nullable = false)
+    private String amount;
+    @Column(nullable = false, unique = true)
+    private String reference;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "kol_id")
     private Kol kol;

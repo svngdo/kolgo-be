@@ -14,13 +14,11 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "accessToken",
-        "refreshToken",
-        "tokenType"
+        "refreshToken"
 })
 public class TokenResponse {
 
     private String accessToken;
     private String refreshToken;
-    private String tokenType;
 
 }

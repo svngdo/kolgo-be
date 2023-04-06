@@ -1,6 +1,7 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.exception.NotFoundException;
+import com.dtu.kolgo.model.Token;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.TokenRepository;
 import com.dtu.kolgo.security.JwtProvider;
@@ -18,12 +19,17 @@ public class TokenServiceImpl implements TokenService {
     private final JwtProvider jwtProvider;
 
     @Override
+    public void save(Token token) {
+        repo.save(token);
+    }
+
+    @Override
     public void revoke(String value) {
         if (repo.existsByValue(value)) {
             repo.deleteByValue(value);
             System.out.println("Delete single token: " + value);
         } else {
-            long userId = jwtProvider.extractUserId(value);
+            int userId = jwtProvider.extractUserId(value);
             User user = userService.getById(userId);
             repo.deleteAllByUser(user);
             System.out.println("Delete all tokens of user " + user.getUsername());

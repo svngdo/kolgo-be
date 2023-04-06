@@ -12,11 +12,11 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "enterprises")
-public class Enterprise extends Base {
+public class Enterprise extends BaseInt {
 
     @Column
     private String name;
-    @Column(columnDefinition = "varchar(20)")
+    @Column
     private String phoneNumber;
     @Column
     private String taxIdentificationNumber;
@@ -29,6 +29,8 @@ public class Enterprise extends Base {
     private List<Payment> payments;
     @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
     private List<Campaign> campaigns;
+    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;

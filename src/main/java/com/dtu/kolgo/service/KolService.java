@@ -9,16 +9,16 @@ import java.util.List;
 
 public interface KolService {
 
+    void save(Kol kol);
+
     List<KolResponse> getAll();
 
-    Kol getByUserID(long userId);
+    Kol getById(int kolId);
 
-    KolResponse getResponseByUserId(long userId);
+    KolResponse getResponseById(int kolId);
 
-    WebResponse update(long userId, KolUpdateRequest request);
+    WebResponse update(int kolId, KolUpdateRequest request);
 
-    WebResponse delete(long userId);
-
-    KolResponse mapEntityToDto(Kol kol);
+    WebResponse delete(int kolId);
 
 }

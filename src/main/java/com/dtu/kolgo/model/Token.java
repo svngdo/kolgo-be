@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "tokens")
-public class Token extends Base {
+public class Token extends BaseInt {
 
     @Column
     private String value;

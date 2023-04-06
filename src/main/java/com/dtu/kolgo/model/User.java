@@ -6,10 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @NoArgsConstructor
@@ -22,28 +24,32 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(columnDefinition = "varchar(64)", unique = true, nullable = false)
+    private Integer id;
+    @Column(nullable = false, unique = true)
     private String username;
-    @Column(columnDefinition = "varchar(20)", nullable = false)
+    @Column(nullable = false)
     private String firstName;
-    @Column(columnDefinition = "varchar(20)", nullable = false)
+    @Column(nullable = false)
     private String lastName;
-    @Column(columnDefinition = "varchar(45)", unique = true, nullable = false)
+    @Column
+    private String avatar;
+    @Column(nullable = false, unique = true)
     private String email;
-    @Column(columnDefinition = "varchar(64)", nullable = false)
+    @Column(nullable = false)
     private String password;
-    @Column(name = "role")
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override

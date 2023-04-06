@@ -47,8 +47,8 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(JwtException.class)
-    public WebResponse handleJwtException(JwtException e) {
+    @ExceptionHandler(CustomJwtException.class)
+    public WebResponse handleJwtException(CustomJwtException e) {
         return new WebResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 

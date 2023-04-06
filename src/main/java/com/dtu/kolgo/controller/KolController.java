@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("kol")
+@RequestMapping("kols")
 @RequiredArgsConstructor
 public class KolController {
 
@@ -24,21 +24,21 @@ public class KolController {
 
     @GetMapping("{id}")
     public ResponseEntity<?> get(
-            @PathVariable("id") long userId
+            @PathVariable("id") int kolId
     ) {
         return new ResponseEntity<>(
-                service.getByUserID(userId),
+                service.getResponseById(kolId),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @PathVariable("id") int userId,
+            @PathVariable("id") int kolId,
             @RequestBody KolUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.update(userId, request),
+                service.update(kolId, request),
                 HttpStatus.OK
         );
     }

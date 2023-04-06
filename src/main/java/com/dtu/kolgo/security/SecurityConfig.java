@@ -1,14 +1,13 @@
 package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.exception.FilterChainExceptionHandler;
-import com.dtu.kolgo.model.Role;
+import com.dtu.kolgo.util.constant.Roles;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,7 +22,10 @@ public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/demo",
-            "/auth/**"
+            "/auth/**",
+            "/kols",
+            "/cities",
+            "/genders"
     };
     private final FilterChainExceptionHandler filterChainExceptionHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -46,13 +48,20 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers(AUTH_WHITELIST).permitAll()
                 .requestMatchers(
-                        "/demo/kol",
-                        "/kol/**"
-                ).hasAuthority(Role.KOL.getAuthority())
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yaml",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html"
+                ).permitAll()
                 .requestMatchers(
-                        "/demo/enterprise",
-                        "/enterprise/**"
-                ).hasAuthority(Role.ENTERPRISE.getAuthority())
+                        "/demo/admin"
+                ).hasAuthority(Roles.ADMIN.name())
+                .requestMatchers(
+                        "/kols/**"
+                ).hasAuthority(Roles.KOL.name())
+                .requestMatchers(
+                        "/enterprises/**"
+                ).hasAuthority(Roles.ENTERPRISE.name())
                 // Disallow everything else..
                 .anyRequest().authenticated();
 
@@ -67,7 +76,7 @@ public class SecurityConfig {
 
         // Handling logout
         http.logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/auth/logout")
                 .addLogoutHandler(logoutHandler);
 
         return http.build();
@@ -87,13 +96,4 @@ public class SecurityConfig {
         };
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers(
-                "/v3/api-docs/**",
-                "/v3/api-docs.yaml",
-                "/swagger-ui/**",
-                "/swagger-ui.html"
-        );
-    }
 }

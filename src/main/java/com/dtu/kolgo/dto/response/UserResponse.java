@@ -20,6 +20,7 @@ import java.util.List;
         "id",
         "firstName",
         "lastName",
+        "avatar",
         "email",
         "roles"
 })
@@ -29,6 +30,7 @@ public class UserResponse {
     private int id;
     private String firstName;
     private String lastName;
+    private String avatar;
     private String email;
     private List<Role> roles;
 

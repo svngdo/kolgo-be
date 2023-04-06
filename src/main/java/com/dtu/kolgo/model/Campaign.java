@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "campaigns")
-public class Campaign extends Base {
+public class Campaign extends BaseInt {
 
     @Column
     private String objective;

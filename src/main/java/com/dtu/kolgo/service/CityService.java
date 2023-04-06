@@ -2,8 +2,12 @@ package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.model.City;
 
+import java.util.List;
+
 public interface CityService {
 
-    City get(String name);
+    List<City> getAll();
+
+    City getByAbbreviation(String abbreviation);
 
 }

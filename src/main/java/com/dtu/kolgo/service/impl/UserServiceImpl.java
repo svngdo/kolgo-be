@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(long id) {
+    public User getById(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("User ID not found: " + id));
     }
@@ -40,9 +40,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByUsername(String username) {
+        return repo.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("Username not found: " + username));
+    }
+
+    @Override
     public WebResponse changePassword(Principal principal, ChangePasswordRequest request) {
         String userId = principal.getName();
-        User user = getById(Long.parseLong(userId));
+        User user = getById(Integer.parseInt(userId));
 
         Map<String, Object> error = new HashMap<>();
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {

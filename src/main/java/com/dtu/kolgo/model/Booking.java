@@ -3,7 +3,7 @@ package com.dtu.kolgo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -13,10 +13,10 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "bookings")
-public class Booking extends Base {
+public class Booking extends BaseInt {
 
     @Column
-    private LocalDateTime time;
+    private LocalDate time;
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;

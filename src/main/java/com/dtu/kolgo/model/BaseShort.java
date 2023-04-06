@@ -10,10 +10,10 @@ import java.io.Serializable;
 
 @Data
 @MappedSuperclass
-public abstract class Base implements Serializable {
+public abstract class BaseShort implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Short id;
 
 }

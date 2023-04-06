@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "addresses")
-public class Address extends Base {
+public class Address extends BaseInt {
 
     @Column
     private String buildingNumber;

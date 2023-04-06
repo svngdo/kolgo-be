@@ -1,5 +1,6 @@
 package com.dtu.kolgo.security;
 
+import com.dtu.kolgo.exception.CustomJwtException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.util.constant.GrantType;
@@ -110,8 +111,8 @@ public class JwtProvider {
         return claimsResolver.apply(claims);
     }
 
-    public long extractUserId(String token) {
-        return Long.parseLong(extractClaim(token, Claims::getSubject));
+    public Integer extractUserId(String token) {
+        return Integer.parseInt(extractClaim(token, Claims::getSubject));
     }
 
     public String extractEmail(String token) {
@@ -147,7 +148,7 @@ public class JwtProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException ex) {
-            throw new JwtException("Expired token");
+            throw new CustomJwtException("Token expired");
         } catch (IllegalArgumentException
                  | SignatureException
                  | UnsupportedJwtException

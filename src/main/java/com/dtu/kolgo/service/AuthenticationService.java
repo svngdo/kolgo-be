@@ -16,7 +16,7 @@ public interface AuthenticationService {
 
     UserResponse login(LoginRequest request);
 
-    void authenticate(long id, String password);
+    void authenticate(int id, String password);
 
     TokenResponse refreshToken(String refreshToken);
 

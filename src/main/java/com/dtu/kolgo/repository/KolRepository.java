@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface KolRepository extends JpaRepository<Kol, Long> {
+public interface KolRepository extends JpaRepository<Kol, Integer> {
 
     Optional<Kol> findByUser(User user);
 

@@ -1,7 +1,6 @@
 package com.dtu.kolgo.dto.response;
 
-import com.dtu.kolgo.model.Role;
-import com.dtu.kolgo.util.constant.Gender;
+import com.dtu.kolgo.model.Feedback;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
@@ -11,9 +10,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -21,8 +20,9 @@ import java.util.List;
         "id",
         "firstName",
         "lastName",
-        "email",
+        "avatar",
         "gender",
+        "email",
         "phoneNumber",
         "city",
         "speciality",
@@ -30,23 +30,24 @@ import java.util.List;
         "instagramUrl",
         "tiktokUrl",
         "youtubeUrl",
-        "roles"
+        "feedback"
 })
 public class KolResponse {
 
     private TokenResponse token;
-    private Long id;
+    private int id;
     private String firstName;
     private String lastName;
+    private String avatar;
+    private String gender;
     private String email;
     private String phoneNumber;
-    private Gender gender;
     private String city;
     private String speciality;
     private String facebookUrl;
     private String instagramUrl;
     private String tiktokUrl;
     private String youtubeUrl;
-    private List<Role> roles;
+    private List<Feedback> feedbacks;
 
 }

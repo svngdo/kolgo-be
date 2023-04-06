@@ -31,7 +31,7 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (JwtException e) {
+        } catch (CustomJwtException e) {
             mapErrorToResponse(handler.handleJwtException(e), response);
         } catch (NotFoundException e) {
             mapErrorToResponse(handler.handleNotFoundException(e), response);

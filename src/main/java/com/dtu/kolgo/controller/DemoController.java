@@ -13,6 +13,11 @@ public class DemoController {
         return "Hello user";
     }
 
+    @GetMapping("admin")
+    public String demoAdmin() {
+        return "Hello ADMIN";
+    }
+
     @GetMapping("kol")
     public String demoKol() {
         return "Hello KOL";

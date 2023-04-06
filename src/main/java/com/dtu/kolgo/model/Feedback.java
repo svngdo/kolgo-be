@@ -10,15 +10,18 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "feedbacks")
-public class Feedback extends Base {
+public class Feedback extends BaseInt {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column
     private int rating;
     @Column
     private String comment;
+    @ManyToOne
+    @JoinColumn(name = "kol_id")
+    private Kol kol;
+    @ManyToOne
+    @JoinColumn(name = "enterprise_id")
+    private Enterprise enterprise;
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
