@@ -11,6 +11,7 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,7 +26,7 @@ import java.util.function.Function;
 public class JwtProvider {
 
     public String resolveToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer")) {
             return authHeader.substring(7);
         }

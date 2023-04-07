@@ -49,15 +49,6 @@ public class AuthenticationController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("refresh_token")
-    public ResponseEntity<?> token(
-            @RequestParam(value = "token") String token
-    ) {
-        return new ResponseEntity<>(
-                service.refreshToken(token),
-                HttpStatus.OK);
-    }
-
     @PostMapping("reset_password")
     public ResponseEntity<?> resetPassword(
             @RequestBody @Valid ResetPasswordRequest request
@@ -76,6 +67,15 @@ public class AuthenticationController {
                 service.updatePassword(token, request),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("refresh_token")
+    public ResponseEntity<?> token(
+            @RequestParam(value = "token") String token
+    ) {
+        return new ResponseEntity<>(
+                service.refreshToken(token),
+                HttpStatus.OK);
     }
 
 }
