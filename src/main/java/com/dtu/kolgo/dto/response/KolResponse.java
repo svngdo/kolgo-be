@@ -16,13 +16,12 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "token",
         "id",
         "firstName",
         "lastName",
         "avatar",
-        "gender",
         "email",
+        "gender",
         "phoneNumber",
         "city",
         "speciality",
@@ -34,13 +33,12 @@ import java.util.List;
 })
 public class KolResponse {
 
-    private TokenResponse token;
     private int id;
     private String firstName;
     private String lastName;
     private String avatar;
-    private String gender;
     private String email;
+    private String gender;
     private String phoneNumber;
     private String city;
     private String speciality;

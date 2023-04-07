@@ -1,16 +1,24 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.EnterpriseRegisterRequest;
+import com.dtu.kolgo.dto.request.EnterpriseUpdateRequest;
 import com.dtu.kolgo.dto.response.EnterpriseResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.model.Enterprise;
 
+import java.util.List;
+
 public interface EnterpriseService {
 
-    WebResponse register(EnterpriseRegisterRequest request);
+    void save(Enterprise ent);
 
-    WebResponse verify(String registerToken);
+    List<EnterpriseResponse> getAll();
 
-    EnterpriseResponse save(Enterprise enterprise);
+    Enterprise getById(int entId);
+
+    EnterpriseResponse getResponseById(int entId);
+
+    WebResponse update(int entId, EnterpriseUpdateRequest request);
+
+    WebResponse delete(int entId);
 
 }
