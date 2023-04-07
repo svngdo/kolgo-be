@@ -5,6 +5,7 @@ import com.dtu.kolgo.dto.response.EnterpriseResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Enterprise;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.CityService;
 import com.dtu.kolgo.service.EnterpriseService;
@@ -44,6 +45,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public Enterprise getById(int entId) {
         return repo.findById(entId)
                 .orElseThrow(() -> new NotFoundException("Enterprise ID not found: " + entId));
+    }
+
+    @Override
+    public Enterprise getByUser(User user) {
+        return repo.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("Enterprise with User ID not found: " + user.getId()));
     }
 
     @Override

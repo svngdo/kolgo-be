@@ -5,6 +5,7 @@ import com.dtu.kolgo.dto.response.KolResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Kol;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.KolRepository;
 import com.dtu.kolgo.service.CityService;
 import com.dtu.kolgo.service.GenderService;
@@ -47,6 +48,12 @@ public class KolServiceImpl implements KolService {
     public Kol getById(int kolId) {
         return repo.findById(kolId)
                 .orElseThrow(() -> new NotFoundException("KOL ID not found: " + kolId));
+    }
+
+    @Override
+    public Kol getByUser(User user) {
+        return repo.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("KOL with User ID not found: " + user.getId()));
     }
 
     @Override

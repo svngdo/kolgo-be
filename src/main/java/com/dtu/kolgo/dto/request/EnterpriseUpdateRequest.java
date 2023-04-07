@@ -5,10 +5,9 @@ import lombok.Data;
 @Data
 public class EnterpriseUpdateRequest {
 
-    private int id;
+    private String avatar;
     private String firstName;
     private String lastName;
-    private String avatar;
     private String email;
     private String name;
     private String phoneNumber;

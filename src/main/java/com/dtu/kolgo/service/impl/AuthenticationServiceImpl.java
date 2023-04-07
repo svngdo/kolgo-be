@@ -1,10 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.MailDetails;
-import com.dtu.kolgo.dto.request.LoginRequest;
+import com.dtu.kolgo.dto.request.ForgotPasswordRequest;
+import com.dtu.kolgo.dto.request.AuthLoginRequest;
 import com.dtu.kolgo.dto.request.RegisterRequest;
 import com.dtu.kolgo.dto.request.ResetPasswordRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
@@ -109,7 +109,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public UserResponse login(LoginRequest request) {
+    public UserResponse login(AuthLoginRequest request) {
         User user = userService.getByEmail(request.getEmail());
 
         authenticate(user.getId(), request.getPassword());
@@ -181,7 +181,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
-    public WebResponse resetPassword(ResetPasswordRequest request) {
+    public WebResponse forgotPassword(ForgotPasswordRequest request) {
         User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
@@ -204,7 +204,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public WebResponse updatePassword(String resetPasswordToken, UpdatePasswordRequest request) {
+    public WebResponse resetPassword(String resetPasswordToken, ResetPasswordRequest request) {
         // Validate token
         jwtProvider.validate(resetPasswordToken);
         jwtProvider.validateGrantType(resetPasswordToken, GrantType.RESET_PASSWORD_TOKEN);

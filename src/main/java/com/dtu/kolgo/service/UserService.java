@@ -1,6 +1,8 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.ChangePasswordRequest;
+import com.dtu.kolgo.dto.request.UserEmailRequest;
+import com.dtu.kolgo.dto.request.UserPasswordRequest;
+import com.dtu.kolgo.dto.request.UserProfileRequest;
 import com.dtu.kolgo.dto.request.UserUpdateRequest;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
@@ -21,9 +23,14 @@ public interface UserService {
 
     User getByEmail(String email);
 
-    WebResponse changePassword(Principal principal, ChangePasswordRequest request);
-
     WebResponse update(int userId, UserUpdateRequest request);
 
+    WebResponse updateEmail(Principal principal, UserEmailRequest request);
+
+    WebResponse updatePassword(Principal principal, UserPasswordRequest request);
+
+    WebResponse updateProfile(Principal principal, UserProfileRequest request);
+
     WebResponse delete(int userId);
+
 }

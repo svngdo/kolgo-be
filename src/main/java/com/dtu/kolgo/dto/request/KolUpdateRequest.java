@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class KolUpdateRequest {
 
+    private String avatar;
     private String firstName;
     private String lastName;
-    private String avatar;
     private String gender;
     private String phoneNumber;
     private String city;

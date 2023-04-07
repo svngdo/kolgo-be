@@ -1,9 +1,12 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.ChangePasswordRequest;
+import com.dtu.kolgo.dto.request.UserEmailRequest;
+import com.dtu.kolgo.dto.request.UserPasswordRequest;
+import com.dtu.kolgo.dto.request.UserProfileRequest;
 import com.dtu.kolgo.dto.request.UserUpdateRequest;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.exception.ValidationException;
 import com.dtu.kolgo.model.User;
@@ -72,7 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public WebResponse changePassword(Principal principal, ChangePasswordRequest request) {
+    public WebResponse updatePassword(Principal principal, UserPasswordRequest request) {
         String userId = principal.getName();
         User user = getById(Integer.parseInt(userId));
 
@@ -94,6 +97,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public WebResponse updateProfile(Principal principal, UserProfileRequest request) {
+        return null;
+    }
+
+    @Override
     public WebResponse update(int userId, UserUpdateRequest request) {
         User user = getById(userId);
 
@@ -105,6 +113,20 @@ public class UserServiceImpl implements UserService {
         repo.save(user);
 
         return new WebResponse("Updated successfully User with ID: " + userId);
+    }
+
+    @Override
+    public WebResponse updateEmail(Principal principal, UserEmailRequest request) {
+        if (repo.existsByEmail(request.getEmail())) {
+            throw new ExistsException("Email already in use: " + request.getEmail());
+        }
+
+        String userId = principal.getName();
+        User user = getById(Integer.parseInt(userId));
+        user.setEmail(request.getEmail());
+        repo.save(user);
+
+        return new WebResponse("Updated email successfully User with ID: " + userId);
     }
 
     @Override
