@@ -6,6 +6,7 @@ import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,6 +28,13 @@ public class SecurityConfig {
             "/cities",
             "/genders"
     };
+    private static final String[] OPEN_API_WHITELIST = {
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
+    };
+
     private final FilterChainExceptionHandler filterChainExceptionHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -46,22 +54,9 @@ public class SecurityConfig {
 
         // Entry points
         http.authorizeHttpRequests()
-                .requestMatchers(AUTH_WHITELIST).permitAll()
-                .requestMatchers(
-                        "/v3/api-docs/**",
-                        "/v3/api-docs.yaml",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html"
-                ).permitAll()
-                .requestMatchers(
-                        "/demo/admin"
-                ).hasAuthority(Roles.ADMIN.name())
-                .requestMatchers(
-                        "/kols/**"
-                ).hasAuthority(Roles.KOL.name())
-                .requestMatchers(
-                        "/enterprises/**"
-                ).hasAuthority(Roles.ENTERPRISE.name())
+                .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()
+                .requestMatchers(OPEN_API_WHITELIST).permitAll()
+                .requestMatchers("/**").hasAuthority(Roles.ADMIN.name())
                 // Disallow everything else..
                 .anyRequest().authenticated();
 
