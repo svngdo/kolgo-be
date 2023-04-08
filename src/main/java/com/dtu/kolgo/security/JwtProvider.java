@@ -5,7 +5,7 @@ import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.util.constant.GrantType;
 import com.dtu.kolgo.util.constant.JwtKey;
-import com.dtu.kolgo.util.env.Jwt;
+import com.dtu.kolgo.util.env.JwtEnv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 @Component
 public class JwtProvider {
 
-    public String resolveToken(HttpServletRequest request) {
+    public static String resolveToken(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer")) {
             return authHeader.substring(7);
@@ -34,7 +34,7 @@ public class JwtProvider {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Jwt.SECRET.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = JwtEnv.SECRET.getBytes(StandardCharsets.UTF_8);
         byte[] key64UrlBytes = Encoders.BASE64URL.encode(keyBytes).getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(key64UrlBytes);
     }
@@ -59,7 +59,7 @@ public class JwtProvider {
     public String generateAccessToken(User user) {
         return generateToken(
                 String.valueOf(user.getId()),
-                Jwt.ACCESS_TOKEN_EXPIRATION,
+                JwtEnv.ACCESS_EXPIRATION,
                 GrantType.ACCESS_TOKEN
         );
     }
@@ -67,7 +67,7 @@ public class JwtProvider {
     public String generateRefreshToken(User user) {
         return generateToken(
                 String.valueOf(user.getId()),
-                Jwt.REFRESH_TOKEN_EXPIRATION,
+                JwtEnv.REFRESH_EXPIRATION,
                 GrantType.REFRESH_TOKEN
         );
     }
@@ -77,7 +77,7 @@ public class JwtProvider {
         extraClaims.put(JwtKey.PASSWORD.toString(), user.getPassword());
         return generateToken(
                 String.valueOf(user.getId()),
-                Jwt.RESET_PASSWORD_TOKEN_EXPIRATION,
+                JwtEnv.RESET_PASSWORD_EXPIRATION,
                 GrantType.RESET_PASSWORD_TOKEN,
                 extraClaims
         );
@@ -93,7 +93,7 @@ public class JwtProvider {
         extraClaims.put(JwtKey.PASSWORD.toString(), password);
         return generateToken(
                 "0",
-                Jwt.VERIFY_ACCOUNT_TOKEN_EXPIRATION,
+                JwtEnv.VERIFY_ACCOUNT_EXPIRATION,
                 GrantType.VERIFY_ACCOUNT_TOKEN,
                 extraClaims
         );

@@ -17,7 +17,7 @@ public class AuthenticationController {
 
     @PostMapping("register")
     public ResponseEntity<?> register(
-            @RequestBody @Valid RegisterRequest request
+            @RequestBody @Valid AuthRegisterRequest request
     ) {
         return new ResponseEntity<>(
                 service.register(request),
@@ -48,7 +48,7 @@ public class AuthenticationController {
 
     @PostMapping("forgot_password")
     public ResponseEntity<?> forgotPassword(
-            @RequestBody @Valid ForgotPasswordRequest request
+            @RequestBody @Valid AuthForgotPasswordRequest request
     ) {
         return new ResponseEntity<>(
                 service.forgotPassword(request),
@@ -58,7 +58,7 @@ public class AuthenticationController {
     @PostMapping("reset_password")
     public ResponseEntity<?> resetPassword(
             @RequestParam("reset_password_token") String token,
-            @RequestBody @Valid ResetPasswordRequest request
+            @RequestBody @Valid AuthResetPasswordRequest request
     ) {
         return new ResponseEntity<>(
                 service.resetPassword(token, request),

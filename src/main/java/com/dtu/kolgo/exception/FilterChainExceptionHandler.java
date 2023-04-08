@@ -40,7 +40,7 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
         } catch (Exception e) {
             log.error("Spring Security Filter Chain Exception", e);
             mapErrorToResponse(
-                    new WebResponse(HttpStatus.UNAUTHORIZED),
+                    new WebResponse(HttpStatus.UNAUTHORIZED.getReasonPhrase()),
                     response
             );
         }

@@ -1,10 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.MailDetails;
-import com.dtu.kolgo.dto.request.ForgotPasswordRequest;
+import com.dtu.kolgo.dto.request.AuthForgotPasswordRequest;
 import com.dtu.kolgo.dto.request.AuthLoginRequest;
-import com.dtu.kolgo.dto.request.RegisterRequest;
-import com.dtu.kolgo.dto.request.ResetPasswordRequest;
+import com.dtu.kolgo.dto.request.AuthRegisterRequest;
+import com.dtu.kolgo.dto.request.AuthResetPasswordRequest;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
@@ -19,8 +19,8 @@ import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.constant.GrantType;
 import com.dtu.kolgo.util.constant.Roles;
-import com.dtu.kolgo.util.env.Jwt;
-import com.dtu.kolgo.util.env.Server;
+import com.dtu.kolgo.util.env.JwtEnv;
+import com.dtu.kolgo.util.env.ServerEnv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;
@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenService tokenService;
 
     @Override
-    public WebResponse register(RegisterRequest request) {
+    public WebResponse register(AuthRegisterRequest request) {
         if (userRepo.existsByEmail(request.getEmail())) {
             throw new ExistsException("Email already in use");
         }
@@ -59,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 passwordEncoder.encode(request.getPassword())
         );
         String url = String.format("http://%s:3000/verify_account?biz=%b&verify_account_token=%s",
-                Server.HOST, request.isBiz(), verifyAccountToken);
+                ServerEnv.HOST, request.isBiz(), verifyAccountToken);
         String subject = "Verify your registration";
         String body = """
                 Dear [[name]],<br><br>
@@ -87,7 +86,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         User user = userRepo.save(User.builder()
-                .username(UUID.randomUUID().toString())
                 .firstName(jwtProvider.extractFirstName(token))
                 .lastName(jwtProvider.extractLastName(token))
                 .email(email)
@@ -124,7 +122,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         tokenService.save(Token.builder()
                 .value(newRefreshToken)
-                .expiresIn(LocalDateTime.now().plusDays(Jwt.DB_TOKEN_EXPIRATION))
+                .expiresIn(LocalDateTime.now().plusDays(JwtEnv.DAY_EXPIRATION))
                 .user(user)
                 .build());
 
@@ -173,7 +171,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // save new refresh token
         tokenService.save(Token.builder()
                 .value(newRefreshToken)
-                .expiresIn(LocalDateTime.now().plusDays(Jwt.DB_TOKEN_EXPIRATION))
+                .expiresIn(LocalDateTime.now().plusDays(JwtEnv.DAY_EXPIRATION))
                 .user(user)
                 .build());
 
@@ -181,12 +179,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
-    public WebResponse forgotPassword(ForgotPasswordRequest request) {
+    public WebResponse forgotPassword(AuthForgotPasswordRequest request) {
         User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
         String url = String.format("http://%s:3000/update_password?reset_password_token=%s",
-                Server.HOST, resetPasswordToken);
+                ServerEnv.HOST, resetPasswordToken);
         String subject = "Reset password";
         String body = """
                 Dear [[name]],<br><br>
@@ -204,7 +202,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public WebResponse resetPassword(String resetPasswordToken, ResetPasswordRequest request) {
+    public WebResponse resetPassword(String resetPasswordToken, AuthResetPasswordRequest request) {
         // Validate token
         jwtProvider.validate(resetPasswordToken);
         jwtProvider.validateGrantType(resetPasswordToken, GrantType.RESET_PASSWORD_TOKEN);
@@ -222,7 +220,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userService.save(user);
 
-        return new WebResponse("Update password successfully!!");
+        return new WebResponse("Update password successfully !!");
     }
 
 }
