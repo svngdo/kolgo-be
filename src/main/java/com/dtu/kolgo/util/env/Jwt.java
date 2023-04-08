@@ -7,40 +7,40 @@ import org.springframework.stereotype.Component;
 public class Jwt {
 
     public static String SECRET;
-    public static long ACCESS_TOKEN_EXPIRATION;
-    public static long REFRESH_TOKEN_EXPIRATION;
-    public static long DB_TOKEN_EXPIRATION;
-    public static long RESET_PASSWORD_TOKEN_EXPIRATION;
-    public static long VERIFY_ACCOUNT_TOKEN_EXPIRATION;
+    public static long ACCESS_EXPIRATION;
+    public static long REFRESH_EXPIRATION;
+    public static long DAY_EXPIRATION;
+    public static long RESET_PASSWORD_EXPIRATION;
+    public static long VERIFY_ACCOUNT_EXPIRATION;
 
     @Value("${JWT_SECRET}")
     private void setSecret(String secret) {
         SECRET = secret;
     }
 
-    @Value("${ACCESS_TOKEN_EXPIRATION}")
-    private void setAccessTokenExpiration(long expiration) {
-        ACCESS_TOKEN_EXPIRATION = expiration;
+    @Value("${TOKEN_ACCESS_EXPIRATION}")
+    private void setAccessExpiration(long expiration) {
+        ACCESS_EXPIRATION = expiration;
     }
 
-    @Value("${REFRESH_TOKEN_EXPIRATION}")
-    private void setRefreshTokenExpiration(long expiration) {
-        REFRESH_TOKEN_EXPIRATION = expiration;
+    @Value("${TOKEN_REFRESH_EXPIRATION}")
+    private void setRefreshExpiration(long expiration) {
+        REFRESH_EXPIRATION = expiration;
     }
 
-    @Value("${DB_TOKEN_EXPIRATION}")
-    private void setDbTokenExpiration(long expiration) {
-        DB_TOKEN_EXPIRATION = expiration;
+    @Value("${TOKEN_DAY_EXPIRATION}")
+    private void setDayExpiration(long expiration) {
+        DAY_EXPIRATION = expiration;
     }
 
-    @Value("${RESET_PASSWORD_TOKEN_EXPIRATION}")
-    private void setResetPasswordTokenExpiration(long expiration) {
-        RESET_PASSWORD_TOKEN_EXPIRATION = expiration;
+    @Value("${TOKEN_RESET_PASSWORD_EXPIRATION}")
+    private void setResetPasswordExpiration(long expiration) {
+        RESET_PASSWORD_EXPIRATION = expiration;
     }
 
-    @Value("${VERIFY_ACCOUNT_TOKEN_EXPIRATION}")
-    private void setVerifyAccountTokenExpiration(long expiration) {
-        VERIFY_ACCOUNT_TOKEN_EXPIRATION = expiration;
+    @Value("${TOKEN_VERIFY_ACCOUNT_EXPIRATION}")
+    private void setVerifyAccountExpiration(long expiration) {
+        VERIFY_ACCOUNT_EXPIRATION = expiration;
     }
 
 }
