@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.request.UpdateKolRequest;
 import com.dtu.kolgo.service.KolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class KolController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int kolId,
-            @RequestBody KolUpdateRequest request
+            @RequestBody UpdateKolRequest request
     ) {
         return new ResponseEntity<>(
                 service.update(kolId, request),

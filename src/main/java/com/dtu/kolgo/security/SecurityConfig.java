@@ -23,9 +23,10 @@ public class SecurityConfig {
 
     private static final String[] GET_WHITELIST = {
             "/demo",
-            "/kols",
-            "/cities",
-            "/genders",
+            "/kols/**",
+            "/enterprises/**",
+            "/cities/**",
+            "/genders/**",
     };
     private static final String[] POST_WHITELIST = {
             "/auth/**"
@@ -62,8 +63,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
-                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(
-                        Roles.ENTERPRISE.name(), Roles.KOL.name())
+                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(Roles.ENTERPRISE.name(), Roles.KOL.name())
+
                 .requestMatchers("/**").hasAuthority(
                         Roles.ADMIN.name())
                 // Disallow everything else..

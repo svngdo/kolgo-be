@@ -1,6 +1,6 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.EnterpriseUpdateRequest;
+import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
 import com.dtu.kolgo.dto.response.EnterpriseResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.NotFoundException;
@@ -75,12 +75,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public WebResponse update(int entId, EnterpriseUpdateRequest request) {
+    public WebResponse update(int entId, UpdateEnterpriseRequest request) {
         Enterprise ent = getById(entId);
 
         ent.getUser().setFirstName(request.getFirstName());
         ent.getUser().setLastName(request.getLastName());
-        ent.getUser().setAvatar(request.getAvatar());
         ent.setName(request.getName());
         ent.setPhoneNumber(request.getPhoneNumber());
         ent.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
@@ -88,7 +87,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         ent.getAddress().setStreetName(request.getStreetName());
         ent.getAddress().setWard(request.getWard());
         ent.getAddress().setDistrict(request.getDistrict());
-        ent.getAddress().setCity(cityService.getByAbbreviation(request.getCity()));
+        ent.getAddress().setCity(cityService.getById(request.getCityId()));
 
         repo.save(ent);
 

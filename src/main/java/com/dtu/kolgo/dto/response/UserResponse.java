@@ -17,20 +17,18 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "token",
-        "id",
+        "avatar",
         "firstName",
         "lastName",
-        "avatar",
         "email",
         "roles"
 })
 public class UserResponse {
 
     private TokenResponse token;
-    private int id;
+    private String avatar;
     private String firstName;
     private String lastName;
-    private String avatar;
     private String email;
     private List<Role> roles;
 

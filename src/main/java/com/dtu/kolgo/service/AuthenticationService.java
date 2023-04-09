@@ -1,27 +1,27 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.AuthForgotPasswordRequest;
-import com.dtu.kolgo.dto.request.AuthLoginRequest;
-import com.dtu.kolgo.dto.request.AuthRegisterRequest;
-import com.dtu.kolgo.dto.request.AuthResetPasswordRequest;
+import com.dtu.kolgo.dto.request.EmailRequest;
+import com.dtu.kolgo.dto.request.LoginRequest;
+import com.dtu.kolgo.dto.request.RegisterRequest;
+import com.dtu.kolgo.dto.request.ResetPasswordRequest;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 
 public interface AuthenticationService {
 
-    WebResponse register(AuthRegisterRequest request);
+    WebResponse register(RegisterRequest request);
 
     WebResponse verify(String token, boolean isBiz);
 
-    UserResponse login(AuthLoginRequest request);
+    UserResponse login(LoginRequest request);
 
     void authenticate(int id, String password);
 
     TokenResponse refreshToken(String refreshToken);
 
-    WebResponse forgotPassword(AuthForgotPasswordRequest request);
+    WebResponse forgotPassword(EmailRequest request);
 
-    WebResponse resetPassword(String resetPasswordToken, AuthResetPasswordRequest request);
+    WebResponse resetPassword(String resetPasswordToken, ResetPasswordRequest request);
 
 }

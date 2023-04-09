@@ -14,6 +14,8 @@ import java.util.List;
 @Table(name = "kols")
 public class Kol extends BaseInt {
 
+    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    private List<Image> images;
     @OneToOne
     @JoinColumn(name = "gender_id")
     private Gender gender;

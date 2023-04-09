@@ -1,7 +1,6 @@
 package com.dtu.kolgo.dto.response;
 
 import com.dtu.kolgo.model.Feedback;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "id",
+        "kolId",
         "firstName",
         "lastName",
         "avatar",
@@ -33,11 +32,12 @@ import java.util.List;
 })
 public class KolResponse {
 
-    private int id;
+    private int kolId;
+    private String avatar;
     private String firstName;
     private String lastName;
-    private String avatar;
     private String email;
+    private List<String> images;
     private String gender;
     private String phoneNumber;
     private String city;

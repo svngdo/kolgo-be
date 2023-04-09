@@ -1,6 +1,6 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.EnterpriseUpdateRequest;
+import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
 import com.dtu.kolgo.dto.response.EnterpriseResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.model.Enterprise;
@@ -20,7 +20,7 @@ public interface EnterpriseService {
 
     EnterpriseResponse getResponseById(int entId);
 
-    WebResponse update(int entId, EnterpriseUpdateRequest request);
+    WebResponse update(int entId, UpdateEnterpriseRequest request);
 
     WebResponse delete(int entId);
 

@@ -8,6 +8,6 @@ public interface CityService {
 
     List<City> getAll();
 
-    City getByAbbreviation(String abbreviation);
+    City getById(short id);
 
 }

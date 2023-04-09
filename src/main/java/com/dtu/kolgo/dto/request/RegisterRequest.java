@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class AuthRegisterRequest {
+public class RegisterRequest {
 
     @NotNull
     @NotBlank

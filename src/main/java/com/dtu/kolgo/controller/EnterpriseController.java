@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.EnterpriseUpdateRequest;
+import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
 import com.dtu.kolgo.service.EnterpriseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class EnterpriseController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int entId,
-            @RequestBody EnterpriseUpdateRequest request
+            @RequestBody UpdateEnterpriseRequest request
     ) {
         return new ResponseEntity<>(
                 service.update(entId, request),

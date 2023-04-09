@@ -1,10 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.MailDetails;
-import com.dtu.kolgo.dto.request.AuthForgotPasswordRequest;
-import com.dtu.kolgo.dto.request.AuthLoginRequest;
-import com.dtu.kolgo.dto.request.AuthRegisterRequest;
-import com.dtu.kolgo.dto.request.AuthResetPasswordRequest;
+import com.dtu.kolgo.dto.request.EmailRequest;
+import com.dtu.kolgo.dto.request.LoginRequest;
+import com.dtu.kolgo.dto.request.RegisterRequest;
+import com.dtu.kolgo.dto.request.ResetPasswordRequest;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
@@ -17,7 +17,7 @@ import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
-import com.dtu.kolgo.util.constant.GrantType;
+import com.dtu.kolgo.util.constant.GrantTypes;
 import com.dtu.kolgo.util.constant.Roles;
 import com.dtu.kolgo.util.env.JwtEnv;
 import com.dtu.kolgo.util.env.ServerEnv;
@@ -46,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenService tokenService;
 
     @Override
-    public WebResponse register(AuthRegisterRequest request) {
+    public WebResponse register(RegisterRequest request) {
         if (userRepo.existsByEmail(request.getEmail())) {
             throw new ExistsException("Email already in use");
         }
@@ -78,7 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public WebResponse verify(String token, boolean isBiz) {
         jwtProvider.validate(token);
-        jwtProvider.validateGrantType(token, GrantType.VERIFY_ACCOUNT_TOKEN);
+        jwtProvider.validateGrantType(token, GrantTypes.VERIFY_ACCOUNT_TOKEN);
 
         String email = jwtProvider.extractEmail(token);
         if (userRepo.existsByEmail(email)) {
@@ -107,7 +107,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public UserResponse login(AuthLoginRequest request) {
+    public UserResponse login(LoginRequest request) {
         User user = userService.getByEmail(request.getEmail());
 
         authenticate(user.getId(), request.getPassword());
@@ -128,7 +128,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return UserResponse.builder()
                 .token(tokenResponse)
-                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -157,7 +156,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public TokenResponse refreshToken(String refreshToken) {
         // validate refresh token
         jwtProvider.validate(refreshToken);
-        jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
+        jwtProvider.validateGrantType(refreshToken, GrantTypes.REFRESH_TOKEN);
 
         // get user from token
         User user = userService.getById(jwtProvider.extractUserId(refreshToken));
@@ -179,7 +178,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
-    public WebResponse forgotPassword(AuthForgotPasswordRequest request) {
+    public WebResponse forgotPassword(EmailRequest request) {
         User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
@@ -202,10 +201,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public WebResponse resetPassword(String resetPasswordToken, AuthResetPasswordRequest request) {
+    public WebResponse resetPassword(String resetPasswordToken, ResetPasswordRequest request) {
         // Validate token
         jwtProvider.validate(resetPasswordToken);
-        jwtProvider.validateGrantType(resetPasswordToken, GrantType.RESET_PASSWORD_TOKEN);
+        jwtProvider.validateGrantType(resetPasswordToken, GrantTypes.RESET_PASSWORD_TOKEN);
 
         // Validate password
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {

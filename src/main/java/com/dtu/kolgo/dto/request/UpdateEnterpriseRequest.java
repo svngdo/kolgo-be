@@ -1,11 +1,12 @@
 package com.dtu.kolgo.dto.request;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class EnterpriseUpdateRequest {
+public class UpdateEnterpriseRequest {
 
-    private String avatar;
+    private MultipartFile avatar;
     private String firstName;
     private String lastName;
     private String email;
@@ -16,6 +17,6 @@ public class EnterpriseUpdateRequest {
     private String streetName;
     private String ward;
     private String district;
-    private String city;
+    private short cityId;
 
 }
