@@ -23,6 +23,7 @@ public class SecurityConfig {
 
     private static final String[] GET_WHITELIST = {
             "/demo",
+            "/auth/**",
             "/kols/**",
             "/enterprises/**",
             "/cities/**",
