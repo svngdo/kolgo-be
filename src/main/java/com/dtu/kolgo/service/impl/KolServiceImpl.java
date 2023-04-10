@@ -1,6 +1,8 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.UpdateKolRequest;
+import com.dtu.kolgo.dto.response.FeedbackResponse;
+import com.dtu.kolgo.dto.response.ImageResponse;
 import com.dtu.kolgo.dto.response.KolResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.NotFoundException;
@@ -28,6 +30,7 @@ public class KolServiceImpl implements KolService {
     private final CityService cityService;
     private final GenderService genderService;
     private final ImageService imageService;
+    private final KolFieldService kolFieldService;
     private final FileUtils fileUtils;
 
     @Override
@@ -38,14 +41,16 @@ public class KolServiceImpl implements KolService {
     @Override
     public List<KolResponse> getAll() {
         List<Kol> kols = repo.findAll();
+
         return kols.stream()
                 .map(kol -> KolResponse.builder()
-                        .kolId(kol.getId())
+                        .userId(kol.getUser().getId())
                         .firstName(kol.getUser().getFirstName())
                         .lastName(kol.getUser().getLastName())
-                        .avatar(kol.getUser().getAvatar())
-                        .city(kol.getCity() == null ? null : kol.getCity().getName())
-                        .speciality(kol.getSpeciality())
+                        .avatar(kol.getUser().getAvatar() == null ? null : kol.getUser().getAvatar())
+                        .kolId(kol.getId())
+                        .cityId(kol.getCity() == null ? null : kol.getCity().getId())
+                        .kolFieldId(kol.getField() == null ? null : kol.getField().getId())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -63,37 +68,34 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public KolResponse getResponseById(int kolId) {
+    public KolResponse getProfileById(int kolId) {
         Kol kol = getById(kolId);
-        String firstName = kol.getUser().getFirstName();
-        String lastName = kol.getUser().getLastName();
-        String email = kol.getUser().getEmail();
-        String avatar = kol.getUser().getAvatar();
-        String phoneNumber = kol.getPhoneNumber();
-        String gender = kol.getGender() == null ? null : kol.getGender().getName();
-        String city = kol.getCity() == null ? null : kol.getCity().getName();
-        String speciality = kol.getSpeciality();
-        String facebookUrl = kol.getFacebookUrl();
-        String instagramUrl = kol.getInstagramUrl();
-        String tiktokUrl = kol.getTiktokUrl();
-        String youtubeUrl = kol.getYoutubeUrl();
-        List<String> images = kol.getImages().stream().map(Image::getName).collect(Collectors.toList());
-        List<Feedback> feedbacks = kol.getFeedbacks();
+        List<ImageResponse> images = kol.getImages().stream()
+                .map(img -> new ImageResponse(img.getName()))
+                .collect(Collectors.toList());
+        List<FeedbackResponse> feedbacks = kol.getFeedbacks().stream()
+                .map(feedback -> new FeedbackResponse(
+                        feedback.getRating(),
+                        feedback.getComment(),
+                        feedback.getEnterprise().getName())
+                )
+                .collect(Collectors.toList());
 
         return KolResponse.builder()
+                .userId(kol.getUser().getId())
+                .firstName(kol.getUser().getFirstName())
+                .lastName(kol.getUser().getLastName())
+                .email(kol.getUser().getEmail())
+                .avatar(kol.getUser().getAvatar())
+                .phoneNumber(kol.getUser().getPhoneNumber() == null ? null : kol.getUser().getPhoneNumber())
                 .kolId(kolId)
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
-                .avatar(avatar)
-                .phoneNumber(phoneNumber)
-                .gender(gender)
-                .city(city)
-                .speciality(speciality)
-                .facebookUrl(facebookUrl)
-                .instagramUrl(instagramUrl)
-                .tiktokUrl(tiktokUrl)
-                .youtubeUrl(youtubeUrl)
+                .genderId(kol.getGender() == null ? null : kol.getGender().getId())
+                .cityId(kol.getCity() == null ? null : kol.getCity().getId())
+                .kolFieldId(kol.getField() == null ? null : kol.getField().getId())
+                .facebookUrl(kol.getFacebookUrl())
+                .instagramUrl(kol.getInstagramUrl())
+                .tiktokUrl(kol.getTiktokUrl())
+                .youtubeUrl(kol.getYoutubeUrl())
                 .images(images)
                 .feedbacks(feedbacks)
                 .build();
@@ -104,15 +106,16 @@ public class KolServiceImpl implements KolService {
         Kol kol = getById(kolId);
         City city = cityService.getById(request.getCityId());
         Gender gender = genderService.getById(request.getGenderId());
+        KolField field = kolFieldService.getById(request.getKolFieldId());
+
         userService.updateAvatar(kol.getUser(), request.getAvatar());
         updateImages(kol, request.getImages());
-
         kol.getUser().setFirstName(request.getFirstName());
         kol.getUser().setLastName(request.getLastName());
-        kol.setPhoneNumber(request.getPhoneNumber());
+        kol.getUser().setPhoneNumber(request.getPhoneNumber());
         kol.setCity(city);
         kol.setGender(gender);
-        kol.setSpeciality(request.getSpeciality());
+        kol.setField(field);
         kol.setFacebookUrl(request.getFacebookUrl());
         kol.setInstagramUrl(request.getInstagramUrl());
         kol.setTiktokUrl(request.getTiktokUrl());

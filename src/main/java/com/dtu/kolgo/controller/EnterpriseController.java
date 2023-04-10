@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("enterprise")
+@RequestMapping("ents")
 @RequiredArgsConstructor
 public class EnterpriseController {
 
@@ -27,7 +27,7 @@ public class EnterpriseController {
             @PathVariable("id") int entId
     ) {
         return new ResponseEntity<>(
-                service.getResponseById(entId),
+                service.getProfileById(entId),
                 HttpStatus.OK
         );
     }

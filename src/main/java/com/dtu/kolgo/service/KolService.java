@@ -20,7 +20,7 @@ public interface KolService {
 
     Kol getByUser(User user);
 
-    KolResponse getResponseById(int kolId);
+    KolResponse getProfileById(int kolId);
 
     WebResponse update(int kolId, UpdateKolRequest request);
 

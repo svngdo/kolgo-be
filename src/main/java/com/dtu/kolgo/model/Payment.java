@@ -14,7 +14,7 @@ import lombok.*;
 public class Payment extends BaseInt {
 
     @Column(nullable = false)
-    private String amount;
+    private int amount;
     @Column(nullable = false, unique = true)
     private String reference;
     @ManyToOne(fetch = FetchType.EAGER)

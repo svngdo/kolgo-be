@@ -9,14 +9,15 @@ public class UpdateEnterpriseRequest {
     private MultipartFile avatar;
     private String firstName;
     private String lastName;
-    private String email;
     private String name;
+    private Short enterpriseFieldId;
+    private String email;
     private String phoneNumber;
     private String taxIdentificationNumber;
     private String buildingNumber;
     private String streetName;
     private String ward;
     private String district;
-    private short cityId;
+    private Short cityId;
 
 }

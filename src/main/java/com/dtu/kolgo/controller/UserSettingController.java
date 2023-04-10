@@ -44,7 +44,7 @@ public class UserSettingController {
         );
     }
 
-    @GetMapping("kol_profile")
+    @GetMapping("kol-profile")
     public ResponseEntity<?> getKolProfile(
             Principal principal
     ) {
@@ -54,7 +54,7 @@ public class UserSettingController {
         );
     }
 
-    @PutMapping("kol_profile")
+    @PutMapping("kol-profile")
     public ResponseEntity<?> updateKolProfile(
             Principal principal,
             @ModelAttribute UpdateKolRequest request
@@ -65,7 +65,7 @@ public class UserSettingController {
         );
     }
 
-    @GetMapping("enterprise_profile")
+    @GetMapping("ent-profile")
     public ResponseEntity<?> getEnterpriseProfile(
             Principal principal
     ) {
@@ -75,7 +75,7 @@ public class UserSettingController {
         );
     }
 
-    @PutMapping("enterprise_profile")
+    @PutMapping("ent-profile")
     public ResponseEntity<?> updateEnterpriseProfile(
             Principal principal,
             @RequestParam("image") MultipartFile file,
@@ -83,6 +83,26 @@ public class UserSettingController {
     ) {
         return new ResponseEntity<>(
                 service.updateEnterpriseProfile(principal, file, request),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("booking-history")
+    public ResponseEntity<?> getBookingHistory(
+            Principal principal
+    ) {
+        return new ResponseEntity<>(
+                service.getBookingHistory(principal),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("payment-history")
+    public ResponseEntity<?> getPaymentHistory(
+            Principal principal
+    ) {
+        return new ResponseEntity<>(
+                service.getPaymentHistory(principal),
                 HttpStatus.OK
         );
     }

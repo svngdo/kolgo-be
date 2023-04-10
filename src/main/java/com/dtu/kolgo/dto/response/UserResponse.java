@@ -1,6 +1,5 @@
 package com.dtu.kolgo.dto.response;
 
-import com.dtu.kolgo.model.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
@@ -16,20 +15,24 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "token",
+        "userId",
         "avatar",
         "firstName",
         "lastName",
         "email",
-        "roles"
+        "phoneNumber",
+        "roles",
+        "token"
 })
 public class UserResponse {
 
-    private TokenResponse token;
+    private int userId;
     private String avatar;
     private String firstName;
     private String lastName;
     private String email;
-    private List<Role> roles;
+    private String phoneNumber;
+    private List<String> roles;
+    private TokenResponse token;
 
 }

@@ -18,7 +18,7 @@ public interface EnterpriseService {
 
     Enterprise getByUser(User user);
 
-    EnterpriseResponse getResponseById(int entId);
+    EnterpriseResponse getProfileById(int entId);
 
     WebResponse update(int entId, UpdateEnterpriseRequest request);
 

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -127,11 +128,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
 
         return UserResponse.builder()
-                .token(tokenResponse)
+                .userId(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .roles(user.getRoles())
+                .roles(user.getRoles().stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toList()))
+                .token(tokenResponse)
                 .build();
     }
 

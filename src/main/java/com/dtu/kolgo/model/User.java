@@ -29,12 +29,14 @@ public class User implements UserDetails {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
-    @Column
-    private String avatar;
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column
+    private String phoneNumber;
+    @Column
+    private String avatar;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

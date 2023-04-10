@@ -4,15 +4,14 @@ import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
 import com.dtu.kolgo.dto.request.UpdateKolRequest;
 import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
-import com.dtu.kolgo.dto.response.EnterpriseResponse;
-import com.dtu.kolgo.dto.response.KolResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.*;
 import com.dtu.kolgo.exception.InvalidException;
-import com.dtu.kolgo.model.Kol;
-import com.dtu.kolgo.model.User;
+import com.dtu.kolgo.model.*;
+import com.dtu.kolgo.service.EnterpriseService;
 import com.dtu.kolgo.service.KolService;
 import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.service.UserSettingService;
+import com.dtu.kolgo.util.constant.Roles;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final KolService kolService;
+    private final EnterpriseService entService;
 
     @Override
     public User getUserByPrincipal(Principal principal) {
@@ -63,7 +66,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     public KolResponse getKolProfile(Principal principal) {
         User user = getUserByPrincipal(principal);
         Kol kol = kolService.getByUser(user);
-        return kolService.getResponseById(kol.getId());
+        return kolService.getProfileById(kol.getId());
     }
 
     @Override
@@ -75,12 +78,58 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     @Override
     public EnterpriseResponse getEnterpriseProfile(Principal principal) {
-        return null;
+        User user = getUserByPrincipal(principal);
+        Enterprise ent = entService.getByUser(user);
+        return entService.getProfileById(ent.getId());
     }
 
     @Override
     public WebResponse updateEnterpriseProfile(Principal principal, MultipartFile file, UpdateEnterpriseRequest request) {
-        return null;
+        User user = getUserByPrincipal(principal);
+        Enterprise ent = entService.getByUser(user);
+        return entService.update(ent.getId(), request);
+    }
+
+    @Override
+    public List<BookingResponse> getBookingHistory(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        List<Role> userRoles = user.getRoles();
+        List<Booking> bookings = new ArrayList<>();
+
+        if (userRoles.get(0).getName().equals(Roles.KOL.name())) {
+            bookings = kolService.getByUser(user).getBookings();
+        } else if (userRoles.get(0).getName().equals(Roles.ENTERPRISE.name())) {
+            bookings = entService.getByUser(user).getBookings();
+        }
+        return bookings.stream().map(booking -> BookingResponse.builder()
+                        .time(booking.getTime())
+                        .cost(booking.getCost())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PaymentResponse> getPaymentHistory(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        List<Role> userRoles = user.getRoles();
+        List<Payment> payments = new ArrayList<>();
+
+        if (userRoles.get(0).getName().equals(Roles.KOL.name())) {
+            payments = kolService.getByUser(user).getPayments();
+        } else if (userRoles.get(0).getName().equals(Roles.ENTERPRISE.name())) {
+            payments = entService.getByUser(user).getPayments();
+        }
+
+        return payments.stream()
+                .map(payment -> PaymentResponse.builder()
+                        .paymentId(payment.getId())
+                        .amount(payment.getAmount())
+                        .senderName(payment.getEnterprise().getName())
+                        .senderEmail(payment.getEnterprise().getUser().getEmail())
+                        .receiverName(payment.getKol().getUser().getFirstName() + " " + payment.getKol().getUser().getLastName())
+                        .receiverEmail(payment.getKol().getUser().getEmail())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

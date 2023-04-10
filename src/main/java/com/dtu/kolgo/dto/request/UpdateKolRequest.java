@@ -12,10 +12,10 @@ public class UpdateKolRequest {
     private Set<MultipartFile> images;
     private String firstName;
     private String lastName;
-    private short genderId;
+    private Short genderId;
     private String phoneNumber;
-    private short cityId;
-    private String speciality;
+    private Short cityId;
+    private Short kolFieldId;
     private String facebookUrl;
     private String instagramUrl;
     private String tiktokUrl;

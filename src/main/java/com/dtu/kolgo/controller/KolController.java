@@ -27,7 +27,7 @@ public class KolController {
             @PathVariable("id") int kolId
     ) {
         return new ResponseEntity<>(
-                service.getResponseById(kolId),
+                service.getProfileById(kolId),
                 HttpStatus.OK
         );
     }

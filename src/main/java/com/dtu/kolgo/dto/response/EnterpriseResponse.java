@@ -1,6 +1,10 @@
 package com.dtu.kolgo.dto.response;
 
-import com.dtu.kolgo.model.*;
+import com.dtu.kolgo.model.Booking;
+import com.dtu.kolgo.model.Campaign;
+import com.dtu.kolgo.model.Feedback;
+import com.dtu.kolgo.model.Payment;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,33 +17,45 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-//@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "id",
+        "enterpriseId",
         "firstName",
         "lastName",
-        "avatar",
         "email",
-        "name",
         "phoneNumber",
+        "avatar",
+        "name",
+        "enterpriseFieldId",
         "taxIdentificationNumber",
-        "address",
+        "buildingNumber",
+        "streetName",
+        "ward",
+        "district",
+        "cityId",
         "bookings",
         "payments",
         "campaigns",
         "feedbacks",
+        "userId"
 })
 public class EnterpriseResponse {
 
-    private int id;
+    private Integer userId;
+    private Integer enterpriseId;
     private String firstName;
     private String lastName;
     private String avatar;
     private String email;
-    private String name;
     private String phoneNumber;
+    private String name;
+    private Short enterpriseFieldId;
     private String taxIdentificationNumber;
-    private Address address;
+    private String buildingNumber;
+    private String streetName;
+    private String ward;
+    private String district;
+    private Short cityId;
     private List<Booking> bookings;
     private List<Payment> payments;
     private List<Campaign> campaigns;

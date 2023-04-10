@@ -25,9 +25,10 @@ public class SecurityConfig {
             "/demo",
             "/auth/**",
             "/kols/**",
-            "/enterprises/**",
+            "/ents/**",
             "/cities/**",
             "/genders/**",
+            "/fields/**",
             "/images/**"
     };
     private static final String[] POST_WHITELIST = {

@@ -5,6 +5,7 @@ import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.NotFoundException;
+import com.dtu.kolgo.model.Role;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.UserService;
@@ -36,13 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> getAll() {
         return repo.findAll().stream()
-                .map(u -> UserResponse.builder()
-                        .avatar(u.getAvatar())
-                        .firstName(u.getFirstName())
-                        .lastName(u.getLastName())
-                        .email(u.getEmail())
-                        .roles(u.getRoles())
-                        .build())
+                .map(user -> getResponseById(user.getId()))
                 .collect(Collectors.toList());
     }
 
@@ -63,11 +58,15 @@ public class UserServiceImpl implements UserService {
         User user = getById(userId);
 
         return UserResponse.builder()
+                .userId(userId)
                 .avatar(user.getAvatar())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .roles(user.getRoles())
+                .phoneNumber(user.getPhoneNumber())
+                .roles(user.getRoles().stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toList()))
                 .build();
     }
 
