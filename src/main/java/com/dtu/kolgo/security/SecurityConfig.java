@@ -21,12 +21,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] AUTH_WHITELIST = {
+    private static final String[] GET_WHITELIST = {
             "/demo",
             "/auth/**",
-            "/kols",
-            "/cities",
-            "/genders"
+            "/kols/**",
+            "/ents/**",
+            "/cities/**",
+            "/genders/**",
+            "/fields/**",
+            "/images/**"
+    };
+    private static final String[] POST_WHITELIST = {
+            "/auth/**"
+    };
+    private static final String[] AUTH_WHITELIST = {
+            "/settings/**"
     };
     private static final String[] OPEN_API_WHITELIST = {
             "/v3/api-docs/**",
@@ -54,9 +63,13 @@ public class SecurityConfig {
 
         // Entry points
         http.authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()
+                .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
+                .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
-                .requestMatchers("/**").hasAuthority(Roles.ADMIN.name())
+                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(Roles.ENTERPRISE.name(), Roles.KOL.name())
+
+                .requestMatchers("/**").hasAuthority(
+                        Roles.ADMIN.name())
                 // Disallow everything else..
                 .anyRequest().authenticated();
 

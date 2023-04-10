@@ -3,9 +3,9 @@ package com.dtu.kolgo.security;
 import com.dtu.kolgo.exception.CustomJwtException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.User;
-import com.dtu.kolgo.util.constant.GrantType;
-import com.dtu.kolgo.util.constant.JwtKey;
-import com.dtu.kolgo.util.env.Jwt;
+import com.dtu.kolgo.util.constant.GrantTypes;
+import com.dtu.kolgo.util.constant.JwtKeys;
+import com.dtu.kolgo.util.env.JwtEnv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 @Component
 public class JwtProvider {
 
-    public String resolveToken(HttpServletRequest request) {
+    public static String resolveToken(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer")) {
             return authHeader.substring(7);
@@ -34,12 +34,12 @@ public class JwtProvider {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Jwt.SECRET.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = JwtEnv.SECRET.getBytes(StandardCharsets.UTF_8);
         byte[] key64UrlBytes = Encoders.BASE64URL.encode(keyBytes).getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(key64UrlBytes);
     }
 
-    public String generateToken(String sub, long ttlMillis, GrantType grantType, Map<String, Object> extraClaims) {
+    public String generateToken(String sub, long ttlMillis, GrantTypes grantTypes, Map<String, Object> extraClaims) {
         long nowMillis = System.currentTimeMillis();
         Date iat = new Date(nowMillis);
         Date exp = new Date(iat.getTime() + ttlMillis);
@@ -47,38 +47,38 @@ public class JwtProvider {
                 .setSubject(sub)
                 .setExpiration(exp)
                 .setIssuedAt(iat)
-                .claim(JwtKey.GRANT_TYPE.toString(), grantType)
+                .claim(JwtKeys.GRANT_TYPE.toString(), grantTypes)
                 .addClaims(extraClaims)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    public String generateToken(String sub, long ttlMillis, GrantType grantType) {
-        return generateToken(sub, ttlMillis, grantType, new HashMap<>());
+    public String generateToken(String sub, long ttlMillis, GrantTypes grantTypes) {
+        return generateToken(sub, ttlMillis, grantTypes, new HashMap<>());
     }
 
     public String generateAccessToken(User user) {
         return generateToken(
                 String.valueOf(user.getId()),
-                Jwt.ACCESS_TOKEN_EXPIRATION,
-                GrantType.ACCESS_TOKEN
+                JwtEnv.ACCESS_EXPIRATION,
+                GrantTypes.ACCESS_TOKEN
         );
     }
 
     public String generateRefreshToken(User user) {
         return generateToken(
                 String.valueOf(user.getId()),
-                Jwt.REFRESH_TOKEN_EXPIRATION,
-                GrantType.REFRESH_TOKEN
+                JwtEnv.REFRESH_EXPIRATION,
+                GrantTypes.REFRESH_TOKEN
         );
     }
 
     public String generateResetPasswordToken(User user) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(JwtKey.PASSWORD.toString(), user.getPassword());
+        extraClaims.put(JwtKeys.PASSWORD.toString(), user.getPassword());
         return generateToken(
                 String.valueOf(user.getId()),
-                Jwt.RESET_PASSWORD_TOKEN_EXPIRATION,
-                GrantType.RESET_PASSWORD_TOKEN,
+                JwtEnv.RESET_PASSWORD_EXPIRATION,
+                GrantTypes.RESET_PASSWORD_TOKEN,
                 extraClaims
         );
     }
@@ -87,14 +87,14 @@ public class JwtProvider {
             String firstName, String lastName, String email, String password
     ) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(JwtKey.FIRST_NAME.toString(), firstName);
-        extraClaims.put(JwtKey.LAST_NAME.toString(), lastName);
-        extraClaims.put(JwtKey.EMAIL.toString(), email);
-        extraClaims.put(JwtKey.PASSWORD.toString(), password);
+        extraClaims.put(JwtKeys.FIRST_NAME.toString(), firstName);
+        extraClaims.put(JwtKeys.LAST_NAME.toString(), lastName);
+        extraClaims.put(JwtKeys.EMAIL.toString(), email);
+        extraClaims.put(JwtKeys.PASSWORD.toString(), password);
         return generateToken(
                 "0",
-                Jwt.VERIFY_ACCOUNT_TOKEN_EXPIRATION,
-                GrantType.VERIFY_ACCOUNT_TOKEN,
+                JwtEnv.VERIFY_ACCOUNT_EXPIRATION,
+                GrantTypes.VERIFY_ACCOUNT_TOKEN,
                 extraClaims
         );
     }
@@ -118,27 +118,27 @@ public class JwtProvider {
 
     public String extractEmail(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.EMAIL.toString(), String.class);
+        return claims.get(JwtKeys.EMAIL.toString(), String.class);
     }
 
     public String extractPassword(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.PASSWORD.toString(), String.class);
+        return claims.get(JwtKeys.PASSWORD.toString(), String.class);
     }
 
     public String extractFirstName(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.FIRST_NAME.toString(), String.class);
+        return claims.get(JwtKeys.FIRST_NAME.toString(), String.class);
     }
 
     public String extractLastName(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.LAST_NAME.toString(), String.class);
+        return claims.get(JwtKeys.LAST_NAME.toString(), String.class);
     }
 
     public String extractGrantType(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKey.GRANT_TYPE.toString(), String.class);
+        return claims.get(JwtKeys.GRANT_TYPE.toString(), String.class);
     }
 
     public boolean validate(String token) {
@@ -158,7 +158,7 @@ public class JwtProvider {
         }
     }
 
-    public boolean validateGrantType(String token, GrantType type) {
+    public boolean validateGrantType(String token, GrantTypes type) {
         String grantType = extractGrantType(token);
         if (grantType.equals(type.name())) {
             return true;

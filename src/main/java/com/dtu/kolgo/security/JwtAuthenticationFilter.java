@@ -1,6 +1,6 @@
 package com.dtu.kolgo.security;
 
-import com.dtu.kolgo.util.constant.GrantType;
+import com.dtu.kolgo.util.constant.GrantTypes;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtProvider.resolveToken(request);
         if (token != null
                 && jwtProvider.validate(token)
-                && jwtProvider.validateGrantType(token, GrantType.ACCESS_TOKEN)
+                && jwtProvider.validateGrantType(token, GrantTypes.ACCESS_TOKEN)
         ) {
             int userId = jwtProvider.extractUserId(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(userId));

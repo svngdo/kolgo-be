@@ -13,7 +13,7 @@ import lombok.*;
 public class Feedback extends BaseInt {
 
     @Column
-    private int rating;
+    private short rating;
     @Column
     private String comment;
     @ManyToOne

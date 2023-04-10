@@ -1,9 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.LoginRequest;
-import com.dtu.kolgo.dto.request.RegisterRequest;
-import com.dtu.kolgo.dto.request.ResetPasswordRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
+import com.dtu.kolgo.dto.request.*;
 import com.dtu.kolgo.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,22 +46,22 @@ public class AuthenticationController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("reset_password")
-    public ResponseEntity<?> resetPassword(
-            @RequestBody @Valid ResetPasswordRequest request
+    @PostMapping("forgot_password")
+    public ResponseEntity<?> forgotPassword(
+            @RequestBody @Valid EmailRequest request
     ) {
         return new ResponseEntity<>(
-                service.resetPassword(request),
+                service.forgotPassword(request),
                 HttpStatus.OK);
     }
 
-    @PostMapping("update_password")
-    public ResponseEntity<?> updatePassword(
+    @PostMapping("reset_password")
+    public ResponseEntity<?> resetPassword(
             @RequestParam("reset_password_token") String token,
-            @RequestBody @Valid UpdatePasswordRequest request
+            @RequestBody @Valid ResetPasswordRequest request
     ) {
         return new ResponseEntity<>(
-                service.updatePassword(token, request),
+                service.resetPassword(token, request),
                 HttpStatus.OK
         );
     }

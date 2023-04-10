@@ -21,9 +21,12 @@ public class GenderServiceImpl implements GenderService {
     }
 
     @Override
-    public Gender get(String name) {
-        return repo.findByName(name)
-                .orElseThrow(() -> new NotFoundException("Not found Gender name: " + name));
+    public Gender getById(short id) {
+        if (id <= 0) {
+            return null;
+        }
+        return repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Gender ID not found: " + id));
     }
 
 }

@@ -2,7 +2,7 @@ package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.MailDetails;
 import com.dtu.kolgo.service.MailService;
-import com.dtu.kolgo.util.env.Mail;
+import com.dtu.kolgo.util.env.MailEnv;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +29,8 @@ public class MailServiceImpl implements MailService {
 
         // Try block to check for exceptions
         try {
-
             mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-            mimeMessageHelper.setFrom(Mail.SENDER, Mail.DISPLAY_NAME);
+            mimeMessageHelper.setFrom(MailEnv.SENDER, MailEnv.DISPLAY_NAME);
             mimeMessageHelper.setTo(details.getRecipient());
             mimeMessageHelper.setSubject(details.getSubject());
             mimeMessageHelper.setText(details.getBody(), isHtml);
@@ -51,17 +50,15 @@ public class MailServiceImpl implements MailService {
         MimeMessageHelper mimeMessageHelper;
 
         try {
-
             // Setting multipart as true for attachments to be sent
             mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
-            mimeMessageHelper.setFrom(Mail.SENDER, Mail.DISPLAY_NAME);
+            mimeMessageHelper.setFrom(MailEnv.SENDER, MailEnv.DISPLAY_NAME);
             mimeMessageHelper.setTo(details.getRecipient());
             mimeMessageHelper.setSubject(details.getSubject());
             mimeMessageHelper.setText(details.getBody());
 
             // Adding the attachment
             FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-
             mimeMessageHelper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
 
             // Sending the mail
@@ -71,10 +68,9 @@ public class MailServiceImpl implements MailService {
 
         // Catch block to handle MessagingException
         catch (Exception e) {
-
             // Display message when exception occurred
             log.error("Mail Service Exception", e);
-            return "Error while sending mail!!!";
+            return "Error while sending mail !!";
         }
     }
 

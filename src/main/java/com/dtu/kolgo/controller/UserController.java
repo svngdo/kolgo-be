@@ -1,14 +1,11 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.ChangePasswordRequest;
-import com.dtu.kolgo.dto.request.UserUpdateRequest;
+import com.dtu.kolgo.dto.request.UpdateUserRequest;
 import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("users")
@@ -38,7 +35,7 @@ public class UserController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int userId,
-            @RequestBody UserUpdateRequest request
+            @RequestBody UpdateUserRequest request
     ) {
         return new ResponseEntity<>(
                 service.update(userId, request),
@@ -52,17 +49,6 @@ public class UserController {
     ) {
         return new ResponseEntity<>(
                 service.delete(userId),
-                HttpStatus.OK
-        );
-    }
-
-    @PostMapping("change_password")
-    public ResponseEntity<?> changePassword(
-            Principal principal,
-            @RequestBody ChangePasswordRequest request
-    ) {
-        return new ResponseEntity<>(
-                service.changePassword(principal, request),
                 HttpStatus.OK
         );
     }

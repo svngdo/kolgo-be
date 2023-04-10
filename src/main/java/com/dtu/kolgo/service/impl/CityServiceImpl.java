@@ -21,8 +21,11 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public City getByAbbreviation(String abbreviation) {
-        return repo.findByAbbreviation(abbreviation)
-                .orElseThrow(() -> new NotFoundException("Not found City with abbreviation: " + abbreviation));
+    public City getById(short id) {
+        if (id <= 0) {
+            return null;
+        }
+        return repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("City ID not found: " + id));
     }
 }

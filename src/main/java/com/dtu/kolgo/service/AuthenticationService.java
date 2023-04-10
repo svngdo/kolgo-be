@@ -1,9 +1,9 @@
 package com.dtu.kolgo.service;
 
+import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.LoginRequest;
 import com.dtu.kolgo.dto.request.RegisterRequest;
 import com.dtu.kolgo.dto.request.ResetPasswordRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.WebResponse;
@@ -20,8 +20,8 @@ public interface AuthenticationService {
 
     TokenResponse refreshToken(String refreshToken);
 
-    WebResponse resetPassword(ResetPasswordRequest request);
+    WebResponse forgotPassword(EmailRequest request);
 
-    WebResponse updatePassword(String resetPasswordToken, UpdatePasswordRequest request);
+    WebResponse resetPassword(String resetPasswordToken, ResetPasswordRequest request);
 
 }

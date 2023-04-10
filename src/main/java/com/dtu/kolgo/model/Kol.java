@@ -14,16 +14,17 @@ import java.util.List;
 @Table(name = "kols")
 public class Kol extends BaseInt {
 
+    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    private List<Image> images;
     @OneToOne
     @JoinColumn(name = "gender_id")
     private Gender gender;
-    @Column
-    private String phoneNumber;
     @OneToOne
     @JoinColumn(name = "city_id")
     private City city;
-    @Column
-    private String speciality;
+    @OneToOne
+    @JoinColumn(name = "kol_field_id")
+    private KolField field;
     @Column
     private String facebookUrl;
     @Column

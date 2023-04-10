@@ -16,8 +16,9 @@ public class Enterprise extends BaseInt {
 
     @Column
     private String name;
-    @Column
-    private String phoneNumber;
+    @OneToOne
+    @JoinColumn(name = "enterprise_field_id")
+    private EnterpriseField field;
     @Column
     private String taxIdentificationNumber;
     @OneToOne(cascade = CascadeType.ALL)

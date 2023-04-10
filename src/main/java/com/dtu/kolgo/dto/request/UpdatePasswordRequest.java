@@ -9,9 +9,9 @@ public class UpdatePasswordRequest {
 
     @NotNull
     @NotBlank
-    private String newPassword;
+    private String oldPassword;
     @NotNull
     @NotBlank
-    private String confirmPassword;
+    private String newPassword;
 
 }

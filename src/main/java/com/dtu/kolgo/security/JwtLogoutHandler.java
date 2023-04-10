@@ -1,10 +1,8 @@
 package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.dto.response.WebResponse;
-import com.dtu.kolgo.repository.TokenRepository;
 import com.dtu.kolgo.service.TokenService;
-import com.dtu.kolgo.service.UserService;
-import com.dtu.kolgo.util.constant.GrantType;
+import com.dtu.kolgo.util.constant.GrantTypes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,9 +19,7 @@ import org.springframework.stereotype.Component;
 public class JwtLogoutHandler implements LogoutHandler {
 
     private final JwtProvider jwtProvider;
-    private final TokenRepository tokenRepo;
     private final TokenService tokenService;
-    private final UserService userService;
 
     @SneakyThrows
     @Override
@@ -33,13 +29,13 @@ public class JwtLogoutHandler implements LogoutHandler {
             Authentication authentication
     ) {
         String accessToken = jwtProvider.resolveToken(request);
-        String refreshToken = request.getParameter(GrantType.REFRESH_TOKEN.toString());
+        String refreshToken = request.getParameter(GrantTypes.REFRESH_TOKEN.toString());
 
         // validate access token & refresh token
         jwtProvider.validate(accessToken);
-        jwtProvider.validateGrantType(accessToken, GrantType.ACCESS_TOKEN);
+        jwtProvider.validateGrantType(accessToken, GrantTypes.ACCESS_TOKEN);
         jwtProvider.validate(refreshToken);
-        jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
+        jwtProvider.validateGrantType(refreshToken, GrantTypes.REFRESH_TOKEN);
 
         tokenService.revoke(refreshToken);
 

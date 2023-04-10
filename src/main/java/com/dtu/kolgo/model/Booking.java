@@ -3,7 +3,7 @@ package com.dtu.kolgo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -16,7 +16,9 @@ import java.util.List;
 public class Booking extends BaseInt {
 
     @Column
-    private LocalDate time;
+    private LocalDateTime time;
+    @Column
+    private int cost;
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;

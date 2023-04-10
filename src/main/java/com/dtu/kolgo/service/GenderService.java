@@ -8,6 +8,6 @@ public interface GenderService {
 
     List<Gender> getAll();
 
-    Gender get(String name);
+    Gender getById(short id);
 
 }

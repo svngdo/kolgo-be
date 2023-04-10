@@ -3,6 +3,7 @@ package com.dtu.kolgo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -15,7 +16,13 @@ import java.util.List;
 public class Campaign extends BaseInt {
 
     @Column
-    private String objective;
+    private LocalDateTime time;
+    @Column
+    private String location;
+    @Column
+    private int cost;
+    @Column
+    private String description;
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;
