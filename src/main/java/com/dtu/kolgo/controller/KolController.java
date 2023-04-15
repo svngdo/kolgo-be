@@ -32,6 +32,16 @@ public class KolController {
         );
     }
 
+    @GetMapping("field/{fieldId}")
+    public ResponseEntity<?> getAllByField(
+            @PathVariable("fieldId") short fieldId
+    ) {
+        return new ResponseEntity<>(
+                service.getAllByFieldId(fieldId),
+                HttpStatus.OK
+        );
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int kolId,

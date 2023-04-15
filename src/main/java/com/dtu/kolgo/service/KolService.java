@@ -16,6 +16,10 @@ public interface KolService {
 
     List<KolResponse> getAll();
 
+    List<KolResponse> getAllByFieldId(short fieldId);
+
+    List<KolResponse> getResponseList(List<Kol> kols);
+
     Kol getById(int kolId);
 
     Kol getByUser(User user);

@@ -41,7 +41,18 @@ public class KolServiceImpl implements KolService {
     @Override
     public List<KolResponse> getAll() {
         List<Kol> kols = repo.findAll();
+        return getResponseList(kols);
+    }
 
+    @Override
+    public List<KolResponse> getAllByFieldId(short fieldId) {
+        KolField field = kolFieldService.getById(fieldId);
+        List<Kol> kols = repo.findAllByField(field);
+        return getResponseList(kols);
+    }
+
+    @Override
+    public List<KolResponse> getResponseList(List<Kol> kols) {
         return kols.stream()
                 .map(kol -> KolResponse.builder()
                         .userId(kol.getUser().getId())
