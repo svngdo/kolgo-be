@@ -35,6 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 && jwtProvider.validate(token)
                 && jwtProvider.validateGrantType(token, GrantTypes.ACCESS_TOKEN)
         ) {
+            System.out.println("VALID USER");
             int userId = jwtProvider.extractUserId(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(userId));
 

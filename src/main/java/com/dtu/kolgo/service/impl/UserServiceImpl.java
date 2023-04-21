@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -54,11 +55,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByPrincipal(Principal principal) {
+        return getByEmail(principal.getName());
+    }
+
+    @Override
     public UserResponse getResponseById(int userId) {
         User user = getById(userId);
 
         return UserResponse.builder()
-                .userId(userId)
+                .id(userId)
                 .avatar(user.getAvatar())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

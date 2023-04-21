@@ -25,7 +25,7 @@ import java.util.function.Function;
 @Component
 public class JwtProvider {
 
-    public static String resolveToken(HttpServletRequest request) {
+    public String resolveToken(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer")) {
             return authHeader.substring(7);

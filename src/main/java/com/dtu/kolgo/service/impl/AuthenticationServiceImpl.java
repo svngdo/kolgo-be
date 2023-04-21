@@ -128,7 +128,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
 
         return UserResponse.builder()
-                .userId(user.getId())
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())

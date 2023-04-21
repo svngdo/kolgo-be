@@ -23,7 +23,7 @@ public class DemoController {
         return "Hello KOL";
     }
 
-    @GetMapping("enterprise")
+    @GetMapping("ent")
     public String demoEnterprise() {
         return "Hello Enterprise";
     }

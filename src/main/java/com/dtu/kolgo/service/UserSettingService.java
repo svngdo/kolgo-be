@@ -13,8 +13,6 @@ import java.util.List;
 
 public interface UserSettingService {
 
-    User getUserByPrincipal(Principal principal);
-
     WebResponse updateUserEmail(Principal principal, EmailRequest request);
 
     WebResponse updateUserPassword(Principal principal, UpdatePasswordRequest request);
