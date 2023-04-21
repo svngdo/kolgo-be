@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
 import com.dtu.kolgo.service.KolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,7 +50,7 @@ public class KolController {
             @PathVariable("id") int kolId,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            @RequestBody UpdateKolRequest request
+            @RequestBody KolUpdateRequest request
     ) {
         return new ResponseEntity<>(
                 service.update(kolId, request, avatar, images),

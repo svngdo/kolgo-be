@@ -3,7 +3,7 @@ package com.dtu.kolgo.dto.request;
 import lombok.Data;
 
 @Data
-public class UpdateEnterpriseRequest {
+public class EntUpdateRequest {
 
     private String firstName;
     private String lastName;
@@ -12,10 +12,7 @@ public class UpdateEnterpriseRequest {
     private String email;
     private String phoneNumber;
     private String taxIdentificationNumber;
-    private String buildingNumber;
-    private String streetName;
-    private String ward;
-    private String district;
+    private String addressDetails;
     private Short cityId;
 
 }

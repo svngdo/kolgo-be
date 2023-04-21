@@ -1,9 +1,9 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.dto.response.*;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,17 +15,17 @@ public interface UserSettingService {
 
     User getUserByPrincipal(Principal principal);
 
-    WebResponse updateUserEmail(Principal principal, EmailRequest request);
+    ApiResponse updateUserEmail(Principal principal, EmailRequest request);
 
-    WebResponse updateUserPassword(Principal principal, UpdatePasswordRequest request);
+    ApiResponse updateUserPassword(Principal principal, PasswordUpdateRequest request);
 
     KolResponse getKolProfile(Principal principal);
 
-    WebResponse updateKolProfile(Principal principal, UpdateKolRequest request, MultipartFile avatar, List<MultipartFile> images);
+    ApiResponse updateKolProfile(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
 
-    EnterpriseResponse getEnterpriseProfile(Principal principal);
+    EntResponse getEnterpriseProfile(Principal principal);
 
-    WebResponse updateEnterpriseProfile(Principal principal, UpdateEnterpriseRequest request, MultipartFile avatar);
+    ApiResponse updateEnterpriseProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar);
 
     List<BookingResponse> getBookingHistory(Principal principal);
 

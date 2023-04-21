@@ -1,8 +1,8 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.UpdateUserRequest;
+import com.dtu.kolgo.dto.request.UserUpdateRequest;
 import com.dtu.kolgo.dto.response.UserResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,11 +20,11 @@ public interface UserService {
 
     UserResponse getResponseById(int userId);
 
-    WebResponse update(int userId, UpdateUserRequest request);
+    ApiResponse update(int userId, UserUpdateRequest request);
 
     void updateAvatar(User user, MultipartFile avatar);
 
-    WebResponse delete(int userId);
+    ApiResponse delete(int userId);
 
     void validateEmail(String email);
 

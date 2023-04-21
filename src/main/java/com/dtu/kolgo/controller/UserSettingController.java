@@ -1,9 +1,9 @@
 package com.dtu.kolgo.controller;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.service.UserSettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class UserSettingController {
     @PutMapping("password")
     public ResponseEntity<?> updateUserPassword(
             Principal principal,
-            @RequestBody UpdatePasswordRequest request
+            @RequestBody PasswordUpdateRequest request
     ) {
         return new ResponseEntity<>(
                 service.updateUserPassword(principal, request),
@@ -60,7 +60,7 @@ public class UserSettingController {
             Principal principal,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            @ModelAttribute UpdateKolRequest request
+            @ModelAttribute KolUpdateRequest request
     ) {
         log.info(request.toString());
         return new ResponseEntity<>(
@@ -83,7 +83,7 @@ public class UserSettingController {
     public ResponseEntity<?> updateEnterpriseProfile(
             Principal principal,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @ModelAttribute UpdateEnterpriseRequest request
+            @ModelAttribute EntUpdateRequest request
     ) {
         return new ResponseEntity<>(
                 service.updateEnterpriseProfile(principal, request, avatar),

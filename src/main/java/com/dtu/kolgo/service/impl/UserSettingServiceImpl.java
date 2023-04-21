@@ -1,9 +1,9 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.dto.response.*;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.*;
@@ -39,17 +39,17 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public WebResponse updateUserEmail(Principal principal, EmailRequest request) {
+    public ApiResponse updateUserEmail(Principal principal, EmailRequest request) {
         userService.validateEmail(request.getEmail());
         User user = getUserByPrincipal(principal);
         user.setEmail(request.getEmail());
         userService.save(user);
 
-        return new WebResponse("Updated email successfully User with ID: " + user.getId());
+        return new ApiResponse("Updated email successfully User with ID: " + user.getId());
     }
 
     @Override
-    public WebResponse updateUserPassword(Principal principal, UpdatePasswordRequest request) {
+    public ApiResponse updateUserPassword(Principal principal, PasswordUpdateRequest request) {
         User user = getUserByPrincipal(principal);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
@@ -59,7 +59,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userService.save(user);
 
-        return new WebResponse("Updated password successfully !!");
+        return new ApiResponse("Updated password successfully !!");
     }
 
     @Override
@@ -70,24 +70,24 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public WebResponse updateKolProfile(Principal principal, UpdateKolRequest request, MultipartFile avatar, List<MultipartFile> images) {
+    public ApiResponse updateKolProfile(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
         User user = getUserByPrincipal(principal);
         Kol kol = kolService.getByUser(user);
         return kolService.update(kol.getId(), request, avatar, images);
     }
 
     @Override
-    public EnterpriseResponse getEnterpriseProfile(Principal principal) {
+    public EntResponse getEnterpriseProfile(Principal principal) {
         User user = getUserByPrincipal(principal);
         Enterprise ent = entService.getByUser(user);
         return entService.getProfileById(ent.getId());
     }
 
     @Override
-    public WebResponse updateEnterpriseProfile(Principal principal, UpdateEnterpriseRequest request, MultipartFile avatar) {
+    public ApiResponse updateEnterpriseProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar) {
         User user = getUserByPrincipal(principal);
         Enterprise ent = entService.getByUser(user);
-        return entService.update(ent.getId(), request);
+        return entService.update(ent.getId(), request, avatar);
     }
 
     @Override

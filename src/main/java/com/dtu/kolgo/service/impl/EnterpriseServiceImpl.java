@@ -1,8 +1,8 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
-import com.dtu.kolgo.dto.response.EnterpriseResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.response.EntResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.City;
 import com.dtu.kolgo.model.Enterprise;
@@ -12,8 +12,10 @@ import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.CityService;
 import com.dtu.kolgo.service.EnterpriseFieldService;
 import com.dtu.kolgo.service.EnterpriseService;
+import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private final EnterpriseRepository repo;
     private final CityService cityService;
     private final EnterpriseFieldService entFieldService;
+    private final UserService userService;
 
     @Override
     public void save(Enterprise ent) {
@@ -32,9 +35,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public List<EnterpriseResponse> getAll() {
+    public List<EntResponse> getAll() {
         return repo.findAll().stream()
-                .map(ent -> EnterpriseResponse.builder()
+                .map(ent -> EntResponse.builder()
                         .userId(ent.getUser().getId())
                         .enterpriseId(ent.getId())
                         .firstName(ent.getUser().getFirstName())
@@ -59,24 +62,18 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EnterpriseResponse getProfileById(int entId) {
+    public EntResponse getProfileById(int entId) {
         Enterprise ent = getById(entId);
 
-        String buildingNumber = null;
-        String streetName = null;
-        String ward = null;
-        String district = null;
+        String addressDetails = null;
         Short cityId = null;
 
         if (ent.getAddress() != null) {
-            buildingNumber = ent.getAddress().getBuildingNumber() == null ? null : ent.getAddress().getBuildingNumber();
-            streetName = ent.getAddress().getStreetName() == null ? null : ent.getAddress().getStreetName();
-            ward = ent.getAddress().getWard() == null ? null : ent.getAddress().getWard();
-            district = ent.getAddress().getDistrict() == null ? null : ent.getAddress().getDistrict();
+            addressDetails = ent.getAddress().getDetails() == null ? null : ent.getAddress().getDetails();
             cityId = ent.getAddress().getCity() == null ? null : ent.getAddress().getCity().getId();
         }
 
-        return EnterpriseResponse.builder()
+        return EntResponse.builder()
                 .enterpriseId(entId)
                 .firstName(ent.getUser().getFirstName())
                 .lastName(ent.getUser().getLastName())
@@ -85,20 +82,18 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 .avatar(ent.getUser().getAvatar() == null ? null : ent.getUser().getAvatar())
                 .name(ent.getName())
                 .enterpriseFieldId(ent.getField() == null ? null : ent.getField().getId())
-                .buildingNumber(buildingNumber)
-                .streetName(streetName)
-                .ward(ward)
-                .district(district)
+                .addressDetails(addressDetails)
                 .cityId(cityId)
                 .taxIdentificationNumber(ent.getTaxIdentificationNumber())
                 .build();
     }
 
     @Override
-    public WebResponse update(int entId, UpdateEnterpriseRequest request) {
+    public ApiResponse update(int entId, EntUpdateRequest request, MultipartFile avatar) {
         Enterprise ent = getById(entId);
         City city = cityService.getById(request.getCityId());
         EnterpriseField field = entFieldService.getById(request.getEnterpriseFieldId());
+        userService.updateAvatar(ent.getUser(), avatar);
 
         ent.getUser().setFirstName(request.getFirstName());
         ent.getUser().setLastName(request.getLastName());
@@ -106,21 +101,22 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         ent.setName(request.getName());
         ent.setField(field);
         ent.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
-        ent.getAddress().setBuildingNumber(request.getBuildingNumber());
-        ent.getAddress().setStreetName(request.getStreetName());
-        ent.getAddress().setWard(request.getWard());
-        ent.getAddress().setDistrict(request.getDistrict());
+//        ent.getAddress().setBuildingNumber(request.getBuildingNumber());
+//        ent.getAddress().setStreetName(request.getStreetName());
+//        ent.getAddress().setWard(request.getWard());
+//        ent.getAddress().setDistrict(request.getDistrict());
+        ent.getAddress().setDetails(request.getAddressDetails());
         ent.getAddress().setCity(city);
 
         repo.save(ent);
 
-        return new WebResponse("Updated successfully Enterprise with ID " + entId);
+        return new ApiResponse("Updated successfully Enterprise with ID " + entId);
     }
 
     @Override
-    public WebResponse delete(int entId) {
+    public ApiResponse delete(int entId) {
         repo.deleteById(entId);
-        return new WebResponse("Deleted successfully Enterprise with ID " + entId);
+        return new ApiResponse("Deleted successfully Enterprise with ID " + entId);
     }
 
 }

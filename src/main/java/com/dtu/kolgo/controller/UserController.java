@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.UpdateUserRequest;
+import com.dtu.kolgo.dto.request.UserUpdateRequest;
 import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class UserController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int userId,
-            @RequestBody UpdateUserRequest request
+            @RequestBody UserUpdateRequest request
     ) {
         return new ResponseEntity<>(
                 service.update(userId, request),

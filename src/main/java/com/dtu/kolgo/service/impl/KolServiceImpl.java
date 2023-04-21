@@ -1,10 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
 import com.dtu.kolgo.dto.response.FeedbackResponse;
 import com.dtu.kolgo.dto.response.ImageResponse;
 import com.dtu.kolgo.dto.response.KolResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.KolRepository;
@@ -114,9 +114,8 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public WebResponse update(int kolId, UpdateKolRequest request, MultipartFile avatar, List<MultipartFile> images) {
+    public ApiResponse update(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
         Kol kol = getById(kolId);
-        log.info(request.toString());
         City city = cityService.getById(request.getCityId());
         Gender gender = genderService.getById(request.getGenderId());
         KolField field = kolFieldService.getById(request.getKolFieldId());
@@ -136,7 +135,7 @@ public class KolServiceImpl implements KolService {
 
         repo.save(kol);
 
-        return new WebResponse("Update KOL successfully !!");
+        return new ApiResponse("Update KOL successfully !!");
     }
 
     @Override
@@ -151,9 +150,9 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public WebResponse delete(int kolId) {
+    public ApiResponse delete(int kolId) {
         repo.deleteById(kolId);
-        return new WebResponse("Delete KOL successfully !!");
+        return new ApiResponse("Delete KOL successfully !!");
     }
 
 }

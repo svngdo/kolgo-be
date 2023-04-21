@@ -39,7 +39,7 @@ import java.util.List;
         "feedbacks",
         "userId"
 })
-public class EnterpriseResponse {
+public class EntResponse {
 
     private Integer userId;
     private Integer enterpriseId;
@@ -51,10 +51,7 @@ public class EnterpriseResponse {
     private String name;
     private Short enterpriseFieldId;
     private String taxIdentificationNumber;
-    private String buildingNumber;
-    private String streetName;
-    private String ward;
-    private String district;
+    private String addressDetails;
     private Short cityId;
     private List<Booking> bookings;
     private List<Payment> payments;
