@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("settings")
@@ -57,10 +58,13 @@ public class UserSettingController {
     @PutMapping("kol-profile")
     public ResponseEntity<?> updateKolProfile(
             Principal principal,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
             @ModelAttribute UpdateKolRequest request
     ) {
+        log.info(request.toString());
         return new ResponseEntity<>(
-                service.updateKolProfile(principal, request),
+                service.updateKolProfile(principal, request, avatar, images),
                 HttpStatus.OK
         );
     }
@@ -78,11 +82,11 @@ public class UserSettingController {
     @PutMapping("ent-profile")
     public ResponseEntity<?> updateEnterpriseProfile(
             Principal principal,
-            @RequestParam("image") MultipartFile file,
-            @RequestBody UpdateEnterpriseRequest request
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @ModelAttribute UpdateEnterpriseRequest request
     ) {
         return new ResponseEntity<>(
-                service.updateEnterpriseProfile(principal, file, request),
+                service.updateEnterpriseProfile(principal, request, avatar),
                 HttpStatus.OK
         );
     }

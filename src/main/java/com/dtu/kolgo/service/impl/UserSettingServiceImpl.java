@@ -70,10 +70,10 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public WebResponse updateKolProfile(Principal principal, UpdateKolRequest request) {
+    public WebResponse updateKolProfile(Principal principal, UpdateKolRequest request, MultipartFile avatar, List<MultipartFile> images) {
         User user = getUserByPrincipal(principal);
         Kol kol = kolService.getByUser(user);
-        return kolService.update(kol.getId(), request);
+        return kolService.update(kol.getId(), request, avatar, images);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public WebResponse updateEnterpriseProfile(Principal principal, MultipartFile file, UpdateEnterpriseRequest request) {
+    public WebResponse updateEnterpriseProfile(Principal principal, UpdateEnterpriseRequest request, MultipartFile avatar) {
         User user = getUserByPrincipal(principal);
         Enterprise ent = entService.getByUser(user);
         return entService.update(ent.getId(), request);

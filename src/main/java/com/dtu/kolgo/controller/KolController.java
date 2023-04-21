@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("kols")
@@ -45,10 +48,12 @@ public class KolController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int kolId,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
             @RequestBody UpdateKolRequest request
     ) {
         return new ResponseEntity<>(
-                service.update(kolId, request),
+                service.update(kolId, request, avatar, images),
                 HttpStatus.OK
         );
     }

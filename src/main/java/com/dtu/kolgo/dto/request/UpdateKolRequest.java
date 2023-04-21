@@ -1,15 +1,10 @@
 package com.dtu.kolgo.dto.request;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Set;
 
 @Data
 public class UpdateKolRequest {
 
-    private MultipartFile avatar;
-    private Set<MultipartFile> images;
     private String firstName;
     private String lastName;
     private Short genderId;

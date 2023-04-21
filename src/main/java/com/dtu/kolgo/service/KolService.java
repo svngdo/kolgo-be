@@ -8,7 +8,6 @@ import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 
 public interface KolService {
 
@@ -26,9 +25,9 @@ public interface KolService {
 
     KolResponse getProfileById(int kolId);
 
-    WebResponse update(int kolId, UpdateKolRequest request);
+    WebResponse update(int kolId, UpdateKolRequest request, MultipartFile avatar, List<MultipartFile> images);
 
-    void updateImages(Kol kol, Set<MultipartFile> images);
+    void updateImages(Kol kol, List<MultipartFile> images);
 
     WebResponse delete(int kolId);
 
