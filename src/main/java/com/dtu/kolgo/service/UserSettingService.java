@@ -21,11 +21,11 @@ public interface UserSettingService {
 
     KolResponse getKolProfile(Principal principal);
 
-    WebResponse updateKolProfile(Principal principal, UpdateKolRequest request);
+    WebResponse updateKolProfile(Principal principal, UpdateKolRequest request, MultipartFile avatar, List<MultipartFile> images);
 
     EnterpriseResponse getEnterpriseProfile(Principal principal);
 
-    WebResponse updateEnterpriseProfile(Principal principal, MultipartFile file, UpdateEnterpriseRequest request);
+    WebResponse updateEnterpriseProfile(Principal principal, UpdateEnterpriseRequest request, MultipartFile avatar);
 
     List<BookingResponse> getBookingHistory(Principal principal);
 

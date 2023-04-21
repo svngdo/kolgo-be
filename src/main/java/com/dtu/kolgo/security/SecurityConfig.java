@@ -1,7 +1,6 @@
 package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.exception.FilterChainExceptionHandler;
-import com.dtu.kolgo.util.constant.Roles;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -66,10 +65,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
-                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(Roles.ENTERPRISE.name(), Roles.KOL.name())
 
-                .requestMatchers("/**").hasAuthority(
-                        Roles.ADMIN.name())
+//                .requestMatchers("/**").hasAuthority(
+//                        Roles.ADMIN.name())
                 // Disallow everything else..
                 .anyRequest().authenticated();
 
