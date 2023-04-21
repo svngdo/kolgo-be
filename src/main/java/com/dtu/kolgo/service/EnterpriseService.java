@@ -1,10 +1,11 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
-import com.dtu.kolgo.dto.response.EnterpriseResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.response.EntResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,16 +13,16 @@ public interface EnterpriseService {
 
     void save(Enterprise ent);
 
-    List<EnterpriseResponse> getAll();
+    List<EntResponse> getAll();
 
     Enterprise getById(int entId);
 
     Enterprise getByUser(User user);
 
-    EnterpriseResponse getProfileById(int entId);
+    EntResponse getProfileById(int entId);
 
-    WebResponse update(int entId, UpdateEnterpriseRequest request);
+    ApiResponse update(int entId, EntUpdateRequest request, MultipartFile avatar);
 
-    WebResponse delete(int entId);
+    ApiResponse delete(int entId);
 
 }

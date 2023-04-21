@@ -1,11 +1,14 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
 import com.dtu.kolgo.service.KolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("kols")
@@ -45,10 +48,12 @@ public class KolController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int kolId,
-            @RequestBody UpdateKolRequest request
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
+            @RequestBody KolUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.update(kolId, request),
+                service.update(kolId, request, avatar, images),
                 HttpStatus.OK
         );
     }

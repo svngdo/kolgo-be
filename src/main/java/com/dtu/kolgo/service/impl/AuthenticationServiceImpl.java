@@ -4,10 +4,10 @@ import com.dtu.kolgo.dto.MailDetails;
 import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.LoginRequest;
 import com.dtu.kolgo.dto.request.RegisterRequest;
-import com.dtu.kolgo.dto.request.ResetPasswordRequest;
+import com.dtu.kolgo.dto.request.PasswordResetRequest;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.ExpiredException;
 import com.dtu.kolgo.exception.InvalidException;
@@ -47,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenService tokenService;
 
     @Override
-    public WebResponse register(RegisterRequest request) {
+    public ApiResponse register(RegisterRequest request) {
         if (userRepo.existsByEmail(request.getEmail())) {
             throw new ExistsException("Email already in use");
         }
@@ -73,11 +73,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         mailService.send(new MailDetails(request.getEmail(), subject, body), true);
 
-        return new WebResponse("A verify email was sent to " + request.getEmail());
+        return new ApiResponse("A verify email was sent to " + request.getEmail());
     }
 
     @Override
-    public WebResponse verify(String token, boolean isBiz) {
+    public ApiResponse verify(String token, boolean isBiz) {
         jwtProvider.validate(token);
         jwtProvider.validateGrantType(token, GrantTypes.VERIFY_ACCOUNT_TOKEN);
 
@@ -104,7 +104,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build());
         }
 
-        return new WebResponse("Account has been verified");
+        return new ApiResponse("Account has been verified");
     }
 
     @Override
@@ -182,7 +182,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
-    public WebResponse forgotPassword(EmailRequest request) {
+    public ApiResponse forgotPassword(EmailRequest request) {
         User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
@@ -201,11 +201,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         mailService.send(new MailDetails(request.getEmail(), subject, body), true);
 
-        return new WebResponse("A reset password email was sent to " + request.getEmail());
+        return new ApiResponse("A reset password email was sent to " + request.getEmail());
     }
 
     @Override
-    public WebResponse resetPassword(String resetPasswordToken, ResetPasswordRequest request) {
+    public ApiResponse resetPassword(String resetPasswordToken, PasswordResetRequest request) {
         // Validate token
         jwtProvider.validate(resetPasswordToken);
         jwtProvider.validateGrantType(resetPasswordToken, GrantTypes.RESET_PASSWORD_TOKEN);
@@ -223,7 +223,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userService.save(user);
 
-        return new WebResponse("Update password successfully !!");
+        return new ApiResponse("Update password successfully !!");
     }
 
 }

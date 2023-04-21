@@ -1,6 +1,6 @@
 package com.dtu.kolgo.security;
 
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.service.TokenService;
 import com.dtu.kolgo.util.constant.GrantTypes;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +45,7 @@ public class JwtLogoutHandler implements LogoutHandler {
         final ObjectMapper mapper = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_OK);
-        mapper.writeValue(response.getOutputStream(), new WebResponse("Logged out successfully!!"));
+        mapper.writeValue(response.getOutputStream(), new ApiResponse("Logged out successfully!!"));
     }
 
 }

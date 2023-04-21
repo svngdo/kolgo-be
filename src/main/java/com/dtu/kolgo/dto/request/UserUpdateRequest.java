@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Data
-public class UpdateUserRequest {
+public class UserUpdateRequest {
 
     private String email;
     private List<Role> roles;

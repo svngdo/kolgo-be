@@ -1,10 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
 import com.dtu.kolgo.dto.response.FeedbackResponse;
 import com.dtu.kolgo.dto.response.ImageResponse;
 import com.dtu.kolgo.dto.response.KolResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.KolRepository;
@@ -12,17 +12,18 @@ import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.FileUtils;
 import com.dtu.kolgo.util.env.FileEnv;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KolServiceImpl implements KolService {
 
     private final KolRepository repo;
@@ -113,14 +114,14 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public WebResponse update(int kolId, UpdateKolRequest request) {
+    public ApiResponse update(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
         Kol kol = getById(kolId);
         City city = cityService.getById(request.getCityId());
         Gender gender = genderService.getById(request.getGenderId());
         KolField field = kolFieldService.getById(request.getKolFieldId());
 
-        userService.updateAvatar(kol.getUser(), request.getAvatar());
-        updateImages(kol, request.getImages());
+        userService.updateAvatar(kol.getUser(), avatar);
+        updateImages(kol, images);
         kol.getUser().setFirstName(request.getFirstName());
         kol.getUser().setLastName(request.getLastName());
         kol.getUser().setPhoneNumber(request.getPhoneNumber());
@@ -134,11 +135,11 @@ public class KolServiceImpl implements KolService {
 
         repo.save(kol);
 
-        return new WebResponse("Update KOL successfully !!");
+        return new ApiResponse("Update KOL successfully !!");
     }
 
     @Override
-    public void updateImages(Kol kol, Set<MultipartFile> images) {
+    public void updateImages(Kol kol, List<MultipartFile> images) {
         if (images == null) return;
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
@@ -149,9 +150,9 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public WebResponse delete(int kolId) {
+    public ApiResponse delete(int kolId) {
         repo.deleteById(kolId);
-        return new WebResponse("Delete KOL successfully !!");
+        return new ApiResponse("Delete KOL successfully !!");
     }
 
 }

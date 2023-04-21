@@ -1,9 +1,9 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.dto.response.*;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.*;
@@ -34,18 +34,23 @@ public class UserSettingServiceImpl implements UserSettingService {
     private final EnterpriseService entService;
 
     @Override
-    public WebResponse updateUserEmail(Principal principal, EmailRequest request) {
-        userService.validateEmail(request.getEmail());
-        User user = userService.getByPrincipal(principal);
-        user.setEmail(request.getEmail());
-        userService.save(user);
-
-        return new WebResponse("Updated email successfully User with ID: " + user.getId());
+    public User getUserByPrincipal(Principal principal) {
+        return userService.getByEmail(principal.getName());
     }
 
     @Override
-    public WebResponse updateUserPassword(Principal principal, UpdatePasswordRequest request) {
-        User user = userService.getByPrincipal(principal);
+    public ApiResponse updateUserEmail(Principal principal, EmailRequest request) {
+        userService.validateEmail(request.getEmail());
+        User user = getUserByPrincipal(principal);
+        user.setEmail(request.getEmail());
+        userService.save(user);
+
+        return new ApiResponse("Updated email successfully User with ID: " + user.getId());
+    }
+
+    @Override
+    public ApiResponse updateUserPassword(Principal principal, PasswordUpdateRequest request) {
+        User user = getUserByPrincipal(principal);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new InvalidException("Incorrect paassword");
@@ -54,40 +59,40 @@ public class UserSettingServiceImpl implements UserSettingService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userService.save(user);
 
-        return new WebResponse("Updated password successfully !!");
+        return new ApiResponse("Updated password successfully !!");
     }
 
     @Override
     public KolResponse getKolProfile(Principal principal) {
-        User user = userService.getByPrincipal(principal);
+        User user = getUserByPrincipal(principal);
         Kol kol = kolService.getByUser(user);
         return kolService.getProfileById(kol.getId());
     }
 
     @Override
-    public WebResponse updateKolProfile(Principal principal, UpdateKolRequest request) {
-        User user = userService.getByPrincipal(principal);
+    public ApiResponse updateKolProfile(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
+        User user = getUserByPrincipal(principal);
         Kol kol = kolService.getByUser(user);
-        return kolService.update(kol.getId(), request);
+        return kolService.update(kol.getId(), request, avatar, images);
     }
 
     @Override
-    public EnterpriseResponse getEnterpriseProfile(Principal principal) {
-        User user = userService.getByPrincipal(principal);
+    public EntResponse getEnterpriseProfile(Principal principal) {
+        User user = getUserByPrincipal(principal);
         Enterprise ent = entService.getByUser(user);
         return entService.getProfileById(ent.getId());
     }
 
     @Override
-    public WebResponse updateEnterpriseProfile(Principal principal, MultipartFile file, UpdateEnterpriseRequest request) {
-        User user = userService.getByPrincipal(principal);
+    public ApiResponse updateEnterpriseProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar) {
+        User user = getUserByPrincipal(principal);
         Enterprise ent = entService.getByUser(user);
-        return entService.update(ent.getId(), request);
+        return entService.update(ent.getId(), request, avatar);
     }
 
     @Override
     public List<BookingResponse> getBookingHistory(Principal principal) {
-        User user = userService.getByPrincipal(principal);
+        User user = getUserByPrincipal(principal);
         List<Role> userRoles = user.getRoles();
         List<Booking> bookings = new ArrayList<>();
 
@@ -105,7 +110,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     @Override
     public List<PaymentResponse> getPaymentHistory(Principal principal) {
-        User user = userService.getByPrincipal(principal);
+        User user = getUserByPrincipal(principal);
         List<Role> userRoles = user.getRoles();
         List<Payment> payments = new ArrayList<>();
 

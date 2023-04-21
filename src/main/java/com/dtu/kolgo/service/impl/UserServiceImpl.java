@@ -1,8 +1,8 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.UpdateUserRequest;
+import com.dtu.kolgo.dto.request.UserUpdateRequest;
 import com.dtu.kolgo.dto.response.UserResponse;
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Role;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public WebResponse update(int userId, UpdateUserRequest request) {
+    public ApiResponse update(int userId, UserUpdateRequest request) {
         User user = getById(userId);
         updateAvatar(user, request.getAvatar());
         user.setFirstName(request.getFirstName());
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         user.setRoles(request.getRoles());
         repo.save(user);
 
-        return new WebResponse("Updated successfully User with ID: " + userId);
+        return new ApiResponse("Updated successfully User with ID: " + userId);
     }
 
     @Override
@@ -100,9 +100,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public WebResponse delete(int userId) {
+    public ApiResponse delete(int userId) {
         repo.deleteById(userId);
-        return new WebResponse("Deleted successfully User with ID: " + userId);
+        return new ApiResponse("Deleted successfully User with ID: " + userId);
     }
 
     @Override

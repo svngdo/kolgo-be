@@ -1,6 +1,6 @@
 package com.dtu.kolgo.exception;
 
-import com.dtu.kolgo.dto.response.WebResponse;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -32,27 +32,29 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (CustomJwtException e) {
-            mapErrorToResponse(handler.handleJwtException(e), response);
+            mapErrorToResponse(HttpStatus.UNAUTHORIZED, handler.handleJwtException(e), response);
         } catch (NotFoundException e) {
-            mapErrorToResponse(handler.handleNotFoundException(e), response);
+            mapErrorToResponse(HttpStatus.NOT_FOUND, handler.handleNotFoundException(e), response);
         } catch (InvalidException e) {
-            mapErrorToResponse(handler.handleInvalidException(e), response);
+            mapErrorToResponse(HttpStatus.FORBIDDEN, handler.handleInvalidException(e), response);
         } catch (Exception e) {
             log.error("FilterChainExceptionHandler.java Exception", e);
             mapErrorToResponse(
-                    new WebResponse(HttpStatus.UNAUTHORIZED.getReasonPhrase()),
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    new ApiResponse(HttpStatus.UNAUTHORIZED.getReasonPhrase()),
                     response
             );
         }
     }
 
     private void mapErrorToResponse(
-            WebResponse error,
+            HttpStatus status,
+            ApiResponse error,
             HttpServletResponse response
     ) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(error.getCode());
+        response.setStatus(status.value());
         mapper.writeValue(response.getOutputStream(), error);
     }
 

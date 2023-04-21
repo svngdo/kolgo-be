@@ -1,9 +1,9 @@
 package com.dtu.kolgo.controller;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
-import com.dtu.kolgo.dto.request.UpdateKolRequest;
-import com.dtu.kolgo.dto.request.UpdatePasswordRequest;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.service.UserSettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("settings")
@@ -36,7 +37,7 @@ public class UserSettingController {
     @PutMapping("password")
     public ResponseEntity<?> updateUserPassword(
             Principal principal,
-            @RequestBody UpdatePasswordRequest request
+            @RequestBody PasswordUpdateRequest request
     ) {
         return new ResponseEntity<>(
                 service.updateUserPassword(principal, request),
@@ -57,10 +58,13 @@ public class UserSettingController {
     @PutMapping("kol-profile")
     public ResponseEntity<?> updateKolProfile(
             Principal principal,
-            @ModelAttribute UpdateKolRequest request
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
+            @ModelAttribute KolUpdateRequest request
     ) {
+        log.info(request.toString());
         return new ResponseEntity<>(
-                service.updateKolProfile(principal, request),
+                service.updateKolProfile(principal, request, avatar, images),
                 HttpStatus.OK
         );
     }
@@ -78,11 +82,11 @@ public class UserSettingController {
     @PutMapping("ent-profile")
     public ResponseEntity<?> updateEnterpriseProfile(
             Principal principal,
-            @RequestParam("image") MultipartFile file,
-            @RequestBody UpdateEnterpriseRequest request
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @ModelAttribute EntUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.updateEnterpriseProfile(principal, file, request),
+                service.updateEnterpriseProfile(principal, request, avatar),
                 HttpStatus.OK
         );
     }

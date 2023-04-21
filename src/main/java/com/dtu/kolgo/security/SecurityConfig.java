@@ -77,8 +77,8 @@ public class SecurityConfig {
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
-//                .requestMatchers("/**").hasAuthority(ADMIN)
-                .requestMatchers("/**").hasAnyAuthority(ADMIN, KOL, ENTERPRISE)
+                .requestMatchers(OPEN_API_WHITELIST).permitAll()
+                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(Roles.ENTERPRISE.name(), Roles.KOL.name())
 
                 // Disallow everything else..
                 .anyRequest().authenticated();

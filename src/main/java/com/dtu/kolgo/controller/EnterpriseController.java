@@ -1,11 +1,12 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.UpdateEnterpriseRequest;
+import com.dtu.kolgo.dto.request.EntUpdateRequest;
 import com.dtu.kolgo.service.EnterpriseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("ents")
@@ -35,10 +36,11 @@ public class EnterpriseController {
     @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int entId,
-            @RequestBody UpdateEnterpriseRequest request
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @RequestBody EntUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.update(entId, request),
+                service.update(entId, request, avatar),
                 HttpStatus.OK
         );
     }
