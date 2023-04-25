@@ -1,6 +1,7 @@
 package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.exception.FilterChainExceptionHandler;
+import com.dtu.kolgo.enums.Roles;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] GET_WHITELIST = {
+    private final String ADMIN = Roles.ADMIN.name();
+    private final String ENTERPRISE = Roles.ENTERPRISE.name();
+    private final String KOL = Roles.KOL.name();
+    private final String[] GET_WHITELIST = {
             "/demo",
             "/auth/**",
             "/kols/**",
@@ -28,15 +32,19 @@ public class SecurityConfig {
             "/cities/**",
             "/genders/**",
             "/fields/**",
-            "/images/**"
+            "/images/**",
     };
-    private static final String[] POST_WHITELIST = {
+    private final String[] POST_WHITELIST = {
             "/auth/**"
     };
-    private static final String[] AUTH_WHITELIST = {
-            "/settings/**"
+    private final String[] AUTH_WHITELIST = {
+            "/users/**",
+            "/settings/**",
+            "/conversations/**",
+            "/websocket/**",
+            "/chat/**",
     };
-    private static final String[] OPEN_API_WHITELIST = {
+    private final String[] OPEN_API_WHITELIST = {
             "/v3/api-docs/**",
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
@@ -62,12 +70,16 @@ public class SecurityConfig {
 
         // Entry points
         http.authorizeHttpRequests()
+                .requestMatchers("/demo/kol").hasAuthority(KOL)
+                .requestMatchers("/demo/ent").hasAnyAuthority(ENTERPRISE)
+                .requestMatchers("/demo/admin").hasAuthority(ADMIN)
+                .requestMatchers("/websocket/**").permitAll()
+                .requestMatchers(OPEN_API_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
+                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(Roles.ENTERPRISE.name(), Roles.KOL.name())
 
-//                .requestMatchers("/**").hasAuthority(
-//                        Roles.ADMIN.name())
                 // Disallow everything else..
                 .anyRequest().authenticated();
 

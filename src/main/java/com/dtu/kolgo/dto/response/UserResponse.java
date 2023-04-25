@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "userId",
+        "id",
         "avatar",
         "firstName",
         "lastName",
@@ -26,7 +26,7 @@ import java.util.List;
 })
 public class UserResponse {
 
-    private int userId;
+    private int id;
     private String avatar;
     private String firstName;
     private String lastName;

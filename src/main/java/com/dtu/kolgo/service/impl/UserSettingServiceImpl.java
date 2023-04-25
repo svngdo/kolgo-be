@@ -11,7 +11,7 @@ import com.dtu.kolgo.service.EnterpriseService;
 import com.dtu.kolgo.service.KolService;
 import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.service.UserSettingService;
-import com.dtu.kolgo.util.constant.Roles;
+import com.dtu.kolgo.enums.Roles;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

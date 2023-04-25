@@ -3,9 +3,9 @@ package com.dtu.kolgo.security;
 import com.dtu.kolgo.exception.CustomJwtException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.User;
-import com.dtu.kolgo.util.constant.GrantTypes;
-import com.dtu.kolgo.util.constant.JwtKeys;
-import com.dtu.kolgo.util.env.JwtEnv;
+import com.dtu.kolgo.enums.GrantTypes;
+import com.dtu.kolgo.enums.JwtKeys;
+import com.dtu.kolgo.env.JwtEnv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 @Component
 public class JwtProvider {
 
-    public static String resolveToken(HttpServletRequest request) {
+    public String resolveToken(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer")) {
             return authHeader.substring(7);

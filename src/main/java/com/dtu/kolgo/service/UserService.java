@@ -6,6 +6,7 @@ import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService {
@@ -17,6 +18,8 @@ public interface UserService {
     User getById(int userId);
 
     User getByEmail(String email);
+
+    User getByPrincipal(Principal principal);
 
     UserResponse getResponseById(int userId);
 

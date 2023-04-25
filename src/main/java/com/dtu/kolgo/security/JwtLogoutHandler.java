@@ -2,7 +2,7 @@ package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.service.TokenService;
-import com.dtu.kolgo.util.constant.GrantTypes;
+import com.dtu.kolgo.enums.GrantTypes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
