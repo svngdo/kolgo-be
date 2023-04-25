@@ -11,7 +11,6 @@ import com.dtu.kolgo.repository.MessageRepository;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.ChatService;
 import com.dtu.kolgo.service.UserService;
-import com.dtu.kolgo.util.constant.ConversationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,7 @@ public class ChatServiceImpl implements ChatService {
         users.add(sender);
         users.add(receiver);
 
-         Conversation conversation = conversationRepo.save(new Conversation(
+        Conversation conversation = conversationRepo.save(new Conversation(
                 request.getType(),
                 users,
                 new ArrayList<>()));
@@ -64,17 +63,17 @@ public class ChatServiceImpl implements ChatService {
                             .filter(u -> !u.getId().equals(sender.getId())).toList().get(0);
             List<MessageResponse> messages =
                     c.getMessages().stream().map(msg -> MessageResponse.builder()
-                            .type(msg.getType())
                             .authorId(msg.getUser().getId())
                             .authorFirstName(msg.getUser().getFirstName())
                             .authorLastName(msg.getUser().getLastName())
+                            .messageType(msg.getType())
                             .content(msg.getContent())
                             .timestamp(msg.getTimestamp())
                             .conversationId(msg.getConversation().getId())
                             .build()).toList();
             return ConversationResponse.builder()
                     .id(c.getId())
-                    .type(ConversationType.PRIVATE)
+                    .type(c.getType())
                     .receiverId(receiver.getId())
                     .receiverFirstName(receiver.getFirstName())
                     .receiverLastName(receiver.getLastName())
@@ -90,7 +89,7 @@ public class ChatServiceImpl implements ChatService {
                 .authorId(author.getId())
                 .authorFirstName(author.getFirstName())
                 .authorLastName(author.getLastName())
-                .type(request.getMessageType())
+                .messageType(request.getMessageType())
                 .content(request.getContent())
                 .timestamp(request.getTimestamp())
                 .build();
@@ -98,9 +97,15 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public MessageResponse handlePrivateMessage(MessageRequest request) {
-
+        User sender = userService.getById(request.getSenderId());
         return MessageResponse.builder()
-
+                .conversationId(request.getConversationId())
+                .authorId(request.getSenderId())
+                .authorFirstName(sender.getFirstName())
+                .authorLastName(sender.getLastName())
+                .messageType(request.getMessageType())
+                .content(request.getContent())
+                .timestamp(request.getTimestamp())
                 .build();
     }
 

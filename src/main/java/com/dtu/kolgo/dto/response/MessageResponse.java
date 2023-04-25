@@ -1,6 +1,6 @@
 package com.dtu.kolgo.dto.response;
 
-import com.dtu.kolgo.util.constant.MessageType;
+import com.dtu.kolgo.enums.MessageType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +19,7 @@ public class MessageResponse {
     private Integer authorId;
     private String authorFirstName;
     private String authorLastName;
-    private MessageType type;
+    private MessageType messageType;
     private String content;
     private LocalDateTime timestamp;
     private Integer conversationId;

@@ -1,7 +1,6 @@
 package com.dtu.kolgo.dto.request;
 
-import com.dtu.kolgo.util.constant.ConversationType;
-import com.dtu.kolgo.util.constant.MessageType;
+import com.dtu.kolgo.enums.MessageType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 public class MessageRequest {
 
     private Integer conversationId;
-    private ConversationType conversationType;
     private Integer senderId;
     private Integer receiverId;
     private MessageType messageType;

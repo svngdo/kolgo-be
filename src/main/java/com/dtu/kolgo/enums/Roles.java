@@ -1,4 +1,4 @@
-package com.dtu.kolgo.util.constant;
+package com.dtu.kolgo.enums;
 
 public enum Roles {
 

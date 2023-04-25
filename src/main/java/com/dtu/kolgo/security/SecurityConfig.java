@@ -1,7 +1,7 @@
 package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.exception.FilterChainExceptionHandler;
-import com.dtu.kolgo.util.constant.Roles;
+import com.dtu.kolgo.enums.Roles;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

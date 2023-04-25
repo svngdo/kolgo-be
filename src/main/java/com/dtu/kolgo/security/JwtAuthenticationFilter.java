@@ -1,6 +1,6 @@
 package com.dtu.kolgo.security;
 
-import com.dtu.kolgo.util.constant.GrantTypes;
+import com.dtu.kolgo.enums.GrantTypes;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

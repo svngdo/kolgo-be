@@ -10,7 +10,7 @@ import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.KolRepository;
 import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.FileUtils;
-import com.dtu.kolgo.util.env.FileEnv;
+import com.dtu.kolgo.env.FileEnv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.dtu.kolgo.model;
 
-import com.dtu.kolgo.util.constant.ConversationType;
+import com.dtu.kolgo.enums.ConversationType;
 import jakarta.persistence.*;
 import lombok.*;
 

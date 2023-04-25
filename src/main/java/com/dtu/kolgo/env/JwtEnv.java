@@ -1,4 +1,4 @@
-package com.dtu.kolgo.util.env;
+package com.dtu.kolgo.env;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

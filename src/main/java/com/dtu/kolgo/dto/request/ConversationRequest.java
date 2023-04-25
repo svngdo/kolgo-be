@@ -1,6 +1,6 @@
 package com.dtu.kolgo.dto.request;
 
-import com.dtu.kolgo.util.constant.ConversationType;
+import com.dtu.kolgo.enums.ConversationType;
 import lombok.Data;
 
 @Data

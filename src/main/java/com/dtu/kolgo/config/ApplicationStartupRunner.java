@@ -1,6 +1,6 @@
 package com.dtu.kolgo.config;
 
-import com.dtu.kolgo.util.env.ServerEnv;
+import com.dtu.kolgo.env.ServerEnv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

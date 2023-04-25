@@ -1,6 +1,6 @@
 package com.dtu.kolgo.dto.response;
 
-import com.dtu.kolgo.util.constant.ConversationType;
+import com.dtu.kolgo.enums.ConversationType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
