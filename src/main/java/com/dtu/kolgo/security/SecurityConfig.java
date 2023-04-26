@@ -27,6 +27,7 @@ public class SecurityConfig {
     private final String[] GET_WHITELIST = {
             "/demo",
             "/auth/**",
+            "/users/**",
             "/kols/**",
             "/ents/**",
             "/cities/**",
@@ -38,11 +39,23 @@ public class SecurityConfig {
             "/auth/**"
     };
     private final String[] AUTH_WHITELIST = {
-            "/users/**",
             "/settings/**",
+    };
+    private final String[] WEBSOCKET_WHITELIST = {
             "/conversations/**",
             "/websocket/**",
             "/chat/**",
+    };
+    private final String[] KOL_WHITELIST = {
+            "/demo/kol",
+            "/kol/**"
+    };
+    private final String[] ENT_WHITELIST = {
+            "/demo/ent",
+            "/ent/**",
+    };
+    private final String[] ADMIN_WHITELIST = {
+            "/demo/admin"
     };
     private final String[] OPEN_API_WHITELIST = {
             "/v3/api-docs/**",
@@ -70,15 +83,15 @@ public class SecurityConfig {
 
         // Entry points
         http.authorizeHttpRequests()
-                .requestMatchers("/demo/kol").hasAuthority(KOL)
-                .requestMatchers("/demo/ent").hasAnyAuthority(ENTERPRISE)
-                .requestMatchers("/demo/admin").hasAuthority(ADMIN)
-                .requestMatchers("/websocket/**").permitAll()
+                .requestMatchers(WEBSOCKET_WHITELIST).permitAll()
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
-                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(Roles.ENTERPRISE.name(), Roles.KOL.name())
+                .requestMatchers(KOL_WHITELIST).hasAuthority(KOL)
+                .requestMatchers(ENT_WHITELIST).hasAuthority(ENTERPRISE)
+                .requestMatchers(AUTH_WHITELIST).hasAnyAuthority(ADMIN, KOL, ENTERPRISE)
+                .requestMatchers(ADMIN_WHITELIST).hasAuthority(ADMIN)
 
                 // Disallow everything else..
                 .anyRequest().authenticated();
