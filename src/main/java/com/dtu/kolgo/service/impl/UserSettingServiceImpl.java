@@ -1,22 +1,20 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.EntUpdateRequest;
-import com.dtu.kolgo.dto.request.KolUpdateRequest;
-import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
-import com.dtu.kolgo.dto.response.*;
-import com.dtu.kolgo.exception.InvalidException;
-import com.dtu.kolgo.model.*;
+import com.dtu.kolgo.dto.response.BookingResponse;
+import com.dtu.kolgo.dto.response.PaymentResponse;
+import com.dtu.kolgo.enums.Roles;
+import com.dtu.kolgo.model.Booking;
+import com.dtu.kolgo.model.Payment;
+import com.dtu.kolgo.model.Role;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.service.EnterpriseService;
 import com.dtu.kolgo.service.KolService;
 import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.service.UserSettingService;
-import com.dtu.kolgo.enums.Roles;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -36,58 +34,6 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public User getUserByPrincipal(Principal principal) {
         return userService.getByEmail(principal.getName());
-    }
-
-    @Override
-    public ApiResponse updateUserEmail(Principal principal, EmailRequest request) {
-        userService.validateEmail(request.getEmail());
-        User user = getUserByPrincipal(principal);
-        user.setEmail(request.getEmail());
-        userService.save(user);
-
-        return new ApiResponse("Updated email successfully User with ID: " + user.getId());
-    }
-
-    @Override
-    public ApiResponse updateUserPassword(Principal principal, PasswordUpdateRequest request) {
-        User user = getUserByPrincipal(principal);
-
-        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new InvalidException("Incorrect paassword");
-        }
-
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userService.save(user);
-
-        return new ApiResponse("Updated password successfully !!");
-    }
-
-    @Override
-    public KolResponse getKolProfile(Principal principal) {
-        User user = getUserByPrincipal(principal);
-        Kol kol = kolService.getByUser(user);
-        return kolService.getProfileById(kol.getId());
-    }
-
-    @Override
-    public ApiResponse updateKolProfile(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
-        User user = getUserByPrincipal(principal);
-        Kol kol = kolService.getByUser(user);
-        return kolService.update(kol.getId(), request, avatar, images);
-    }
-
-    @Override
-    public EntResponse getEnterpriseProfile(Principal principal) {
-        User user = getUserByPrincipal(principal);
-        Enterprise ent = entService.getByUser(user);
-        return entService.getProfileById(ent.getId());
-    }
-
-    @Override
-    public ApiResponse updateEnterpriseProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar) {
-        User user = getUserByPrincipal(principal);
-        Enterprise ent = entService.getByUser(user);
-        return entService.update(ent.getId(), request, avatar);
     }
 
     @Override

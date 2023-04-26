@@ -1,22 +1,23 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.FeedbackResponse;
 import com.dtu.kolgo.dto.response.ImageResponse;
 import com.dtu.kolgo.dto.response.KolResponse;
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.env.FileEnv;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.KolRepository;
 import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.FileUtils;
-import com.dtu.kolgo.env.FileEnv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -114,14 +115,27 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public ApiResponse update(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
+    public KolResponse getProfileByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        Kol kol = getByUser(user);
+        return getProfileById(kol.getId());
+    }
+
+    @Override
+    public ApiResponse updateProfileById(
+            int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
         Kol kol = getById(kolId);
         City city = cityService.getById(request.getCityId());
         Gender gender = genderService.getById(request.getGenderId());
         KolField field = kolFieldService.getById(request.getKolFieldId());
 
-        userService.updateAvatar(kol.getUser(), avatar);
-        updateImages(kol, images);
+        if (avatar != null) {
+            userService.updateAvatar(kol.getUser(), avatar);
+        }
+        if (images != null) {
+            updateImages(kol, images);
+        }
+
         kol.getUser().setFirstName(request.getFirstName());
         kol.getUser().setLastName(request.getLastName());
         kol.getUser().setPhoneNumber(request.getPhoneNumber());
@@ -139,12 +153,20 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
+    public ApiResponse updateProfileByPrincipal(
+            Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
+        User user = userService.getByPrincipal(principal);
+        Kol kol = getByUser(user);
+        return updateProfileById(kol.getId(), request, avatar, images);
+    }
+
+    @Override
     public void updateImages(Kol kol, List<MultipartFile> images) {
         if (images == null) return;
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
             imageService.save(new Image(fileName, kol));
-            String uploadDir = FileEnv.IMAGE_PATH + "/" + kol.getUser().getId() + " - " + kol.getUser().getEmail();
+            String uploadDir = FileEnv.IMAGE_PATH;
             fileUtils.saveImage(uploadDir, fileName, image);
         });
     }

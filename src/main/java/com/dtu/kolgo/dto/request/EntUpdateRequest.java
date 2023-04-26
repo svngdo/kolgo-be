@@ -12,7 +12,7 @@ public class EntUpdateRequest {
     private String email;
     private String phoneNumber;
     private String taxIdentificationNumber;
-    private String addressDetails;
+    private String address;
     private Short cityId;
 
 }

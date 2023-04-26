@@ -1,12 +1,13 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.request.KolUpdateRequest;
-import com.dtu.kolgo.dto.response.KolResponse;
 import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.response.KolResponse;
 import com.dtu.kolgo.model.Kol;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface KolService {
@@ -25,7 +26,11 @@ public interface KolService {
 
     KolResponse getProfileById(int kolId);
 
-    ApiResponse update(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
+    KolResponse getProfileByPrincipal(Principal principal);
+
+    ApiResponse updateProfileById(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
+
+    ApiResponse updateProfileByPrincipal(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
 
     void updateImages(Kol kol, List<MultipartFile> images);
 

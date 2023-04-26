@@ -8,8 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
+
 @RestController
-@RequestMapping("ents")
 @RequiredArgsConstructor
 public class EnterpriseController {
 
@@ -23,7 +24,7 @@ public class EnterpriseController {
         );
     }
 
-    @GetMapping("{id}")
+    @GetMapping("ents/{id}")
     public ResponseEntity<?> get(
             @PathVariable("id") int entId
     ) {
@@ -33,19 +34,19 @@ public class EnterpriseController {
         );
     }
 
-    @PutMapping("{id}")
+    @PutMapping("ents/{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int entId,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @RequestBody EntUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.update(entId, request, avatar),
+                service.updateProfileById(entId, request, avatar),
                 HttpStatus.OK
         );
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("ents/{id}")
     public ResponseEntity<?> delete(
             @PathVariable("id") int entId
     ) {
@@ -54,5 +55,28 @@ public class EnterpriseController {
                 HttpStatus.OK
         );
     }
+
+    @GetMapping("ent/profile")
+    public ResponseEntity<?> getEnterpriseProfile(
+            Principal principal
+    ) {
+        return new ResponseEntity<>(
+                service.getProfileByPrincipal(principal),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("ent/profile")
+    public ResponseEntity<?> updateEnterpriseProfile(
+            Principal principal,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @ModelAttribute EntUpdateRequest request
+    ) {
+        return new ResponseEntity<>(
+                service.updateProfileByPrincipal(principal, request, avatar),
+                HttpStatus.OK
+        );
+    }
+
 
 }

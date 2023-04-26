@@ -4,10 +4,7 @@ import com.dtu.kolgo.dto.request.EntUpdateRequest;
 import com.dtu.kolgo.dto.response.EntResponse;
 import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.City;
-import com.dtu.kolgo.model.Enterprise;
-import com.dtu.kolgo.model.EnterpriseField;
-import com.dtu.kolgo.model.User;
+import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.CityService;
 import com.dtu.kolgo.service.EnterpriseFieldService;
@@ -17,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,11 +87,24 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public ApiResponse update(int entId, EntUpdateRequest request, MultipartFile avatar) {
+    public EntResponse getProfileByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        Enterprise ent = getByUser(user);
+        return getProfileById(ent.getId());
+    }
+
+    @Override
+    public ApiResponse updateProfileById(int entId, EntUpdateRequest request, MultipartFile avatar) {
         Enterprise ent = getById(entId);
         City city = cityService.getById(request.getCityId());
         EnterpriseField field = entFieldService.getById(request.getEnterpriseFieldId());
-        userService.updateAvatar(ent.getUser(), avatar);
+
+        if (avatar != null) {
+            userService.updateAvatar(ent.getUser(), avatar);
+        }
+        if (ent.getAddress() == null) {
+            ent.setAddress(new Address());
+        }
 
         ent.getUser().setFirstName(request.getFirstName());
         ent.getUser().setLastName(request.getLastName());
@@ -101,16 +112,20 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         ent.setName(request.getName());
         ent.setField(field);
         ent.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
-//        ent.getAddress().setBuildingNumber(request.getBuildingNumber());
-//        ent.getAddress().setStreetName(request.getStreetName());
-//        ent.getAddress().setWard(request.getWard());
-//        ent.getAddress().setDistrict(request.getDistrict());
-        ent.getAddress().setDetails(request.getAddressDetails());
+        ent.getAddress().setDetails(request.getAddress());
         ent.getAddress().setCity(city);
 
         repo.save(ent);
 
         return new ApiResponse("Updated successfully Enterprise with ID " + entId);
+    }
+
+    @Override
+    public ApiResponse updateProfileByPrincipal(
+            Principal principal, EntUpdateRequest request, MultipartFile avatar) {
+        User user = userService.getByPrincipal(principal);
+        Enterprise ent = getByUser(user);
+        return updateProfileById(ent.getId(), request, avatar);
     }
 
     @Override

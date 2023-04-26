@@ -8,16 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("kols")
 @RequiredArgsConstructor
 public class KolController {
 
     private final KolService service;
 
-    @GetMapping
+    @GetMapping("kols")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
                 service.getAll(),
@@ -25,7 +25,7 @@ public class KolController {
         );
     }
 
-    @GetMapping("{id}")
+    @GetMapping("kols/{id}")
     public ResponseEntity<?> get(
             @PathVariable("id") int kolId
     ) {
@@ -35,7 +35,7 @@ public class KolController {
         );
     }
 
-    @GetMapping("field/{fieldId}")
+    @GetMapping("kols/fields/{fieldId}")
     public ResponseEntity<?> getAllByField(
             @PathVariable("fieldId") short fieldId
     ) {
@@ -45,7 +45,7 @@ public class KolController {
         );
     }
 
-    @PutMapping("{id}")
+    @PutMapping("kols/{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int kolId,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
@@ -53,12 +53,12 @@ public class KolController {
             @RequestBody KolUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.update(kolId, request, avatar, images),
+                service.updateProfileById(kolId, request, avatar, images),
                 HttpStatus.OK
         );
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("kols/{id}")
     public ResponseEntity<?> delete(
             @PathVariable("id") int userId
     ) {
@@ -68,4 +68,26 @@ public class KolController {
         );
     }
 
+    @GetMapping("kol/profile")
+    public ResponseEntity<?> getProfile(
+            Principal principal
+    ) {
+        return new ResponseEntity<>(
+                service.getProfileByPrincipal(principal),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("kol/profile")
+    public ResponseEntity<?> updateKolProfile(
+            Principal principal,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
+            @ModelAttribute KolUpdateRequest request
+    ) {
+        return new ResponseEntity<>(
+                service.updateProfileByPrincipal(principal, request, avatar, images),
+                HttpStatus.OK
+        );
+    }
 }

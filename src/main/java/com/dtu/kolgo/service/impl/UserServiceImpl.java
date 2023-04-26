@@ -1,18 +1,22 @@
 package com.dtu.kolgo.service.impl;
 
+import com.dtu.kolgo.dto.request.EmailRequest;
+import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.dto.request.UserUpdateRequest;
-import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.response.UserResponse;
+import com.dtu.kolgo.env.FileEnv;
 import com.dtu.kolgo.exception.ExistsException;
+import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Role;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.util.FileUtils;
-import com.dtu.kolgo.env.FileEnv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repo;
     private final FileUtils fileUtils;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void save(User user) {
@@ -90,26 +95,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAvatar(User user, MultipartFile avatar) {
-        if (avatar == null) return;
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(avatar.getOriginalFilename()));
-        user.setAvatar(fileName);
+    public ApiResponse updateAvatar(User user, MultipartFile avatar) {
+        String msg = "Update avatar failed";
+        if (avatar != null) {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(avatar.getOriginalFilename()));
+            user.setAvatar(fileName);
+            repo.save(user);
+            String uploadDir = FileEnv.IMAGE_PATH;
+            fileUtils.saveImage(uploadDir, fileName, avatar);
+        }
+        return new ApiResponse(msg);
+    }
+
+    @Override
+    public ApiResponse updateEmail(Principal principal, EmailRequest request) {
+        if (repo.existsByEmail(request.getEmail())) {
+            throw new ExistsException("Email already in use: " + request.getEmail());
+        }
+        User user = getByPrincipal(principal);
+        user.setEmail(request.getEmail());
         repo.save(user);
-        String uploadDir = FileEnv.IMAGE_PATH;
-        fileUtils.saveImage(uploadDir, fileName, avatar);
+
+        return new ApiResponse("Updated email successfully");
+    }
+
+    @Override
+    public ApiResponse updatePassword(Principal principal, PasswordUpdateRequest request) {
+        User user = getByPrincipal(principal);
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new InvalidException("Incorrect password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        repo.save(user);
+
+        return new ApiResponse("Updated password successfully !!");
     }
 
     @Override
     public ApiResponse delete(int userId) {
         repo.deleteById(userId);
         return new ApiResponse("Deleted successfully User with ID: " + userId);
-    }
-
-    @Override
-    public void validateEmail(String email) {
-        if (repo.existsByEmail(email)) {
-            throw new ExistsException("Email already in use: " + email);
-        }
     }
 
 }
