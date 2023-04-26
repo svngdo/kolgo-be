@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(avatar.getOriginalFilename()));
         user.setAvatar(fileName);
         repo.save(user);
-        String uploadDir = FileEnv.IMAGE_PATH + "/" + user.getId() + " - " + user.getEmail();
+        String uploadDir = FileEnv.IMAGE_PATH;
         fileUtils.saveImage(uploadDir, fileName, avatar);
     }
 
