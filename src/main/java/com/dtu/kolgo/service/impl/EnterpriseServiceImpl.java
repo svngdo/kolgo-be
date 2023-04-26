@@ -112,7 +112,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         ent.setName(request.getName());
         ent.setField(field);
         ent.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
-        ent.getAddress().setDetails(request.getAddress());
+        ent.getAddress().setDetails(request.getAddressDetails());
         ent.getAddress().setCity(city);
 
         repo.save(ent);

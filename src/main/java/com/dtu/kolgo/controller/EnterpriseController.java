@@ -3,6 +3,7 @@ package com.dtu.kolgo.controller;
 import com.dtu.kolgo.dto.request.EntUpdateRequest;
 import com.dtu.kolgo.service.EnterpriseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +13,12 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class EnterpriseController {
 
     private final EnterpriseService service;
 
-    @GetMapping
+    @GetMapping("ents")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
                 service.getAll(),
@@ -72,6 +74,7 @@ public class EnterpriseController {
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @ModelAttribute EntUpdateRequest request
     ) {
+        log.info(request.toString());
         return new ResponseEntity<>(
                 service.updateProfileByPrincipal(principal, request, avatar),
                 HttpStatus.OK
