@@ -1,6 +1,6 @@
 package com.dtu.kolgo.enums;
 
-public enum GrantTypes {
+public enum GrantType {
 
     ACCESS_TOKEN,
     REFRESH_TOKEN,

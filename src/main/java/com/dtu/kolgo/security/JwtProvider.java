@@ -3,8 +3,8 @@ package com.dtu.kolgo.security;
 import com.dtu.kolgo.exception.CustomJwtException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.User;
-import com.dtu.kolgo.enums.GrantTypes;
-import com.dtu.kolgo.enums.JwtKeys;
+import com.dtu.kolgo.enums.GrantType;
+import com.dtu.kolgo.enums.JwtKey;
 import com.dtu.kolgo.env.JwtEnv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
@@ -39,7 +39,7 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(key64UrlBytes);
     }
 
-    public String generateToken(String sub, long ttlMillis, GrantTypes grantTypes, Map<String, Object> extraClaims) {
+    public String generateToken(String sub, long ttlMillis, GrantType grantType, Map<String, Object> extraClaims) {
         long nowMillis = System.currentTimeMillis();
         Date iat = new Date(nowMillis);
         Date exp = new Date(iat.getTime() + ttlMillis);
@@ -47,20 +47,20 @@ public class JwtProvider {
                 .setSubject(sub)
                 .setExpiration(exp)
                 .setIssuedAt(iat)
-                .claim(JwtKeys.GRANT_TYPE.toString(), grantTypes)
+                .claim(JwtKey.GRANT_TYPE.toString(), grantType)
                 .addClaims(extraClaims)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    public String generateToken(String sub, long ttlMillis, GrantTypes grantTypes) {
-        return generateToken(sub, ttlMillis, grantTypes, new HashMap<>());
+    public String generateToken(String sub, long ttlMillis, GrantType grantType) {
+        return generateToken(sub, ttlMillis, grantType, new HashMap<>());
     }
 
     public String generateAccessToken(User user) {
         return generateToken(
                 String.valueOf(user.getId()),
                 JwtEnv.ACCESS_EXPIRATION,
-                GrantTypes.ACCESS_TOKEN
+                GrantType.ACCESS_TOKEN
         );
     }
 
@@ -68,17 +68,17 @@ public class JwtProvider {
         return generateToken(
                 String.valueOf(user.getId()),
                 JwtEnv.REFRESH_EXPIRATION,
-                GrantTypes.REFRESH_TOKEN
+                GrantType.REFRESH_TOKEN
         );
     }
 
     public String generateResetPasswordToken(User user) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(JwtKeys.PASSWORD.toString(), user.getPassword());
+        extraClaims.put(JwtKey.PASSWORD.toString(), user.getPassword());
         return generateToken(
                 String.valueOf(user.getId()),
                 JwtEnv.RESET_PASSWORD_EXPIRATION,
-                GrantTypes.RESET_PASSWORD_TOKEN,
+                GrantType.RESET_PASSWORD_TOKEN,
                 extraClaims
         );
     }
@@ -87,14 +87,14 @@ public class JwtProvider {
             String firstName, String lastName, String email, String password
     ) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(JwtKeys.FIRST_NAME.toString(), firstName);
-        extraClaims.put(JwtKeys.LAST_NAME.toString(), lastName);
-        extraClaims.put(JwtKeys.EMAIL.toString(), email);
-        extraClaims.put(JwtKeys.PASSWORD.toString(), password);
+        extraClaims.put(JwtKey.FIRST_NAME.toString(), firstName);
+        extraClaims.put(JwtKey.LAST_NAME.toString(), lastName);
+        extraClaims.put(JwtKey.EMAIL.toString(), email);
+        extraClaims.put(JwtKey.PASSWORD.toString(), password);
         return generateToken(
                 "0",
                 JwtEnv.VERIFY_ACCOUNT_EXPIRATION,
-                GrantTypes.VERIFY_ACCOUNT_TOKEN,
+                GrantType.VERIFY_ACCOUNT_TOKEN,
                 extraClaims
         );
     }
@@ -118,27 +118,27 @@ public class JwtProvider {
 
     public String extractEmail(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKeys.EMAIL.toString(), String.class);
+        return claims.get(JwtKey.EMAIL.toString(), String.class);
     }
 
     public String extractPassword(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKeys.PASSWORD.toString(), String.class);
+        return claims.get(JwtKey.PASSWORD.toString(), String.class);
     }
 
     public String extractFirstName(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKeys.FIRST_NAME.toString(), String.class);
+        return claims.get(JwtKey.FIRST_NAME.toString(), String.class);
     }
 
     public String extractLastName(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKeys.LAST_NAME.toString(), String.class);
+        return claims.get(JwtKey.LAST_NAME.toString(), String.class);
     }
 
     public String extractGrantType(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get(JwtKeys.GRANT_TYPE.toString(), String.class);
+        return claims.get(JwtKey.GRANT_TYPE.toString(), String.class);
     }
 
     public boolean validate(String token) {
@@ -158,7 +158,7 @@ public class JwtProvider {
         }
     }
 
-    public boolean validateGrantType(String token, GrantTypes type) {
+    public boolean validateGrantType(String token, GrantType type) {
         String grantType = extractGrantType(token);
         if (grantType.equals(type.name())) {
             return true;

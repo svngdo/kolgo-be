@@ -17,7 +17,7 @@ import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
-import com.dtu.kolgo.enums.GrantTypes;
+import com.dtu.kolgo.enums.GrantType;
 import com.dtu.kolgo.enums.Roles;
 import com.dtu.kolgo.env.JwtEnv;
 import com.dtu.kolgo.env.ServerEnv;
@@ -79,7 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public ApiResponse verify(String token, boolean isBiz) {
         jwtProvider.validate(token);
-        jwtProvider.validateGrantType(token, GrantTypes.VERIFY_ACCOUNT_TOKEN);
+        jwtProvider.validateGrantType(token, GrantType.VERIFY_ACCOUNT_TOKEN);
 
         String email = jwtProvider.extractEmail(token);
         if (userRepo.existsByEmail(email)) {
@@ -160,7 +160,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public TokenResponse refreshToken(String refreshToken) {
         // validate refresh token
         jwtProvider.validate(refreshToken);
-        jwtProvider.validateGrantType(refreshToken, GrantTypes.REFRESH_TOKEN);
+        jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
 
         // get user from token
         User user = userService.getById(jwtProvider.extractUserId(refreshToken));
@@ -208,7 +208,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public ApiResponse resetPassword(String resetPasswordToken, PasswordResetRequest request) {
         // Validate token
         jwtProvider.validate(resetPasswordToken);
-        jwtProvider.validateGrantType(resetPasswordToken, GrantTypes.RESET_PASSWORD_TOKEN);
+        jwtProvider.validateGrantType(resetPasswordToken, GrantType.RESET_PASSWORD_TOKEN);
 
         // Validate password
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
