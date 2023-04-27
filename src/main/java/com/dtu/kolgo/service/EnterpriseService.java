@@ -1,8 +1,8 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.request.EntUpdateRequest;
-import com.dtu.kolgo.dto.response.EntResponse;
 import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.response.EntResponse;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +20,8 @@ public interface EnterpriseService {
 
     Enterprise getByUser(User user);
 
+    Enterprise getByPrincipal(Principal principal);
+
     EntResponse getProfileById(int entId);
 
     EntResponse getProfileByPrincipal(Principal principal);
@@ -28,6 +30,6 @@ public interface EnterpriseService {
 
     ApiResponse updateProfileByPrincipal(Principal principal, EntUpdateRequest request, MultipartFile avatar);
 
-    ApiResponse delete(int entId);
+    ApiResponse deleteById(int entId);
 
 }

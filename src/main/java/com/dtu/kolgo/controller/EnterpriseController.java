@@ -53,7 +53,7 @@ public class EnterpriseController {
             @PathVariable("id") int entId
     ) {
         return new ResponseEntity<>(
-                service.delete(entId),
+                service.deleteById(entId),
                 HttpStatus.OK
         );
     }
@@ -74,12 +74,10 @@ public class EnterpriseController {
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @ModelAttribute EntUpdateRequest request
     ) {
-        log.info(request.toString());
         return new ResponseEntity<>(
                 service.updateProfileByPrincipal(principal, request, avatar),
                 HttpStatus.OK
         );
     }
-
 
 }

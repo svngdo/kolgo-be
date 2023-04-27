@@ -1,10 +1,7 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.KolUpdateRequest;
-import com.dtu.kolgo.dto.response.ApiResponse;
-import com.dtu.kolgo.dto.response.FeedbackResponse;
-import com.dtu.kolgo.dto.response.ImageResponse;
-import com.dtu.kolgo.dto.response.KolResponse;
+import com.dtu.kolgo.dto.response.*;
 import com.dtu.kolgo.env.FileEnv;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.*;
@@ -43,18 +40,18 @@ public class KolServiceImpl implements KolService {
     @Override
     public List<KolResponse> getAll() {
         List<Kol> kols = repo.findAll();
-        return getResponseList(kols);
+        return getResponses(kols);
     }
 
     @Override
-    public List<KolResponse> getAllByFieldId(short fieldId) {
+    public List<KolResponse> getAll(short fieldId) {
         KolField field = kolFieldService.getById(fieldId);
         List<Kol> kols = repo.findAllByField(field);
-        return getResponseList(kols);
+        return getResponses(kols);
     }
 
     @Override
-    public List<KolResponse> getResponseList(List<Kol> kols) {
+    public List<KolResponse> getResponses(List<Kol> kols) {
         return kols.stream()
                 .map(kol -> KolResponse.builder()
                         .userId(kol.getUser().getId())
@@ -69,20 +66,26 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public Kol getById(int kolId) {
+    public Kol get(int kolId) {
         return repo.findById(kolId)
                 .orElseThrow(() -> new NotFoundException("KOL ID not found: " + kolId));
     }
 
     @Override
-    public Kol getByUser(User user) {
+    public Kol get(User user) {
         return repo.findByUser(user)
                 .orElseThrow(() -> new NotFoundException("KOL with User ID not found: " + user.getId()));
     }
 
     @Override
-    public KolResponse getProfileById(int kolId) {
-        Kol kol = getById(kolId);
+    public Kol get(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        return get(user);
+    }
+
+    @Override
+    public KolResponse getProfile(int kolId) {
+        Kol kol = get(kolId);
         List<ImageResponse> images = kol.getImages().stream()
                 .map(img -> new ImageResponse(img.getName()))
                 .collect(Collectors.toList());
@@ -115,16 +118,15 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public KolResponse getProfileByPrincipal(Principal principal) {
-        User user = userService.getByPrincipal(principal);
-        Kol kol = getByUser(user);
-        return getProfileById(kol.getId());
+    public KolResponse getProfile(Principal principal) {
+        Kol kol = get(principal);
+        return getProfile(kol.getId());
     }
 
     @Override
-    public ApiResponse updateProfileById(
+    public ApiResponse updateProfile(
             int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
-        Kol kol = getById(kolId);
+        Kol kol = get(kolId);
         City city = cityService.getById(request.getCityId());
         Gender gender = genderService.getById(request.getGenderId());
         KolField field = kolFieldService.getById(request.getKolFieldId());
@@ -153,11 +155,10 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public ApiResponse updateProfileByPrincipal(
+    public ApiResponse updateProfile(
             Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images) {
-        User user = userService.getByPrincipal(principal);
-        Kol kol = getByUser(user);
-        return updateProfileById(kol.getId(), request, avatar, images);
+        Kol kol = get(principal);
+        return updateProfile(kol.getId(), request, avatar, images);
     }
 
     @Override

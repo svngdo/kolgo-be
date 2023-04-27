@@ -40,6 +40,7 @@ public class SecurityConfig {
     };
     private final String[] AUTH_WHITELIST = {
             "/settings/**",
+            "/campaigns/**"
     };
     private final String[] WEBSOCKET_WHITELIST = {
             "/conversations/**",
