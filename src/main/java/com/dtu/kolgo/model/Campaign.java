@@ -1,5 +1,6 @@
 package com.dtu.kolgo.model;
 
+import com.dtu.kolgo.enums.CampaignStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,18 +17,18 @@ import java.util.List;
 public class Campaign extends BaseInt {
 
     @Column
-    private LocalDateTime time;
-    @Column
-    private String location;
-    @Column
     private int cost;
     @Column
     private String description;
+    @Enumerated(EnumType.STRING)
+    private CampaignStatus status;
+    @Column
+    private LocalDateTime createdAt;
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "campaigns_kols",
+    @JoinTable(name = "campaign_kols",
             joinColumns = @JoinColumn(name = "campaign_id"),
             inverseJoinColumns = @JoinColumn(name = "kol_id"))
     private List<Kol> kols;

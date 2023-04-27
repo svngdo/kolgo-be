@@ -16,21 +16,23 @@ public interface KolService {
 
     List<KolResponse> getAll();
 
-    List<KolResponse> getAllByFieldId(short fieldId);
+    List<KolResponse> getAll(short fieldId);
 
-    List<KolResponse> getResponseList(List<Kol> kols);
+    List<KolResponse> getResponses(List<Kol> kols);
 
-    Kol getById(int kolId);
+    Kol get(int kolId);
 
-    Kol getByUser(User user);
+    Kol get(User user);
 
-    KolResponse getProfileById(int kolId);
+    Kol get(Principal principal);
 
-    KolResponse getProfileByPrincipal(Principal principal);
+    KolResponse getProfile(int kolId);
 
-    ApiResponse updateProfileById(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
+    KolResponse getProfile(Principal principal);
 
-    ApiResponse updateProfileByPrincipal(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
+    ApiResponse updateProfile(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
+
+    ApiResponse updateProfile(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
 
     void updateImages(Kol kol, List<MultipartFile> images);
 

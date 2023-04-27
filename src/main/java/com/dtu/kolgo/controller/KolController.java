@@ -30,7 +30,7 @@ public class KolController {
             @PathVariable("id") int kolId
     ) {
         return new ResponseEntity<>(
-                service.getProfileById(kolId),
+                service.getProfile(kolId),
                 HttpStatus.OK
         );
     }
@@ -40,7 +40,7 @@ public class KolController {
             @PathVariable("fieldId") short fieldId
     ) {
         return new ResponseEntity<>(
-                service.getAllByFieldId(fieldId),
+                service.getAll(fieldId),
                 HttpStatus.OK
         );
     }
@@ -53,7 +53,7 @@ public class KolController {
             @RequestBody KolUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.updateProfileById(kolId, request, avatar, images),
+                service.updateProfile(kolId, request, avatar, images),
                 HttpStatus.OK
         );
     }
@@ -73,7 +73,7 @@ public class KolController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getProfileByPrincipal(principal),
+                service.getProfile(principal),
                 HttpStatus.OK
         );
     }
@@ -86,8 +86,9 @@ public class KolController {
             @ModelAttribute KolUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.updateProfileByPrincipal(principal, request, avatar, images),
+                service.updateProfile(principal, request, avatar, images),
                 HttpStatus.OK
         );
     }
+
 }

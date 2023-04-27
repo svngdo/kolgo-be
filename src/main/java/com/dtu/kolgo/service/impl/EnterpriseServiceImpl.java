@@ -1,15 +1,12 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.EntUpdateRequest;
-import com.dtu.kolgo.dto.response.EntResponse;
 import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.response.EntResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.EnterpriseRepository;
-import com.dtu.kolgo.service.CityService;
-import com.dtu.kolgo.service.EnterpriseFieldService;
-import com.dtu.kolgo.service.EnterpriseService;
-import com.dtu.kolgo.service.UserService;
+import com.dtu.kolgo.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +57,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    public Enterprise getByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        return getByUser(user);
+    }
+
+    @Override
     public EntResponse getProfileById(int entId) {
         Enterprise ent = getById(entId);
 
@@ -88,8 +91,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public EntResponse getProfileByPrincipal(Principal principal) {
-        User user = userService.getByPrincipal(principal);
-        Enterprise ent = getByUser(user);
+        Enterprise ent = getByPrincipal(principal);
         return getProfileById(ent.getId());
     }
 
@@ -123,13 +125,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public ApiResponse updateProfileByPrincipal(
             Principal principal, EntUpdateRequest request, MultipartFile avatar) {
-        User user = userService.getByPrincipal(principal);
-        Enterprise ent = getByUser(user);
+        Enterprise ent = getByPrincipal(principal);
         return updateProfileById(ent.getId(), request, avatar);
     }
 
     @Override
-    public ApiResponse delete(int entId) {
+    public ApiResponse deleteById(int entId) {
         repo.deleteById(entId);
         return new ApiResponse("Deleted successfully Enterprise with ID " + entId);
     }

@@ -38,8 +38,8 @@ public class KolResponse {
     private String avatar;
     private String firstName;
     private String lastName;
-    private Short genderId;
     private String email;
+    private Short genderId;
     private String phoneNumber;
     private List<ImageResponse> images;
     private Short cityId;

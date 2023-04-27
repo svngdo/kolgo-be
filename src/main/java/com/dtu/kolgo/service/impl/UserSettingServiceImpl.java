@@ -43,7 +43,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         List<Booking> bookings = new ArrayList<>();
 
         if (userRoles.get(0).getName().equals(Roles.KOL.name())) {
-            bookings = kolService.getByUser(user).getBookings();
+            bookings = kolService.get(user).getBookings();
         } else if (userRoles.get(0).getName().equals(Roles.ENTERPRISE.name())) {
             bookings = entService.getByUser(user).getBookings();
         }
@@ -61,7 +61,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         List<Payment> payments = new ArrayList<>();
 
         if (userRoles.get(0).getName().equals(Roles.KOL.name())) {
-            payments = kolService.getByUser(user).getPayments();
+            payments = kolService.get(user).getPayments();
         } else if (userRoles.get(0).getName().equals(Roles.ENTERPRISE.name())) {
             payments = entService.getByUser(user).getPayments();
         }

@@ -1,4 +1,4 @@
-create table if not exists campaigns_kols
+create table if not exists campaign_kols
 (
     campaign_id int not null references campaigns (id),
     kol_id      int not null references kols (id),
