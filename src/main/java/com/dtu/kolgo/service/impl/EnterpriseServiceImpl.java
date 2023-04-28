@@ -36,6 +36,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    public List<EntResponse> getAllResponses(short fieldId) {
+        EnterpriseField field = entFieldService.getById(fieldId);
+        List<Enterprise> ents = repo.findAllByField(field);
+        return mapEntityToDto(ents);
+    }
+
+    @Override
     public Enterprise get(int entId) {
         return repo.findById(entId)
                 .orElseThrow(() -> new NotFoundException("Enterprise ID not found: " + entId));

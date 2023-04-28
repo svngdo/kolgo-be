@@ -20,7 +20,7 @@ public class KolController {
     @GetMapping("kols")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAll(),
+                service.getAllResponses(),
                 HttpStatus.OK
         );
     }
@@ -40,7 +40,7 @@ public class KolController {
             @PathVariable("fieldId") short fieldId
     ) {
         return new ResponseEntity<>(
-                service.getAll(fieldId),
+                service.getAllResponses(fieldId),
                 HttpStatus.OK
         );
     }

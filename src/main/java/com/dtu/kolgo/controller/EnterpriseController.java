@@ -21,7 +21,7 @@ public class EnterpriseController {
     @GetMapping("ents")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAll(),
+                service.getAllResponses(),
                 HttpStatus.OK
         );
     }
@@ -32,6 +32,16 @@ public class EnterpriseController {
     ) {
         return new ResponseEntity<>(
                 service.getProfile(entId),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("ents/fields/{fieldId}")
+    public ResponseEntity<?> getAllByField(
+            @PathVariable("fieldId") short fieldId
+    ) {
+        return new ResponseEntity<>(
+                service.getAllResponses(fieldId),
                 HttpStatus.OK
         );
     }

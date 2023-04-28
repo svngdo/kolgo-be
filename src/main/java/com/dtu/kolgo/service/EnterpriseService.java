@@ -16,6 +16,8 @@ public interface EnterpriseService {
 
     List<EntResponse> getAllResponses();
 
+    List<EntResponse> getAllResponses(short fieldId);
+
     Enterprise get(int entId);
 
     Enterprise get(User user);
