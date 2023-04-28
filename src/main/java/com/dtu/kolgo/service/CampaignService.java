@@ -17,11 +17,15 @@ public interface CampaignService {
 
     ApiResponse save(Principal principal, CampaignRequest request);
 
-    List<CampaignResponse> getAll();
+    List<Campaign> getAll();
 
-    List<CampaignResponse> getAll(Principal principal, boolean isEnt);
+    List<CampaignResponse> getAllResponses();
 
-    Campaign getById(int id);
+    List<CampaignResponse> getAllResponsesEnt(Principal principal);
+
+    List<CampaignResponse> getAllResponsesKol(Principal principal);
+
+    Campaign get(int id);
 
     CampaignResponse getResponse(int id);
 

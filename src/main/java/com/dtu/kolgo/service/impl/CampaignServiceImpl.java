@@ -54,53 +54,47 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public List<CampaignResponse> getAll() {
-        return repo.findAll().stream()
-                .map(c -> CampaignResponse.builder()
-                        .build())
-                .collect(Collectors.toList());
+    public List<Campaign> getAll() {
+        return repo.findAll();
     }
 
     @Override
-    public List<CampaignResponse> getAll(Principal principal, boolean isEnt) {
-        if (isEnt) {
-            Enterprise ent = entService.getByPrincipal(principal);
-            return mapEntitiesToDtos(repo.findAllByEnterprise(ent));
-        }
+    public List<CampaignResponse> getAllResponses() {
+        return mapEntitiesToDtos(getAll());
+    }
+
+    @Override
+    public List<CampaignResponse> getAllResponsesEnt(Principal principal) {
+        Enterprise ent = entService.getByPrincipal(principal);
+        return mapEntitiesToDtos(repo.findAllByEnterprise(ent));
+    }
+
+    @Override
+    public List<CampaignResponse> getAllResponsesKol(Principal principal) {
         Kol kol = kolService.get(principal);
         return mapEntitiesToDtos(repo.findAllByKolsContains(kol));
     }
 
     @Override
-    public Campaign getById(int id) {
+    public Campaign get(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found Campaign with ID: " + id));
     }
 
     @Override
     public CampaignResponse getResponse(int id) {
-        Campaign campaign = getById(id);
+        Campaign campaign = get(id);
         List<KolResponse> kols = new ArrayList<>();
         if (campaign.getKols() != null) {
             kols = campaign.getKols().stream()
                     .map(k -> KolResponse.builder()
-                            .kolId(k.getId())
+                            .id(k.getId())
                             .userId(k.getUser().getId())
                             .avatar(k.getUser().getAvatar())
                             .firstName(k.getUser().getFirstName())
                             .lastName(k.getUser().getLastName())
                             .email(k.getUser().getEmail())
                             .phoneNumber(k.getUser().getPhoneNumber())
-//                            .genderId(k.getGender().getId())
-//                            .cityId(k.getCity().getId())
-//                            .kolFieldId(k.getField().getId())
-//                            .facebookUrl(k.getFacebookUrl())
-//                            .instagramUrl(k.getInstagramUrl())
-//                            .tiktokUrl(k.getTiktokUrl())
-//                            .youtubeUrl(k.getYoutubeUrl())
-//                            .images(k.getImages().stream()
-//                                    .map(img -> new ImageResponse(img.getName()))
-//                                    .collect(Collectors.toList()))
                             .build())
                     .collect(Collectors.toList());
         }
@@ -111,7 +105,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public ApiResponse update(int id, CampaignRequest request) {
-        Campaign campaign = getById(id);
+        Campaign campaign = get(id);
         campaign.setCost(request.getCost());
         campaign.setDescription(request.getDescription());
         campaign.setStatus(request.getStatus());

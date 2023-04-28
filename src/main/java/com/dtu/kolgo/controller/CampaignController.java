@@ -19,7 +19,7 @@ public class CampaignController {
     @GetMapping("campaigns")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAll(),
+                service.getAllResponses(),
                 HttpStatus.OK
         );
     }
@@ -67,11 +67,11 @@ public class CampaignController {
     }
 
     @GetMapping("campaigns/ent")
-    public ResponseEntity<?> getEntCampaigns(
+    public ResponseEntity<?> getAll(
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getAll(principal, true),
+                service.getAllResponsesEnt(principal),
                 HttpStatus.OK
         );
     }
@@ -104,7 +104,7 @@ public class CampaignController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getAll(principal, false),
+                service.getAllResponsesKol(principal),
                 HttpStatus.OK
         );
     }
