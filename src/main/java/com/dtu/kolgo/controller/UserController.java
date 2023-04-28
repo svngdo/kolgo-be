@@ -4,6 +4,7 @@ import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.dto.request.UserUpdateRequest;
 import com.dtu.kolgo.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +60,7 @@ public class UserController {
     @PutMapping("user/email")
     public ResponseEntity<?> updateUserEmail(
             Principal principal,
-            @RequestBody EmailRequest request
+            @RequestBody @Valid EmailRequest request
     ) {
         return new ResponseEntity<>(
                 service.updateEmail(principal, request),
@@ -70,7 +71,7 @@ public class UserController {
     @PutMapping("user/password")
     public ResponseEntity<?> updateUserPassword(
             Principal principal,
-            @RequestBody PasswordUpdateRequest request
+            @RequestBody @Valid PasswordUpdateRequest request
     ) {
         return new ResponseEntity<>(
                 service.updatePassword(principal, request),
