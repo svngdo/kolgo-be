@@ -35,10 +35,6 @@ public class Kol extends BaseInt {
     private String youtubeUrl;
     @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
     private List<Booking> bookings;
-    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks;
-    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
-    private List<Payment> payments;
     @ManyToMany(mappedBy = "kols")
     private List<Campaign> campaigns;
     @OneToOne(cascade = CascadeType.ALL)
