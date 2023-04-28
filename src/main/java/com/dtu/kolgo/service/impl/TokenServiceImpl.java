@@ -30,7 +30,7 @@ public class TokenServiceImpl implements TokenService {
             System.out.println("Delete single token: " + value);
         } else {
             int userId = jwtProvider.extractUserId(value);
-            User user = userService.getById(userId);
+            User user = userService.get(userId);
             repo.deleteAllByUser(user);
             System.out.println("Delete all tokens of user " + user.getUsername());
             throw new NotFoundException("Token not found: " + value);

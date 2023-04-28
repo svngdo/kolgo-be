@@ -36,37 +36,38 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void save(User user) {
+    public ApiResponse save(User user) {
         repo.save(user);
+        return new ApiResponse("Saved user successfully");
     }
 
     @Override
-    public List<UserResponse> getAll() {
+    public List<UserResponse> getAllResponses() {
         return repo.findAll().stream()
-                .map(user -> getResponseById(user.getId()))
+                .map(user -> getResponse(user.getId()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public User getById(int id) {
+    public User get(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("User ID not found: " + id));
     }
 
     @Override
-    public User getByEmail(String email) {
+    public User get(String email) {
         return repo.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Email not found: " + email));
     }
 
     @Override
-    public User getByPrincipal(Principal principal) {
-        return getByEmail(principal.getName());
+    public User get(Principal principal) {
+        return get(principal.getName());
     }
 
     @Override
-    public UserResponse getResponseById(int userId) {
-        User user = getById(userId);
+    public UserResponse getResponse(int userId) {
+        User user = get(userId);
 
         return UserResponse.builder()
                 .id(userId)
@@ -82,8 +83,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getRole(Principal principal) {
+        return get(principal).getRoles().get(0).getName();
+    }
+
+    @Override
     public ApiResponse update(int userId, UserUpdateRequest request) {
-        User user = getById(userId);
+        User user = get(userId);
         updateAvatar(user, request.getAvatar());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -112,7 +118,7 @@ public class UserServiceImpl implements UserService {
         if (repo.existsByEmail(request.getEmail())) {
             throw new ExistsException("Email already in use: " + request.getEmail());
         }
-        User user = getByPrincipal(principal);
+        User user = get(principal);
         user.setEmail(request.getEmail());
         repo.save(user);
 
@@ -121,7 +127,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse updatePassword(Principal principal, PasswordUpdateRequest request) {
-        User user = getByPrincipal(principal);
+        User user = get(principal);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new InvalidException("Incorrect password");
