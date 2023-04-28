@@ -39,8 +39,8 @@ public class SecurityConfig {
             "/auth/**"
     };
     private final String[] AUTH_WHITELIST = {
-            "/settings/**",
-            "/campaigns/**"
+            "/campaigns/**",
+            "/user/**"
     };
     private final String[] WEBSOCKET_WHITELIST = {
             "/conversations/**",
@@ -87,7 +87,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
                 .requestMatchers(WEBSOCKET_WHITELIST).permitAll()
-                .requestMatchers(OPEN_API_WHITELIST).permitAll()
                 .requestMatchers(OPEN_API_WHITELIST).permitAll()
                 .requestMatchers(KOL_WHITELIST).hasAuthority(KOL)
                 .requestMatchers(ENT_WHITELIST).hasAuthority(ENTERPRISE)
