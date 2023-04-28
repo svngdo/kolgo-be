@@ -45,26 +45,26 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public Enterprise getById(int entId) {
+    public Enterprise get(int entId) {
         return repo.findById(entId)
                 .orElseThrow(() -> new NotFoundException("Enterprise ID not found: " + entId));
     }
 
     @Override
-    public Enterprise getByUser(User user) {
+    public Enterprise get(User user) {
         return repo.findByUser(user)
                 .orElseThrow(() -> new NotFoundException("Enterprise not found with User ID: " + user.getId()));
     }
 
     @Override
-    public Enterprise getByPrincipal(Principal principal) {
-        User user = userService.getByPrincipal(principal);
-        return getByUser(user);
+    public Enterprise get(Principal principal) {
+        User user = userService.get(principal);
+        return get(user);
     }
 
     @Override
-    public EntResponse getProfileById(int entId) {
-        Enterprise ent = getById(entId);
+    public EntResponse getProfile(int entId) {
+        Enterprise ent = get(entId);
 
         String addressDetails = null;
         Short cityId = null;
@@ -90,14 +90,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EntResponse getProfileByPrincipal(Principal principal) {
-        Enterprise ent = getByPrincipal(principal);
-        return getProfileById(ent.getId());
+    public EntResponse getProfile(Principal principal) {
+        Enterprise ent = get(principal);
+        return getProfile(ent.getId());
     }
 
     @Override
-    public ApiResponse updateProfileById(int entId, EntUpdateRequest request, MultipartFile avatar) {
-        Enterprise ent = getById(entId);
+    public ApiResponse updateProfile(int entId, EntUpdateRequest request, MultipartFile avatar) {
+        Enterprise ent = get(entId);
         City city = cityService.getById(request.getCityId());
         EnterpriseField field = entFieldService.getById(request.getEnterpriseFieldId());
 
@@ -123,14 +123,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public ApiResponse updateProfileByPrincipal(
+    public ApiResponse updateProfile(
             Principal principal, EntUpdateRequest request, MultipartFile avatar) {
-        Enterprise ent = getByPrincipal(principal);
-        return updateProfileById(ent.getId(), request, avatar);
+        Enterprise ent = get(principal);
+        return updateProfile(ent.getId(), request, avatar);
     }
 
     @Override
-    public ApiResponse deleteById(int entId) {
+    public ApiResponse delete(int entId) {
         repo.deleteById(entId);
         return new ApiResponse("Deleted successfully Enterprise with ID " + entId);
     }

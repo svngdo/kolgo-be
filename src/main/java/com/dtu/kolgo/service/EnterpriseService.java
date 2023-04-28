@@ -16,20 +16,20 @@ public interface EnterpriseService {
 
     List<EntResponse> getAll();
 
-    Enterprise getById(int entId);
+    Enterprise get(int entId);
 
-    Enterprise getByUser(User user);
+    Enterprise get(User user);
 
-    Enterprise getByPrincipal(Principal principal);
+    Enterprise get(Principal principal);
 
-    EntResponse getProfileById(int entId);
+    EntResponse getProfile(int entId);
 
-    EntResponse getProfileByPrincipal(Principal principal);
+    EntResponse getProfile(Principal principal);
 
-    ApiResponse updateProfileById(int entId, EntUpdateRequest request, MultipartFile avatar);
+    ApiResponse updateProfile(int entId, EntUpdateRequest request, MultipartFile avatar);
 
-    ApiResponse updateProfileByPrincipal(Principal principal, EntUpdateRequest request, MultipartFile avatar);
+    ApiResponse updateProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar);
 
-    ApiResponse deleteById(int entId);
+    ApiResponse delete(int entId);
 
 }
