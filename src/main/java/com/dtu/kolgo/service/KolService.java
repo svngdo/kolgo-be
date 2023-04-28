@@ -12,13 +12,11 @@ import java.util.List;
 
 public interface KolService {
 
-    void save(Kol kol);
+    ApiResponse save(Kol kol);
 
-    List<KolResponse> getAll();
+    List<KolResponse> getAllResponses();
 
-    List<KolResponse> getAll(short fieldId);
-
-    List<KolResponse> getResponses(List<Kol> kols);
+    List<KolResponse> getAllResponses(short fieldId);
 
     Kol get(int kolId);
 
@@ -37,5 +35,9 @@ public interface KolService {
     void updateImages(Kol kol, List<MultipartFile> images);
 
     ApiResponse delete(int kolId);
+
+    KolResponse mapEntityToDto(Kol kol);
+
+    List<KolResponse> mapEntityToDto(List<Kol> kols);
 
 }

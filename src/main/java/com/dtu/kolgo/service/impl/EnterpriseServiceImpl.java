@@ -25,23 +25,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private final UserService userService;
 
     @Override
-    public void save(Enterprise ent) {
+    public ApiResponse save(Enterprise ent) {
         repo.save(ent);
+        return new ApiResponse("Saved Enterprise successfully");
     }
 
     @Override
-    public List<EntResponse> getAll() {
-        return repo.findAll().stream()
-                .map(ent -> EntResponse.builder()
-                        .userId(ent.getUser().getId())
-                        .enterpriseId(ent.getId())
-                        .firstName(ent.getUser().getFirstName())
-                        .lastName(ent.getUser().getLastName())
-                        .avatar(ent.getUser().getAvatar())
-                        .email(ent.getUser().getEmail())
-                        .name(ent.getName())
-                        .build())
-                .collect(Collectors.toList());
+    public List<EntResponse> getAllResponses() {
+        return mapEntityToDto(repo.findAll());
     }
 
     @Override
@@ -65,28 +56,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public EntResponse getProfile(int entId) {
         Enterprise ent = get(entId);
-
-        String addressDetails = null;
-        Short cityId = null;
-
-        if (ent.getAddress() != null) {
-            addressDetails = ent.getAddress().getDetails() == null ? null : ent.getAddress().getDetails();
-            cityId = ent.getAddress().getCity() == null ? null : ent.getAddress().getCity().getId();
-        }
-
-        return EntResponse.builder()
-                .enterpriseId(entId)
-                .firstName(ent.getUser().getFirstName())
-                .lastName(ent.getUser().getLastName())
-                .email(ent.getUser().getEmail())
-                .phoneNumber(ent.getUser().getPhoneNumber() == null ? null : ent.getUser().getPhoneNumber())
-                .avatar(ent.getUser().getAvatar() == null ? null : ent.getUser().getAvatar())
-                .name(ent.getName())
-                .enterpriseFieldId(ent.getField() == null ? null : ent.getField().getId())
-                .addressDetails(addressDetails)
-                .cityId(cityId)
-                .taxIdentificationNumber(ent.getTaxIdentificationNumber())
-                .build();
+        return mapEntityToDto(ent);
     }
 
     @Override
@@ -133,6 +103,38 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public ApiResponse delete(int entId) {
         repo.deleteById(entId);
         return new ApiResponse("Deleted successfully Enterprise with ID " + entId);
+    }
+
+    @Override
+    public EntResponse mapEntityToDto(Enterprise ent) {
+        String addressDetails = null;
+        Short cityId = null;
+
+        if (ent.getAddress() != null) {
+            addressDetails = ent.getAddress().getDetails() == null ? null : ent.getAddress().getDetails();
+            cityId = ent.getAddress().getCity() == null ? null : ent.getAddress().getCity().getId();
+        }
+
+        return EntResponse.builder()
+                .id(ent.getId())
+                .firstName(ent.getUser().getFirstName())
+                .lastName(ent.getUser().getLastName())
+                .email(ent.getUser().getEmail())
+                .phoneNumber(ent.getUser().getPhoneNumber() == null ? null : ent.getUser().getPhoneNumber())
+                .avatar(ent.getUser().getAvatar() == null ? null : ent.getUser().getAvatar())
+                .name(ent.getName())
+                .enterpriseFieldId(ent.getField() == null ? null : ent.getField().getId())
+                .addressDetails(addressDetails)
+                .cityId(cityId)
+                .taxIdentificationNumber(ent.getTaxIdentificationNumber())
+                .build();
+    }
+
+    @Override
+    public List<EntResponse> mapEntityToDto(List<Enterprise> enterprises) {
+        return enterprises.stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 
 }

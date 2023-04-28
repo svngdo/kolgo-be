@@ -68,18 +68,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getResponse(int userId) {
         User user = get(userId);
+        return mapEntityToDto(user);
+    }
 
-        return UserResponse.builder()
-                .id(userId)
-                .avatar(user.getAvatar())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .roles(user.getRoles().stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList()))
-                .build();
+    @Override
+    public String getRole(int id) {
+        return get(id).getRoles().get(0).getName();
     }
 
     @Override
@@ -143,6 +137,28 @@ public class UserServiceImpl implements UserService {
     public ApiResponse delete(int userId) {
         repo.deleteById(userId);
         return new ApiResponse("Deleted successfully User with ID: " + userId);
+    }
+
+    @Override
+    public UserResponse mapEntityToDto(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .avatar(user.getAvatar())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .roles(user.getRoles().stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public List<UserResponse> mapEntityToDto(List<User> users) {
+        return users.stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 
 }

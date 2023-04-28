@@ -13,15 +13,12 @@ import lombok.*;
 public class Feedback extends BaseInt {
 
     @Column
-    private short rating;
+    private Short rating;
     @Column
     private String comment;
     @ManyToOne
-    @JoinColumn(name = "kol_id")
-    private Kol kol;
-    @ManyToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise enterprise;
+    @JoinColumn(name = "user_id")
+    private User user;
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;

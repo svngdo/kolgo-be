@@ -43,13 +43,13 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public ApiResponse save(int entId, CampaignRequest request) {
-        Enterprise ent = entService.getById(entId);
+        Enterprise ent = entService.get(entId);
         return save(ent, request);
     }
 
     @Override
     public ApiResponse save(Principal principal, CampaignRequest request) {
-        Enterprise ent = entService.getByPrincipal(principal);
+        Enterprise ent = entService.get(principal);
         return save(ent, request);
     }
 
@@ -65,7 +65,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public List<CampaignResponse> getAllResponsesEnt(Principal principal) {
-        Enterprise ent = entService.getByPrincipal(principal);
+        Enterprise ent = entService.get(principal);
         return mapEntitiesToDtos(repo.findAllByEnterprise(ent));
     }
 
@@ -114,7 +114,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public ApiResponse update(Principal principal, int id, CampaignRequest request) {
-        Enterprise ent = entService.getByPrincipal(principal);
+        Enterprise ent = entService.get(principal);
         boolean hasCampaign = ent.getCampaigns().stream().anyMatch(c -> c.getId() == id);
         if (hasCampaign) {
             return update(id, request);
@@ -130,7 +130,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public ApiResponse delete(Principal principal, int id) {
-        Enterprise ent = entService.getByPrincipal(principal);
+        Enterprise ent = entService.get(principal);
         boolean hasCampaign = ent.getCampaigns().stream().anyMatch(c -> c.getId() == id);
         if (hasCampaign) {
             return delete(id);

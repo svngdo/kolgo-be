@@ -15,7 +15,8 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "kolId",
+        "id",
+        "userId",
         "firstName",
         "lastName",
         "genderId",
@@ -29,12 +30,12 @@ import java.util.List;
         "instagramUrl",
         "tiktokUrl",
         "youtubeUrl",
-        "feedbacks",
-        "userId"
+        "feedbacks"
 })
 public class KolResponse {
 
-    private Integer kolId;
+    private Integer id;
+    private Integer userId;
     private String avatar;
     private String firstName;
     private String lastName;
@@ -49,6 +50,5 @@ public class KolResponse {
     private String tiktokUrl;
     private String youtubeUrl;
     private List<FeedbackResponse> feedbacks;
-    private Integer userId;
 
 }

@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface EnterpriseService {
 
-    void save(Enterprise ent);
+    ApiResponse save(Enterprise ent);
 
-    List<EntResponse> getAll();
+    List<EntResponse> getAllResponses();
 
     Enterprise get(int entId);
 
@@ -31,5 +31,9 @@ public interface EnterpriseService {
     ApiResponse updateProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar);
 
     ApiResponse delete(int entId);
+
+    EntResponse mapEntityToDto(Enterprise enterprise);
+
+    List<EntResponse> mapEntityToDto(List<Enterprise> enterprises);
 
 }

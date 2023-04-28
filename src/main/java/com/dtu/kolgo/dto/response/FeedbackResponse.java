@@ -13,14 +13,20 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "id",
+        "userId",
+        "firstName",
+        "lastName",
         "rating",
-        "comment",
-        "enterpriseName"
+        "comment"
 })
 public class FeedbackResponse {
 
+    private int id;
+    private int userId;
+    private String firstName;
+    private String lastName;
     private short rating;
     private String comment;
-    private String entName;
 
 }

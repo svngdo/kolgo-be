@@ -25,6 +25,8 @@ public interface UserService {
 
     UserResponse getResponse(int userId);
 
+    String getRole(int id);
+
     String getRole(Principal principal);
 
     ApiResponse update(int userId, UserUpdateRequest request);
@@ -36,5 +38,9 @@ public interface UserService {
     ApiResponse updatePassword(Principal principal, PasswordUpdateRequest request);
 
     ApiResponse delete(int userId);
+
+    UserResponse mapEntityToDto(User user);
+
+    List<UserResponse> mapEntityToDto(List<User> users);
 
 }
