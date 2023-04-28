@@ -1,5 +1,7 @@
 package com.dtu.kolgo.dto.response;
 
+import com.dtu.kolgo.enums.PaymentMethod;
+import com.dtu.kolgo.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
@@ -20,11 +22,11 @@ import lombok.NoArgsConstructor;
 })
 public class PaymentResponse {
 
-    private int paymentId;
-    private int amount;
-    private String senderName;
-    private String senderEmail;
-    private String receiverName;
-    private String receiverEmail;
+    private int id;
+    private PaymentMethod method;
+    private String amountPaid;
+    private String description;
+    private PaymentStatus status;
+    private int userId;
 
 }
