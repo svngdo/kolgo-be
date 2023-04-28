@@ -20,7 +20,7 @@ public class UserController {
     @GetMapping("users")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAll(),
+                service.getAllResponses(),
                 HttpStatus.OK
         );
     }
@@ -30,7 +30,7 @@ public class UserController {
             @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
-                service.getResponseById(userId),
+                service.getResponse(userId),
                 HttpStatus.OK
         );
     }
