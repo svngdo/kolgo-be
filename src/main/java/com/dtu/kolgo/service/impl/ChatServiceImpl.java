@@ -31,8 +31,8 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ConversationResponse addConversation(Principal principal, ConversationRequest request) {
 
-        User sender = userService.getByPrincipal(principal);
-        User receiver = userService.getById(request.getReceiverId());
+        User sender = userService.get(principal);
+        User receiver = userService.get(request.getReceiverId());
         List<User> users = new ArrayList<>();
         users.add(sender);
         users.add(receiver);
@@ -54,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ConversationResponse> getConversations(Principal principal) {
-        User sender = userService.getByPrincipal(principal);
+        User sender = userService.get(principal);
         List<Conversation> conversations = conversationRepo.findAllByUsersContains(sender);
         return conversations.stream().map(c ->
         {
@@ -84,7 +84,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public MessageResponse handlePublicMessage(MessageRequest request) {
-        User author = userService.getById(request.getSenderId());
+        User author = userService.get(request.getSenderId());
         return MessageResponse.builder()
                 .authorId(author.getId())
                 .authorFirstName(author.getFirstName())
@@ -97,7 +97,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public MessageResponse handlePrivateMessage(MessageRequest request) {
-        User sender = userService.getById(request.getSenderId());
+        User sender = userService.get(request.getSenderId());
         return MessageResponse.builder()
                 .conversationId(request.getConversationId())
                 .authorId(request.getSenderId())

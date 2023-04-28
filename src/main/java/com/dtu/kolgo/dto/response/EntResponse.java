@@ -19,7 +19,8 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "enterpriseId",
+        "id",
+        "userId",
         "firstName",
         "lastName",
         "email",
@@ -37,12 +38,11 @@ import java.util.List;
         "payments",
         "campaigns",
         "feedbacks",
-        "userId"
 })
 public class EntResponse {
 
+    private Integer id;
     private Integer userId;
-    private Integer enterpriseId;
     private String firstName;
     private String lastName;
     private String avatar;

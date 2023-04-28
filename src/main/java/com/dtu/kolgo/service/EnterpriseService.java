@@ -12,24 +12,30 @@ import java.util.List;
 
 public interface EnterpriseService {
 
-    void save(Enterprise ent);
+    ApiResponse save(Enterprise ent);
 
-    List<EntResponse> getAll();
+    List<EntResponse> getAllResponses();
 
-    Enterprise getById(int entId);
+    List<EntResponse> getAllResponses(short fieldId);
 
-    Enterprise getByUser(User user);
+    Enterprise get(int entId);
 
-    Enterprise getByPrincipal(Principal principal);
+    Enterprise get(User user);
 
-    EntResponse getProfileById(int entId);
+    Enterprise get(Principal principal);
 
-    EntResponse getProfileByPrincipal(Principal principal);
+    EntResponse getProfile(int entId);
 
-    ApiResponse updateProfileById(int entId, EntUpdateRequest request, MultipartFile avatar);
+    EntResponse getProfile(Principal principal);
 
-    ApiResponse updateProfileByPrincipal(Principal principal, EntUpdateRequest request, MultipartFile avatar);
+    ApiResponse updateProfile(int entId, EntUpdateRequest request, MultipartFile avatar);
 
-    ApiResponse deleteById(int entId);
+    ApiResponse updateProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar);
+
+    ApiResponse delete(int entId);
+
+    EntResponse mapEntityToDto(Enterprise enterprise);
+
+    List<EntResponse> mapEntityToDto(List<Enterprise> enterprises);
 
 }

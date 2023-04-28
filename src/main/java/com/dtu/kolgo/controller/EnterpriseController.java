@@ -21,7 +21,7 @@ public class EnterpriseController {
     @GetMapping("ents")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAll(),
+                service.getAllResponses(),
                 HttpStatus.OK
         );
     }
@@ -31,7 +31,17 @@ public class EnterpriseController {
             @PathVariable("id") int entId
     ) {
         return new ResponseEntity<>(
-                service.getProfileById(entId),
+                service.getProfile(entId),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("ents/fields/{fieldId}")
+    public ResponseEntity<?> getAllByField(
+            @PathVariable("fieldId") short fieldId
+    ) {
+        return new ResponseEntity<>(
+                service.getAllResponses(fieldId),
                 HttpStatus.OK
         );
     }
@@ -43,7 +53,7 @@ public class EnterpriseController {
             @RequestBody EntUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.updateProfileById(entId, request, avatar),
+                service.updateProfile(entId, request, avatar),
                 HttpStatus.OK
         );
     }
@@ -53,7 +63,7 @@ public class EnterpriseController {
             @PathVariable("id") int entId
     ) {
         return new ResponseEntity<>(
-                service.deleteById(entId),
+                service.delete(entId),
                 HttpStatus.OK
         );
     }
@@ -63,7 +73,7 @@ public class EnterpriseController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getProfileByPrincipal(principal),
+                service.getProfile(principal),
                 HttpStatus.OK
         );
     }
@@ -75,7 +85,7 @@ public class EnterpriseController {
             @ModelAttribute EntUpdateRequest request
     ) {
         return new ResponseEntity<>(
-                service.updateProfileByPrincipal(principal, request, avatar),
+                service.updateProfile(principal, request, avatar),
                 HttpStatus.OK
         );
     }

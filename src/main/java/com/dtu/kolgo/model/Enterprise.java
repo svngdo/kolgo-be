@@ -27,11 +27,7 @@ public class Enterprise extends BaseInt {
     @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
     private List<Booking> bookings;
     @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
-    private List<Payment> payments;
-    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
     private List<Campaign> campaigns;
-    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;

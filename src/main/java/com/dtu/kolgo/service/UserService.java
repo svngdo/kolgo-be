@@ -13,17 +13,21 @@ import java.util.List;
 
 public interface UserService {
 
-    void save(User user);
+    ApiResponse save(User user);
 
-    List<UserResponse> getAll();
+    List<UserResponse> getAllResponses();
 
-    User getById(int userId);
+    User get(int userId);
 
-    User getByEmail(String email);
+    User get(String email);
 
-    User getByPrincipal(Principal principal);
+    User get(Principal principal);
 
-    UserResponse getResponseById(int userId);
+    UserResponse getResponse(int userId);
+
+    String getRole(int id);
+
+    String getRole(Principal principal);
 
     ApiResponse update(int userId, UserUpdateRequest request);
 
@@ -34,5 +38,9 @@ public interface UserService {
     ApiResponse updatePassword(Principal principal, PasswordUpdateRequest request);
 
     ApiResponse delete(int userId);
+
+    UserResponse mapEntityToDto(User user);
+
+    List<UserResponse> mapEntityToDto(List<User> users);
 
 }

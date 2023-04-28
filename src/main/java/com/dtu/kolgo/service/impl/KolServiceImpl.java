@@ -33,88 +33,45 @@ public class KolServiceImpl implements KolService {
     private final FileUtils fileUtils;
 
     @Override
-    public void save(Kol kol) {
+    public ApiResponse save(Kol kol) {
         repo.save(kol);
+        return new ApiResponse("Saved Kol successfully");
     }
 
     @Override
-    public List<KolResponse> getAll() {
-        List<Kol> kols = repo.findAll();
-        return getResponses(kols);
+    public List<KolResponse> getAllResponses() {
+        return mapEntityToDto(repo.findAll());
     }
 
     @Override
-    public List<KolResponse> getAll(short fieldId) {
+    public List<KolResponse> getAllResponses(short fieldId) {
         KolField field = kolFieldService.getById(fieldId);
         List<Kol> kols = repo.findAllByField(field);
-        return getResponses(kols);
-    }
-
-    @Override
-    public List<KolResponse> getResponses(List<Kol> kols) {
-        return kols.stream()
-                .map(kol -> KolResponse.builder()
-                        .userId(kol.getUser().getId())
-                        .firstName(kol.getUser().getFirstName())
-                        .lastName(kol.getUser().getLastName())
-                        .avatar(kol.getUser().getAvatar() == null ? null : kol.getUser().getAvatar())
-                        .kolId(kol.getId())
-                        .cityId(kol.getCity() == null ? null : kol.getCity().getId())
-                        .kolFieldId(kol.getField() == null ? null : kol.getField().getId())
-                        .build())
-                .collect(Collectors.toList());
+        return mapEntityToDto(kols);
     }
 
     @Override
     public Kol get(int kolId) {
         return repo.findById(kolId)
-                .orElseThrow(() -> new NotFoundException("KOL ID not found: " + kolId));
+                .orElseThrow(() -> new NotFoundException("Not found KOL with ID: " + kolId));
     }
 
     @Override
     public Kol get(User user) {
         return repo.findByUser(user)
-                .orElseThrow(() -> new NotFoundException("KOL with User ID not found: " + user.getId()));
+                .orElseThrow(() -> new NotFoundException("Not found KOL with User ID: " + user.getId()));
     }
 
     @Override
     public Kol get(Principal principal) {
-        User user = userService.getByPrincipal(principal);
+        User user = userService.get(principal);
         return get(user);
     }
 
     @Override
     public KolResponse getProfile(int kolId) {
         Kol kol = get(kolId);
-        List<ImageResponse> images = kol.getImages().stream()
-                .map(img -> new ImageResponse(img.getName()))
-                .collect(Collectors.toList());
-        List<FeedbackResponse> feedbacks = kol.getFeedbacks().stream()
-                .map(feedback -> new FeedbackResponse(
-                        feedback.getRating(),
-                        feedback.getComment(),
-                        feedback.getEnterprise().getName())
-                )
-                .collect(Collectors.toList());
-
-        return KolResponse.builder()
-                .userId(kol.getUser().getId())
-                .firstName(kol.getUser().getFirstName())
-                .lastName(kol.getUser().getLastName())
-                .email(kol.getUser().getEmail())
-                .avatar(kol.getUser().getAvatar())
-                .phoneNumber(kol.getUser().getPhoneNumber() == null ? null : kol.getUser().getPhoneNumber())
-                .kolId(kolId)
-                .genderId(kol.getGender() == null ? null : kol.getGender().getId())
-                .cityId(kol.getCity() == null ? null : kol.getCity().getId())
-                .kolFieldId(kol.getField() == null ? null : kol.getField().getId())
-                .facebookUrl(kol.getFacebookUrl())
-                .instagramUrl(kol.getInstagramUrl())
-                .tiktokUrl(kol.getTiktokUrl())
-                .youtubeUrl(kol.getYoutubeUrl())
-                .images(images)
-                .feedbacks(feedbacks)
-                .build();
+        return mapEntityToDto(kol);
     }
 
     @Override
@@ -176,6 +133,50 @@ public class KolServiceImpl implements KolService {
     public ApiResponse delete(int kolId) {
         repo.deleteById(kolId);
         return new ApiResponse("Delete KOL successfully !!");
+    }
+
+    @Override
+    public KolResponse mapEntityToDto(Kol kol) {
+        List<ImageResponse> images = kol.getImages().stream()
+                .map(img -> new ImageResponse(img.getName()))
+                .collect(Collectors.toList());
+        List<FeedbackResponse> feedbacks = kol.getUser().getFeedbacks().stream()
+                .map(feedback -> FeedbackResponse.builder()
+                        .id(feedback.getId())
+                        .rating(feedback.getRating())
+                        .comment(feedback.getComment())
+                        .firstName(feedback.getUser().getFirstName())
+                        .lastName(feedback.getUser().getLastName())
+                        .rating(feedback.getRating())
+                        .comment(feedback.getComment())
+                        .build())
+                .collect(Collectors.toList());
+
+        return KolResponse.builder()
+                .id(kol.getId())
+                .userId(kol.getUser().getId())
+                .firstName(kol.getUser().getFirstName())
+                .lastName(kol.getUser().getLastName())
+                .email(kol.getUser().getEmail())
+                .avatar(kol.getUser().getAvatar())
+                .phoneNumber(kol.getUser().getPhoneNumber() == null ? null : kol.getUser().getPhoneNumber())
+                .genderId(kol.getGender() == null ? null : kol.getGender().getId())
+                .cityId(kol.getCity() == null ? null : kol.getCity().getId())
+                .kolFieldId(kol.getField() == null ? null : kol.getField().getId())
+                .facebookUrl(kol.getFacebookUrl())
+                .instagramUrl(kol.getInstagramUrl())
+                .tiktokUrl(kol.getTiktokUrl())
+                .youtubeUrl(kol.getYoutubeUrl())
+                .images(images)
+                .feedbacks(feedbacks)
+                .build();
+    }
+
+    @Override
+    public List<KolResponse> mapEntityToDto(List<Kol> kols) {
+        return kols.stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
     }
 
 }
