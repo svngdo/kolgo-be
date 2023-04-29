@@ -1,8 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.KolUpdateRequest;
-import com.dtu.kolgo.dto.response.*;
-import com.dtu.kolgo.env.FileEnv;
+import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.response.FeedbackResponse;
+import com.dtu.kolgo.dto.response.ImageResponse;
+import com.dtu.kolgo.dto.response.KolResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.KolRepository;
@@ -10,6 +12,7 @@ import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class KolServiceImpl implements KolService {
 
+    @Value("${file.image-path}")
+    private String imagePath;
     private final KolRepository repo;
     private final UserService userService;
     private final CityService cityService;
@@ -124,7 +129,7 @@ public class KolServiceImpl implements KolService {
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
             imageService.save(new Image(fileName, kol));
-            String uploadDir = FileEnv.IMAGE_PATH;
+            String uploadDir = imagePath;
             fileUtils.saveImage(uploadDir, fileName, image);
         });
     }

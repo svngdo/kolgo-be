@@ -5,7 +5,6 @@ import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
 import com.dtu.kolgo.dto.request.UserUpdateRequest;
 import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
-import com.dtu.kolgo.env.FileEnv;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
@@ -16,6 +15,7 @@ import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
+    @Value("${file.image-path}")
+    private String imagePath;
     private final UserRepository repo;
     private final FileUtils fileUtils;
     private final PasswordEncoder passwordEncoder;
@@ -101,7 +103,7 @@ public class UserServiceImpl implements UserService {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(avatar.getOriginalFilename()));
             user.setAvatar(fileName);
             repo.save(user);
-            String uploadDir = FileEnv.IMAGE_PATH;
+            String uploadDir = imagePath;
             fileUtils.saveImage(uploadDir, fileName, avatar);
         }
         return new ApiResponse(msg);

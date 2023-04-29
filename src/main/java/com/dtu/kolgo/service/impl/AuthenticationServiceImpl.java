@@ -3,11 +3,13 @@ package com.dtu.kolgo.service.impl;
 import com.dtu.kolgo.dto.MailDetails;
 import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.LoginRequest;
-import com.dtu.kolgo.dto.request.RegisterRequest;
 import com.dtu.kolgo.dto.request.PasswordResetRequest;
+import com.dtu.kolgo.dto.request.RegisterRequest;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.enums.GrantType;
+import com.dtu.kolgo.enums.Roles;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.ExpiredException;
 import com.dtu.kolgo.exception.InvalidException;
@@ -17,12 +19,9 @@ import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
-import com.dtu.kolgo.enums.GrantType;
-import com.dtu.kolgo.enums.Roles;
-import com.dtu.kolgo.env.JwtEnv;
-import com.dtu.kolgo.env.ServerEnv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    @Value("${jwt.exp-day}")
+    private int jwtExpDay;
+    @Value("${server.host}")
+    private String host;
     private final AuthenticationManager authManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
@@ -59,7 +62,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 passwordEncoder.encode(request.getPassword())
         );
         String url = String.format("http://%s:3000/verify_account?biz=%b&verify_account_token=%s",
-                ServerEnv.HOST, request.isBiz(), verifyAccountToken);
+                host, request.isBiz(), verifyAccountToken);
         String subject = "Verify your registration";
         String body = """
                 Dear [[name]],<br><br>
@@ -123,7 +126,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         tokenService.save(Token.builder()
                 .value(newRefreshToken)
-                .expiresIn(LocalDateTime.now().plusDays(JwtEnv.DAY_EXPIRATION))
+                .expiresIn(LocalDateTime.now().plusDays(jwtExpDay))
                 .user(user)
                 .build());
 
@@ -174,7 +177,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // save new refresh token
         tokenService.save(Token.builder()
                 .value(newRefreshToken)
-                .expiresIn(LocalDateTime.now().plusDays(JwtEnv.DAY_EXPIRATION))
+                .expiresIn(LocalDateTime.now().plusDays(jwtExpDay))
                 .user(user)
                 .build());
 
@@ -187,7 +190,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
         String url = String.format("http://%s:3000/reset_password?reset_password_token=%s",
-                ServerEnv.HOST, resetPasswordToken);
+                host, resetPasswordToken);
         String subject = "Reset password";
         String body = """
                 Dear [[name]],<br><br>
