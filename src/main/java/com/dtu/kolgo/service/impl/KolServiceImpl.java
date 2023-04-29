@@ -35,7 +35,6 @@ public class KolServiceImpl implements KolService {
     private final GenderService genderService;
     private final ImageService imageService;
     private final KolFieldService kolFieldService;
-    private final FileUtils fileUtils;
 
     @Override
     public ApiResponse save(Kol kol) {
@@ -130,7 +129,7 @@ public class KolServiceImpl implements KolService {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
             imageService.save(new Image(fileName, kol));
             String uploadDir = imagePath;
-            fileUtils.saveImage(uploadDir, fileName, image);
+            FileUtils.saveImage(uploadDir, fileName, image);
         });
     }
 

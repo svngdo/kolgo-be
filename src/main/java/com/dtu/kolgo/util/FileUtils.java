@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption;
 @Slf4j
 public class FileUtils {
 
-    public void saveImage(String uploadDir, String fileName, MultipartFile file) {
+    public static void saveImage(String uploadDir, String fileName, MultipartFile file) {
         Path uploadPath = Path.of(uploadDir);
         try (InputStream inputStream = file.getInputStream()) {
             if (!Files.exists(uploadPath)) {

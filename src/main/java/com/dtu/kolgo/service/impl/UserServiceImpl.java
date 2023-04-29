@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
     @Value("${file.image-path}")
     private String imagePath;
     private final UserRepository repo;
-    private final FileUtils fileUtils;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -104,7 +103,7 @@ public class UserServiceImpl implements UserService {
             user.setAvatar(fileName);
             repo.save(user);
             String uploadDir = imagePath;
-            fileUtils.saveImage(uploadDir, fileName, avatar);
+            FileUtils.saveImage(uploadDir, fileName, avatar);
         }
         return new ApiResponse(msg);
     }
