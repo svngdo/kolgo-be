@@ -2,7 +2,7 @@ package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
-import com.dtu.kolgo.dto.request.UserUpdateRequest;
+import com.dtu.kolgo.dto.request.UserRequest;
 import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.model.User;
@@ -25,11 +25,7 @@ public interface UserService {
 
     UserResponse getResponse(int userId);
 
-    String getRole(int id);
-
-    String getRole(Principal principal);
-
-    ApiResponse update(int userId, UserUpdateRequest request);
+    ApiResponse update(int userId, UserRequest request);
 
     ApiResponse updateAvatar(User user, MultipartFile avatar);
 

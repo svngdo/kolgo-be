@@ -2,7 +2,7 @@ package com.dtu.kolgo.controller;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
-import com.dtu.kolgo.dto.request.UserUpdateRequest;
+import com.dtu.kolgo.dto.request.UserRequest;
 import com.dtu.kolgo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class UserController {
     @PutMapping("users/{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int userId,
-            @RequestBody UserUpdateRequest request
+            @RequestBody UserRequest request
     ) {
         return new ResponseEntity<>(
                 service.update(userId, request),

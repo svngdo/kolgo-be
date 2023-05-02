@@ -1,16 +1,14 @@
 package com.dtu.kolgo.dto.request;
 
-import com.dtu.kolgo.model.Role;
+import com.dtu.kolgo.enums.Role;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Data
-public class UserUpdateRequest {
+public class UserRequest {
 
     private String email;
-    private List<Role> roles;
+    private Role role;
     private String firstName;
     private String lastName;
     private MultipartFile avatar;
