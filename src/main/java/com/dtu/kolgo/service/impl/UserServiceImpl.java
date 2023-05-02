@@ -2,14 +2,13 @@ package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
-import com.dtu.kolgo.dto.request.UserUpdateRequest;
+import com.dtu.kolgo.dto.request.UserRequest;
 import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.env.FileEnv;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.Role;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.UserService;
@@ -72,23 +71,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getRole(int id) {
-        return get(id).getRoles().get(0).getName();
-    }
-
-    @Override
-    public String getRole(Principal principal) {
-        return get(principal).getRoles().get(0).getName();
-    }
-
-    @Override
-    public ApiResponse update(int userId, UserUpdateRequest request) {
+    public ApiResponse update(int userId, UserRequest request) {
         User user = get(userId);
         updateAvatar(user, request.getAvatar());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
-        user.setRoles(request.getRoles());
+        user.setRole(request.getRole());
         repo.save(user);
 
         return new ApiResponse("Updated successfully User with ID: " + userId);
@@ -147,10 +136,8 @@ public class UserServiceImpl implements UserService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .roles(user.getRoles().stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList()))
+                .phoneNumber(user.getPhone())
+                .role(user.getRole())
                 .build();
     }
 

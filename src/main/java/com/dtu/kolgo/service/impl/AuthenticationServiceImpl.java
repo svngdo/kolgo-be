@@ -3,24 +3,27 @@ package com.dtu.kolgo.service.impl;
 import com.dtu.kolgo.dto.MailDetails;
 import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.LoginRequest;
-import com.dtu.kolgo.dto.request.RegisterRequest;
 import com.dtu.kolgo.dto.request.PasswordResetRequest;
+import com.dtu.kolgo.dto.request.RegisterRequest;
+import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.enums.GrantType;
+import com.dtu.kolgo.enums.Role;
+import com.dtu.kolgo.env.JwtEnv;
+import com.dtu.kolgo.env.ServerEnv;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.ExpiredException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.UserException;
-import com.dtu.kolgo.model.*;
+import com.dtu.kolgo.model.Enterprise;
+import com.dtu.kolgo.model.Kol;
+import com.dtu.kolgo.model.Token;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
-import com.dtu.kolgo.enums.GrantType;
-import com.dtu.kolgo.enums.Roles;
-import com.dtu.kolgo.env.JwtEnv;
-import com.dtu.kolgo.env.ServerEnv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;
@@ -28,8 +31,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,12 +94,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(jwtProvider.extractPassword(token))
                 .build());
         if (isBiz) {
-            user.setRoles(List.of(new Role(Roles.ENTERPRISE.name())));
+            user.setRole(Role.ENTERPRISE);
             enterpriseRepo.save(Enterprise.builder()
                     .user(user)
                     .build());
         } else {
-            user.setRoles(List.of(new Role(Roles.KOL.name())));
+            user.setRole(Role.KOL);
             kolService.save(Kol.builder()
                     .user(user)
                     .build());
@@ -132,9 +133,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .roles(user.getRoles().stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList()))
+                .role(user.getRole())
                 .token(tokenResponse)
                 .build();
     }

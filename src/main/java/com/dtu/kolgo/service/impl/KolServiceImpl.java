@@ -97,7 +97,7 @@ public class KolServiceImpl implements KolService {
 
         kol.getUser().setFirstName(request.getFirstName());
         kol.getUser().setLastName(request.getLastName());
-        kol.getUser().setPhoneNumber(request.getPhoneNumber());
+        kol.getUser().setPhone(request.getPhoneNumber());
         kol.setCity(city);
         kol.setGender(gender);
         kol.setField(field);
@@ -159,7 +159,7 @@ public class KolServiceImpl implements KolService {
                 .lastName(kol.getUser().getLastName())
                 .email(kol.getUser().getEmail())
                 .avatar(kol.getUser().getAvatar())
-                .phoneNumber(kol.getUser().getPhoneNumber() == null ? null : kol.getUser().getPhoneNumber())
+                .phoneNumber(kol.getUser().getPhone() == null ? null : kol.getUser().getPhone())
                 .genderId(kol.getGender() == null ? null : kol.getGender().getId())
                 .cityId(kol.getCity() == null ? null : kol.getCity().getId())
                 .kolFieldId(kol.getField() == null ? null : kol.getField().getId())
