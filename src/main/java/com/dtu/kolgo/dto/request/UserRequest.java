@@ -4,15 +4,13 @@ import com.dtu.kolgo.model.Role;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Data
-public class UserUpdateRequest {
+public class UserRequest {
 
     private String email;
-    private List<Role> roles;
     private String firstName;
     private String lastName;
     private MultipartFile avatar;
+    private Role role;
 
 }
