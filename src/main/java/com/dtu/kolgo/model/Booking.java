@@ -1,9 +1,10 @@
 package com.dtu.kolgo.model;
 
+import com.dtu.kolgo.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -15,8 +16,11 @@ import java.util.List;
 @Table(name = "bookings")
 public class Booking extends BaseInt {
 
-    @Column
-    private LocalDate date;
+    @Column(name = "date")
+    private LocalDateTime date;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private BookingStatus status;
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;

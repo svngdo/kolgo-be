@@ -1,10 +1,13 @@
 package com.dtu.kolgo.controller;
 
+import com.dtu.kolgo.dto.request.PaymentRequest;
 import com.dtu.kolgo.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -14,6 +17,16 @@ import java.security.Principal;
 public class PaymentController {
 
     private final PaymentService service;
+
+    @PostMapping("payments")
+    public ResponseEntity<?> save(
+            @RequestBody PaymentRequest request
+    ) {
+       return new ResponseEntity<>(
+               service.save(request),
+               HttpStatus.OK
+       );
+    }
 
     @GetMapping("payments")
     public ResponseEntity<?> getAll() {

@@ -13,6 +13,8 @@ import com.dtu.kolgo.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,8 +71,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public ApiResponse update(int id, BookingRequest request) {
+        LocalDateTime date = LocalDateTime.parse(request.getDate(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
         Booking booking = get(id);
-        booking.setDate(request.getDate());
+        booking.setDate(date);
         repo.save(booking);
 
         return new ApiResponse("Updated Booking successfully");
@@ -92,7 +96,7 @@ public class BookingServiceImpl implements BookingService {
         }
         return BookingResponse.builder()
                 .id(booking.getId())
-                .date(booking.getDate())
+                .date(booking.getDate().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                 .entId(booking.getEnterprise().getId())
                 .entFirstName(booking.getEnterprise().getUser().getFirstName())
                 .entLastName(booking.getEnterprise().getUser().getLastName())
@@ -100,7 +104,7 @@ public class BookingServiceImpl implements BookingService {
                 .kolId(booking.getKol().getId())
                 .kolFirstName(booking.getKol().getUser().getFirstName())
                 .kolLastName(booking.getKol().getUser().getLastName())
-                .paymentAmountPaid(booking.getPayment().getAmountPaid())
+                .paymentAmount(booking.getPayment().getAmount().toString())
                 .paymentStatus(booking.getPayment().getStatus())
                 .feedbacks(feedbacks)
                 .build();

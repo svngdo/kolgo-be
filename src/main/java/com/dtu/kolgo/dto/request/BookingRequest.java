@@ -1,12 +1,12 @@
 package com.dtu.kolgo.dto.request;
 
+import com.dtu.kolgo.enums.BookingStatus;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class BookingRequest {
 
-    private LocalDate date;
+    private String date;
+    private BookingStatus status;
 
 }

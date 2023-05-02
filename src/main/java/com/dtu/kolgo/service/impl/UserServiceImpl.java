@@ -2,7 +2,7 @@ package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.EmailRequest;
 import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
-import com.dtu.kolgo.dto.request.UserUpdateRequest;
+import com.dtu.kolgo.dto.request.UserRequest;
 import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.exception.ExistsException;
@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -83,13 +84,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse update(int userId, UserUpdateRequest request) {
+    public ApiResponse update(int userId, UserRequest request) {
         User user = get(userId);
         updateAvatar(user, request.getAvatar());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
-        user.setRoles(request.getRoles());
+        user.setRoles(Collections.singletonList(request.getRole()));
         repo.save(user);
 
         return new ApiResponse("Updated successfully User with ID: " + userId);

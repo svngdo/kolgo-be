@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -32,7 +30,7 @@ import java.util.List;
 public class BookingResponse {
 
     private int id;
-    private LocalDate date;
+    private String date;
     private int entId;
     private String entFirstName;
     private String entLastName;
@@ -40,7 +38,7 @@ public class BookingResponse {
     private int kolId;
     private String kolFirstName;
     private String kolLastName;
-    private BigDecimal paymentAmountPaid;
+    private String paymentAmount;
     private PaymentStatus paymentStatus;
     private List<FeedbackResponse> feedbacks;
 
