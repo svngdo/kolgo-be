@@ -1,7 +1,7 @@
 package com.dtu.kolgo.security;
 
 import com.dtu.kolgo.exception.FilterChainExceptionHandler;
-import com.dtu.kolgo.enums.Roles;
+import com.dtu.kolgo.enums.Role;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +21,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final String ADMIN = Roles.ADMIN.name();
-    private final String ENTERPRISE = Roles.ENTERPRISE.name();
-    private final String KOL = Roles.KOL.name();
+    private final String ADMIN = Role.ADMIN.name();
+    private final String ENTERPRISE = Role.ENTERPRISE.name();
+    private final String KOL = Role.KOL.name();
     private final String[] GET_WHITELIST = {
             "/demo",
             "/auth/**",

@@ -87,7 +87,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
         ent.getUser().setFirstName(request.getFirstName());
         ent.getUser().setLastName(request.getLastName());
-        ent.getUser().setPhoneNumber(request.getPhoneNumber());
+        ent.getUser().setPhone(request.getPhoneNumber());
         ent.setName(request.getName());
         ent.setField(field);
         ent.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
@@ -127,7 +127,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 .firstName(ent.getUser().getFirstName())
                 .lastName(ent.getUser().getLastName())
                 .email(ent.getUser().getEmail())
-                .phoneNumber(ent.getUser().getPhoneNumber() == null ? null : ent.getUser().getPhoneNumber())
+                .phoneNumber(ent.getUser().getPhone() == null ? null : ent.getUser().getPhone())
                 .avatar(ent.getUser().getAvatar() == null ? null : ent.getUser().getAvatar())
                 .name(ent.getName())
                 .enterpriseFieldId(ent.getField() == null ? null : ent.getField().getId())

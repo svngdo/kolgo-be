@@ -25,10 +25,6 @@ public interface UserService {
 
     UserResponse getResponse(int userId);
 
-    String getRole(int id);
-
-    String getRole(Principal principal);
-
     ApiResponse update(int userId, UserRequest request);
 
     ApiResponse updateAvatar(User user, MultipartFile avatar);

@@ -8,7 +8,6 @@ import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.Role;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.UserService;
@@ -22,7 +21,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -74,23 +72,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getRole(int id) {
-        return get(id).getRoles().get(0).getName();
-    }
-
-    @Override
-    public String getRole(Principal principal) {
-        return get(principal).getRoles().get(0).getName();
-    }
-
-    @Override
     public ApiResponse update(int userId, UserRequest request) {
         User user = get(userId);
         updateAvatar(user, request.getAvatar());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
-        user.setRoles(Collections.singletonList(request.getRole()));
+        user.setRole(request.getRole());
         repo.save(user);
 
         return new ApiResponse("Updated successfully User with ID: " + userId);
@@ -149,10 +137,8 @@ public class UserServiceImpl implements UserService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .roles(user.getRoles().stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList()))
+                .phoneNumber(user.getPhone())
+                .role(user.getRole())
                 .build();
     }
 

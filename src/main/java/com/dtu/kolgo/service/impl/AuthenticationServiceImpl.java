@@ -9,7 +9,7 @@ import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.TokenResponse;
 import com.dtu.kolgo.dto.response.UserResponse;
 import com.dtu.kolgo.enums.GrantType;
-import com.dtu.kolgo.enums.Roles;
+import com.dtu.kolgo.enums.Role;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.ExpiredException;
 import com.dtu.kolgo.exception.InvalidException;
@@ -27,8 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -96,12 +94,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(jwtProvider.extractPassword(token))
                 .build());
         if (isBiz) {
-            user.setRoles(List.of(new Role(Roles.ENTERPRISE.name())));
+            user.setRole(Role.ENTERPRISE);
             enterpriseRepo.save(Enterprise.builder()
                     .user(user)
                     .build());
         } else {
-            user.setRoles(List.of(new Role(Roles.KOL.name())));
+            user.setRole(Role.KOL);
             kolService.save(Kol.builder()
                     .user(user)
                     .build());
@@ -135,9 +133,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .roles(user.getRoles().stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList()))
+                .role(user.getRole())
                 .token(tokenResponse)
                 .build();
     }

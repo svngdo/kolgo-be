@@ -1,6 +1,6 @@
 package com.dtu.kolgo.dto.request;
 
-import com.dtu.kolgo.model.Role;
+import com.dtu.kolgo.enums.Role;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 

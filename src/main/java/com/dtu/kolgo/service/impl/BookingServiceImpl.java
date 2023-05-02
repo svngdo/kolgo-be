@@ -4,9 +4,9 @@ import com.dtu.kolgo.dto.request.BookingRequest;
 import com.dtu.kolgo.dto.response.ApiResponse;
 import com.dtu.kolgo.dto.response.BookingResponse;
 import com.dtu.kolgo.dto.response.FeedbackResponse;
-import com.dtu.kolgo.enums.Roles;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Booking;
+import com.dtu.kolgo.enums.Role;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.BookingRepository;
 import com.dtu.kolgo.service.*;
@@ -48,11 +48,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingResponse> getAllResponses(int userId) {
         User user = userService.get(userId);
-        String userRole = userService.getRole(userId);
+//        String userRole = userService.getRole(userId);
         List<BookingResponse> bookings = new ArrayList<>();
-        if (userRole.equals(Roles.KOL.name())) {
+        if (user.getRole().equals(Role.KOL)) {
             bookings = mapEntitiesToDtos(kolService.get(user).getBookings());
-        } else if (userRole.equals(Roles.ENTERPRISE.name())) {
+        } else if (user.getRole().equals(Role.ENTERPRISE)) {
             bookings = mapEntitiesToDtos(entService.get(user).getBookings());
         }
         return bookings;

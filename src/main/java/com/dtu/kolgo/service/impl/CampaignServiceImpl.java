@@ -94,7 +94,7 @@ public class CampaignServiceImpl implements CampaignService {
                             .firstName(k.getUser().getFirstName())
                             .lastName(k.getUser().getLastName())
                             .email(k.getUser().getEmail())
-                            .phoneNumber(k.getUser().getPhoneNumber())
+                            .phoneNumber(k.getUser().getPhone())
                             .build())
                     .collect(Collectors.toList());
         }
