@@ -14,7 +14,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"data", "error"})
+@JsonPropertyOrder({"message", "data", "error"})
 public class ApiResponse {
 
     private String message;
