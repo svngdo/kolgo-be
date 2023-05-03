@@ -1,6 +1,6 @@
 package com.dtu.kolgo.enums;
 
-public enum ConversationType {
+public enum ChatType {
 
     PUBLIC,
     GROUP,

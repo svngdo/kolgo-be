@@ -1,18 +1,16 @@
-package com.dtu.kolgo.dto.response;
+package com.dtu.kolgo.dto;
 
 import com.dtu.kolgo.enums.BankCode;
 import com.dtu.kolgo.enums.PaymentMethod;
 import com.dtu.kolgo.enums.PaymentStatus;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class PaymentResponse {
+@Data
+public class PaymentDto {
 
     private int id;
     private PaymentMethod method;

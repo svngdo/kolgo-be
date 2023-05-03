@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ConversationRepository extends JpaRepository<Conversation, Integer> {
+public interface ChatRepository extends JpaRepository<Conversation, Integer> {
 
     List<Conversation> findAllByUsersContains(User user);
 

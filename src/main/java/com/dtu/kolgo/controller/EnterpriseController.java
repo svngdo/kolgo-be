@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.EntUpdateRequest;
+import com.dtu.kolgo.dto.enterprise.EntProfileDto;
 import com.dtu.kolgo.service.EnterpriseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class EnterpriseController {
     @GetMapping("ents")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAllResponses(),
+                service.getAllDto(),
                 HttpStatus.OK
         );
     }
@@ -31,7 +31,7 @@ public class EnterpriseController {
             @PathVariable("id") int entId
     ) {
         return new ResponseEntity<>(
-                service.getProfile(entId),
+                service.getDetails(entId),
                 HttpStatus.OK
         );
     }
@@ -41,19 +41,19 @@ public class EnterpriseController {
             @PathVariable("fieldId") short fieldId
     ) {
         return new ResponseEntity<>(
-                service.getAllResponses(fieldId),
+                service.getAllDtoByField(fieldId),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("ents/{id}")
-    public ResponseEntity<?> update(
+    public ResponseEntity<?> put(
             @PathVariable("id") int entId,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @RequestBody EntUpdateRequest request
+            @RequestBody EntProfileDto dto
     ) {
         return new ResponseEntity<>(
-                service.updateProfile(entId, request, avatar),
+                service.update(entId, dto, avatar),
                 HttpStatus.OK
         );
     }
@@ -73,7 +73,7 @@ public class EnterpriseController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getProfile(principal),
+                service.getDto(principal),
                 HttpStatus.OK
         );
     }
@@ -82,10 +82,10 @@ public class EnterpriseController {
     public ResponseEntity<?> updateEnterpriseProfile(
             Principal principal,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @ModelAttribute EntUpdateRequest request
+            @ModelAttribute EntProfileDto dto
     ) {
         return new ResponseEntity<>(
-                service.updateProfile(principal, request, avatar),
+                service.update(principal, dto, avatar),
                 HttpStatus.OK
         );
     }

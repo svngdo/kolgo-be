@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class MailDetails {
+public class MailDto {
 
     private String recipient;
     private String subject;
     private String body;
     private String attachment;
 
-    public MailDetails(String recipient, String subject, String body) {
+    public MailDto(String recipient, String subject, String body) {
         this.recipient = recipient;
         this.subject = subject;
         this.body = body;

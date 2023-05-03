@@ -1,8 +1,9 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.EntUpdateRequest;
-import com.dtu.kolgo.dto.response.ApiResponse;
-import com.dtu.kolgo.dto.response.EntResponse;
+import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.enterprise.EntDetailsDto;
+import com.dtu.kolgo.dto.enterprise.EntDto;
+import com.dtu.kolgo.dto.enterprise.EntProfileDto;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,28 +15,24 @@ public interface EnterpriseService {
 
     ApiResponse save(Enterprise ent);
 
-    List<EntResponse> getAllResponses();
+    List<EntDto> getAllDto();
 
-    List<EntResponse> getAllResponses(short fieldId);
+    List<EntDto> getAllDtoByField(short fieldId);
 
-    Enterprise get(int entId);
+    Enterprise get(int id);
 
     Enterprise get(User user);
 
     Enterprise get(Principal principal);
 
-    EntResponse getProfile(int entId);
+    EntDetailsDto getDetails(int id);
 
-    EntResponse getProfile(Principal principal);
+    EntDto getDto(Principal principal);
 
-    ApiResponse updateProfile(int entId, EntUpdateRequest request, MultipartFile avatar);
+    ApiResponse update(int id, EntProfileDto dto, MultipartFile avatar);
 
-    ApiResponse updateProfile(Principal principal, EntUpdateRequest request, MultipartFile avatar);
+    ApiResponse update(Principal principal, EntProfileDto dto, MultipartFile avatar);
 
-    ApiResponse delete(int entId);
-
-    EntResponse mapEntityToDto(Enterprise enterprise);
-
-    List<EntResponse> mapEntityToDto(List<Enterprise> enterprises);
+    ApiResponse delete(int id);
 
 }

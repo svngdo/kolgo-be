@@ -1,7 +1,7 @@
-package com.dtu.kolgo.dto.response;
+package com.dtu.kolgo.dto;
 
-import com.dtu.kolgo.enums.ConversationType;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.dtu.kolgo.dto.response.MessageResponse;
+import com.dtu.kolgo.enums.ChatType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,15 +9,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ConversationResponse {
+public class ChatDto {
 
     private Integer id;
-    private ConversationType type;
+    private ChatType type;
 //    private Integer senderId;
 //    private String senderFirstName;
 //    private String senderLastName;

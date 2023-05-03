@@ -22,8 +22,8 @@ public class Booking extends BaseInt {
     @Column(name = "status")
     private BookingStatus status;
     @ManyToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise enterprise;
+    @JoinColumn(name = "user_id")
+    private User user;
     @ManyToOne
     @JoinColumn(name = "kol_id")
     private Kol kol;

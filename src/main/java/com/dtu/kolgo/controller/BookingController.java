@@ -17,7 +17,7 @@ public class BookingController {
     @GetMapping("bookings")
     public ResponseEntity<?> getAllResponses() {
         return new ResponseEntity<>(
-                service.getAllResponses(),
+                service.getAllDto(),
                 HttpStatus.OK
         );
     }
@@ -27,7 +27,7 @@ public class BookingController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getResponse(id),
+                service.getDtoById(id),
                 HttpStatus.OK
         );
     }
@@ -37,7 +37,7 @@ public class BookingController {
             @PathVariable("userId") int userId
     ) {
         return new ResponseEntity<>(
-                service.getAllResponses(userId),
+                service.getAllDtoByUserId(userId),
                 HttpStatus.OK
         );
     }

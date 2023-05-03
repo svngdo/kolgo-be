@@ -1,8 +1,7 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.BookingRequest;
-import com.dtu.kolgo.dto.response.ApiResponse;
-import com.dtu.kolgo.dto.response.BookingResponse;
+import com.dtu.kolgo.dto.BookingDto;
+import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.model.Booking;
 
 import java.util.List;
@@ -11,22 +10,14 @@ public interface BookingService {
 
     ApiResponse save(Booking booking);
 
-    List<Booking> getAll();
+    List<BookingDto> getAllDto();
 
-    List<BookingResponse> getAllResponses();
+    List<BookingDto> getAllDtoByUserId(int userId);
 
-    List<BookingResponse> getAllResponses(int userId);
+    Booking getById(int id);
 
-    Booking get(int id);
+    BookingDto getDtoById(int id);
 
-    BookingResponse getResponse(int id);
-
-    ApiResponse update(int id, BookingRequest request);
-
-    ApiResponse delete(int id);
-
-    BookingResponse mapEntityToDto(Booking booking);
-
-    List<BookingResponse> mapEntitiesToDtos(List<Booking> bookings);
+    ApiResponse updateById(int id, BookingDto request);
 
 }

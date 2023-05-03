@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.PaymentRequest;
+import com.dtu.kolgo.dto.VnPayDto;
 import com.dtu.kolgo.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
-
 @RestController
 @RequiredArgsConstructor
 public class PaymentController {
@@ -20,7 +18,7 @@ public class PaymentController {
 
     @PostMapping("payments")
     public ResponseEntity<?> save(
-            @RequestBody PaymentRequest request
+            @RequestBody VnPayDto request
     ) {
        return new ResponseEntity<>(
                service.save(request),
@@ -36,14 +34,14 @@ public class PaymentController {
         );
     }
 
-    @GetMapping("payments/history")
-    public ResponseEntity<?> getAll(
-            Principal principal
-    ) {
-        return new ResponseEntity<>(
-                service.getAllResponses(principal),
-                HttpStatus.OK
-        );
-    }
+//    @GetMapping("payments/history")
+//    public ResponseEntity<?> getAll(
+//            Principal principal
+//    ) {
+//        return new ResponseEntity<>(
+//                service.getAllResponses(principal),
+//                HttpStatus.OK
+//        );
+//    }
 
 }

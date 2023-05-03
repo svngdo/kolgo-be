@@ -1,6 +1,6 @@
 package com.dtu.kolgo.vnpay;
 
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

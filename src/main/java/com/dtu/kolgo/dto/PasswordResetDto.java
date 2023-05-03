@@ -1,16 +1,13 @@
-package com.dtu.kolgo.dto.request;
+package com.dtu.kolgo.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class PasswordResetRequest {
+public class PasswordResetDto {
 
-    @NotNull
     @NotBlank
     private String newPassword;
-    @NotNull
     @NotBlank
     private String confirmPassword;
 

@@ -1,13 +1,13 @@
-package com.dtu.kolgo.dto.request;
+package com.dtu.kolgo.dto;
 
 import com.dtu.kolgo.enums.PaymentMethod;
 import lombok.Data;
 
 @Data
-public class PaymentRequest {
+public class VnPayDto {
 
     private PaymentMethod method;
-    private UserRequest user;
+    private UserDto userDto;
     private String vnp_Amount;
     private String vnp_BankCode;
     private String vnp_BankTranNo;

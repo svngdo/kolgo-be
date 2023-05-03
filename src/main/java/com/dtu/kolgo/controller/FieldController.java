@@ -1,7 +1,7 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.service.EnterpriseFieldService;
-import com.dtu.kolgo.service.KolFieldService;
+import com.dtu.kolgo.enums.FieldType;
+import com.dtu.kolgo.service.FieldService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,21 +14,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FieldController {
 
-    private final KolFieldService kolFieldService;
-    private final EnterpriseFieldService entFieldService;
+    private final FieldService service;
+
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(
+                service.getAll(),
+                HttpStatus.OK
+        );
+    }
 
     @GetMapping("kol")
-    public ResponseEntity<?> getKolFields() {
+    public ResponseEntity<?> getAllTypeKol() {
         return new ResponseEntity<>(
-                kolFieldService.getAll(),
+                service.getAll(FieldType.KOL),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("ent")
-    public ResponseEntity<?> getEntFields() {
+    public ResponseEntity<?> getAllTypeEnt() {
         return new ResponseEntity<>(
-                entFieldService.getAll(),
+                service.getAll(FieldType.ENTERPRISE),
                 HttpStatus.OK
         );
     }

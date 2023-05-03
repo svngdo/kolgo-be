@@ -1,6 +1,6 @@
 package com.dtu.kolgo.security;
 
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.service.TokenService;
 import com.dtu.kolgo.enums.GrantType;
 import com.fasterxml.jackson.databind.ObjectMapper;

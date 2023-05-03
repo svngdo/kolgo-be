@@ -1,11 +1,11 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.MailDetails;
+import com.dtu.kolgo.dto.MailDto;
 
 public interface MailService {
 
-    void send(MailDetails details, boolean isHtml);
+    void send(MailDto details, boolean isHtml);
 
-    String sendMailWithAttachment(MailDetails details);
+    String sendMailWithAttachment(MailDto details);
 
 }

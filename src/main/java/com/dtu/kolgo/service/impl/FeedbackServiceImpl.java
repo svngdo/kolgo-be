@@ -1,27 +1,25 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.request.FeedbackRequest;
-import com.dtu.kolgo.dto.response.ApiResponse;
-import com.dtu.kolgo.dto.response.FeedbackResponse;
+import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.FeedbackDto;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Feedback;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.FeedbackRepository;
 import com.dtu.kolgo.service.FeedbackService;
-import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FeedbackServiceImpl implements FeedbackService {
 
     private final FeedbackRepository repo;
-    private final UserService userService;
+    private final ModelMapper mapper;
 
     @Override
     public ApiResponse save(Feedback feedback) {
@@ -29,14 +27,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedbackResponse> getAllResponses(User user) {
-        return mapEntitiesToDtos(repo.findAllByUser(user));
-    }
-
-    @Override
-    public List<FeedbackResponse> getAllResponses(Principal principal) {
-        User user = userService.get(principal);
-        return getAllResponses(user);
+    public List<FeedbackDto> getAllDto(User user) {
+        return repo.findAllByUser(user)
+                .stream()
+                .map(feedback -> mapper.map(feedback, FeedbackDto.class))
+                .toList();
     }
 
     @Override
@@ -61,22 +56,4 @@ public class FeedbackServiceImpl implements FeedbackService {
         return new ApiResponse("Deleted Feedback successfully");
     }
 
-    @Override
-    public FeedbackResponse mapEntityToDto(Feedback feedback) {
-        return FeedbackResponse.builder()
-                .id(feedback.getId())
-                .userId(feedback.getUser().getId())
-                .lastName(feedback.getUser().getFirstName())
-                .lastName(feedback.getUser().getLastName())
-                .rating(feedback.getRating())
-                .comment(feedback.getComment())
-                .build();
-    }
-
-    @Override
-    public List<FeedbackResponse> mapEntitiesToDtos(List<Feedback> feedbacks) {
-        return feedbacks.stream()
-                .map(this::mapEntityToDto)
-                .collect(Collectors.toList());
-    }
 }

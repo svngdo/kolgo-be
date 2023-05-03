@@ -1,12 +1,12 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.LoginRequest;
+import com.dtu.kolgo.dto.AuthDto;
+import com.dtu.kolgo.dto.EmailDto;
+import com.dtu.kolgo.dto.LoginDto;
+import com.dtu.kolgo.dto.PasswordResetDto;
 import com.dtu.kolgo.dto.request.RegisterRequest;
-import com.dtu.kolgo.dto.request.PasswordResetRequest;
-import com.dtu.kolgo.dto.response.TokenResponse;
-import com.dtu.kolgo.dto.response.UserResponse;
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.TokenDto;
 
 public interface AuthenticationService {
 
@@ -14,14 +14,14 @@ public interface AuthenticationService {
 
     ApiResponse verify(String token, boolean isBiz);
 
-    UserResponse login(LoginRequest request);
+    AuthDto login(LoginDto request);
 
     void authenticate(int id, String password);
 
-    TokenResponse refreshToken(String refreshToken);
+    TokenDto refreshToken(String refreshToken);
 
-    ApiResponse forgotPassword(EmailRequest request);
+    ApiResponse forgotPassword(EmailDto request);
 
-    ApiResponse resetPassword(String resetPasswordToken, PasswordResetRequest request);
+    ApiResponse resetPassword(String resetPasswordToken, PasswordResetDto request);
 
 }

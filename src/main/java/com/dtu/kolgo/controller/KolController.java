@@ -1,7 +1,8 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.KolUpdateRequest;
+import com.dtu.kolgo.dto.kol.KolProfileDto;
 import com.dtu.kolgo.service.KolService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +19,29 @@ public class KolController {
     private final KolService service;
 
     @GetMapping("kols")
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> get() {
         return new ResponseEntity<>(
-                service.getAllResponses(),
+                service.getAllDto(),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("kols/{id}")
     public ResponseEntity<?> get(
-            @PathVariable("id") int kolId
+            @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getProfile(kolId),
+                service.getDetails(id),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("kols/fields/{fieldId}")
-    public ResponseEntity<?> getAllByField(
+    public ResponseEntity<?> get(
             @PathVariable("fieldId") short fieldId
     ) {
         return new ResponseEntity<>(
-                service.getAllResponses(fieldId),
+                service.getAllDtoByField(fieldId),
                 HttpStatus.OK
         );
     }
@@ -50,20 +51,20 @@ public class KolController {
             @PathVariable("id") int kolId,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            @RequestBody KolUpdateRequest request
-    ) {
+            @ModelAttribute @Valid KolProfileDto dto
+            ) {
         return new ResponseEntity<>(
-                service.updateProfile(kolId, request, avatar, images),
+                service.updateProfile(kolId, dto, avatar, images),
                 HttpStatus.OK
         );
     }
 
     @DeleteMapping("kols/{id}")
     public ResponseEntity<?> delete(
-            @PathVariable("id") int userId
+            @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.delete(userId),
+                service.delete(id),
                 HttpStatus.OK
         );
     }
@@ -73,20 +74,20 @@ public class KolController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getProfile(principal),
+                service.getDto(principal),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("kol/profile")
-    public ResponseEntity<?> updateKolProfile(
+    public ResponseEntity<?> updateProfile(
             Principal principal,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            @ModelAttribute KolUpdateRequest request
+            @ModelAttribute @Valid KolProfileDto dto
     ) {
         return new ResponseEntity<>(
-                service.updateProfile(principal, request, avatar, images),
+                service.updateProfile(principal, dto, avatar, images),
                 HttpStatus.OK
         );
     }

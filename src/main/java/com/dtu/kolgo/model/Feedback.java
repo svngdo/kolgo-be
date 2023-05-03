@@ -12,13 +12,16 @@ import lombok.*;
 @Table(name = "feedbacks")
 public class Feedback extends BaseInt {
 
-    @Column
+    @Column(name = "rating")
     private Short rating;
-    @Column
+    @Column(name = "comment")
     private String comment;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "kol_id")
+    private Kol kol;
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;

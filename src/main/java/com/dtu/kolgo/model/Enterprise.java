@@ -14,22 +14,22 @@ import java.util.List;
 @Table(name = "enterprises")
 public class Enterprise extends BaseInt {
 
-    @Column
-    private String name;
-    @OneToOne
-    @JoinColumn(name = "enterprise_field_id")
-    private EnterpriseField field;
-    @Column
-    private String taxIdentificationNumber;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Address address;
-    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
-    private List<Booking> bookings;
-    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
-    private List<Campaign> campaigns;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "tax_id")
+    private String taxId;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
+    private Address address;
+    @Column(name = "phone")
+    private String phone;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "field_id")
+    private Field field;
+    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
+    private List<Campaign> campaigns;
 
 }

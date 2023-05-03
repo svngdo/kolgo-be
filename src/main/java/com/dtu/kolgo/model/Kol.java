@@ -1,5 +1,6 @@
 package com.dtu.kolgo.model;
 
+import com.dtu.kolgo.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,31 +15,37 @@ import java.util.List;
 @Table(name = "kols")
 public class Kol extends BaseInt {
 
-    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
-    private List<Image> images;
-    @OneToOne
-    @JoinColumn(name = "gender_id")
-    private Gender gender;
-    @OneToOne
-    @JoinColumn(name = "city_id")
-    private City city;
-    @OneToOne
-    @JoinColumn(name = "kol_field_id")
-    private KolField field;
-    @Column
-    private String facebookUrl;
-    @Column
-    private String instagramUrl;
-    @Column
-    private String tiktokUrl;
-    @Column
-    private String youtubeUrl;
-    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
-    private List<Booking> bookings;
-    @ManyToMany(mappedBy = "kols")
-    private List<Campaign> campaigns;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
+    @Column(name = "phone")
+    private String phone;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
+    private Address address;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "field_id")
+    private Field field;
+    @Column(name = "facebook_url")
+    private String facebookUrl;
+    @Column(name = "instagram_url")
+    private String instagramUrl;
+    @Column(name = "tiktok_url")
+    private String tiktokUrl;
+    @Column(name = "youtube_url")
+    private String youtubeUrl;
+    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    private List<Image> images;
+    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
+    //    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+//    private List<Payment> payments;
+    @OneToMany(mappedBy = "kol")
+    private List<Feedback> feedbacks;
+    @ManyToMany(mappedBy = "kols")
+    private List<Campaign> campaigns;
 
 }

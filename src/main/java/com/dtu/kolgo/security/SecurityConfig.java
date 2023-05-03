@@ -31,7 +31,6 @@ public class SecurityConfig {
             "/kols/**",
             "/ents/**",
             "/cities/**",
-            "/genders/**",
             "/fields/**",
             "/images/**",
     };

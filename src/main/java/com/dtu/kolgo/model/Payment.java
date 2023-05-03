@@ -41,7 +41,10 @@ public class Payment extends BaseInt {
     @Column(name = "status")
     private PaymentStatus status;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "sender_id")
+    private User sender;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
 }

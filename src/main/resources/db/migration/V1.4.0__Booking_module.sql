@@ -13,18 +13,19 @@ create table if not exists payments
     date        timestamp with time zone default now(),
     status      varchar(20)  not null
         constraint valid_payment_status check ( status in ('FAILED, SUCCESS, REFUNDED') ),
-    user_id     int          not null references users (id)
+    sender_id   int          not null references users (id),
+    receiver_id int          not null references users (id)
 );
 
 create table if not exists bookings
 (
-    id            int generated always as identity primary key,
-    date          timestamp with time zone default now(),
-    status        varchar(20) not null
+    id         int generated always as identity primary key,
+    date       timestamp with time zone default now(),
+    status     varchar(20) not null
         constraint valid_booking_status check ( status in ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELED')),
-    enterprise_id int         not null references enterprises (id),
-    kol_id        int         not null references kols (id),
-    payment_id    int         not null references payments (id)
+    user_id    int         not null references users (id),
+    kol_id     int         not null references kols (id),
+    payment_id int         not null references payments (id)
 );
 
 create table if not exists feedbacks
@@ -34,5 +35,6 @@ create table if not exists feedbacks
         constraint valid_feedback_rating check ( rating between 1 and 5),
     comment    text,
     user_id    int      not null references users (id),
+    kol_id     int      not null references kols (id),
     booking_id int      not null references bookings (id)
 );

@@ -1,6 +1,6 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.MailDetails;
+import com.dtu.kolgo.dto.MailDto;
 import com.dtu.kolgo.service.MailService;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class MailServiceImpl implements MailService {
     private String senderName;
     private final JavaMailSender mailSender;
 
-    public void send(MailDetails details, boolean isHtml) {
+    public void send(MailDto details, boolean isHtml) {
         // Creating a mime message
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
@@ -48,7 +48,7 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-    public String sendMailWithAttachment(MailDetails details) {
+    public String sendMailWithAttachment(MailDto details) {
         // Creating a mime message
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
