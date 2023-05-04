@@ -69,6 +69,9 @@ public class KolController {
         );
     }
 
+    /*
+        PROFILE
+     */
     @GetMapping("kol/profile")
     public ResponseEntity<?> getProfile(
             Principal principal
@@ -91,5 +94,13 @@ public class KolController {
                 HttpStatus.OK
         );
     }
+    /*
+        END PROFILE
+     */
+
+    /*
+        BOOKING
+     */
+//    @Get
 
 }

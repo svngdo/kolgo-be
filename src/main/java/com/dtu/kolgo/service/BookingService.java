@@ -12,12 +12,12 @@ public interface BookingService {
 
     List<BookingDto> getAllDto();
 
-    List<BookingDto> getAllDtoByUserId(int userId);
+    List<BookingDto> getAllDto(int userId);
 
-    Booking getById(int id);
+    Booking get(int id);
 
-    BookingDto getDtoById(int id);
+    BookingDto getDto(int id);
 
-    ApiResponse updateById(int id, BookingDto request);
+    ApiResponse update(int id, BookingDto request);
 
 }
