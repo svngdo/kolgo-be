@@ -83,15 +83,22 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public KolDetailsDto getDetails(int id) {
-        Kol kol = get(id);
-        return mapper.map(kol, KolDetailsDto.class);
+    public KolDetailsDto getDetails(Kol kol) {
+        KolDetailsDto dto = mapper.map(kol, KolDetailsDto.class);
+        dto.setImages(kol.getImages().stream().map(Image::getName).toList());
+        return dto;
     }
 
     @Override
-    public KolDto getDto(Principal principal) {
+    public KolDetailsDto getDetails(int id) {
+        Kol kol = get(id);
+        return getDetails(kol);
+    }
+
+    @Override
+    public KolDetailsDto getDetails(Principal principal) {
         Kol kol = get(principal);
-        return mapper.map(kol, KolDto.class);
+        return getDetails(kol);
     }
 
     @Override

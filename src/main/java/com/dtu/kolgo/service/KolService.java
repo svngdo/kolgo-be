@@ -25,9 +25,11 @@ public interface KolService {
 
     Kol get(Principal principal);
 
+    KolDetailsDto getDetails(Kol kol);
+
     KolDetailsDto getDetails(int id);
 
-    KolDto getDto(Principal principal);
+    KolDetailsDto getDetails(Principal principal);
 
     ApiResponse updateProfile(int id, KolProfileDto dto, MultipartFile avatar, List<MultipartFile> images);
 

@@ -77,7 +77,7 @@ public class KolController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getDto(principal),
+                service.getDetails(principal),
                 HttpStatus.OK
         );
     }

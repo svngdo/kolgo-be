@@ -13,7 +13,6 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STANDARD);
-//        modelMapper.typeMap(Kol.class, KolDto.class)
 //                .addMapping(src -> src.getUser().getFirstName(), KolDto::setFirstName)
 //                .addMapping(src -> src.getUser().getLastName(), KolDto::setLastName)
 //                .addMapping(src -> src.getUser().getEmail(), KolDto::setEmail)
