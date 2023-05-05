@@ -7,9 +7,4 @@ public enum GrantType {
     RESET_PASSWORD_TOKEN,
     VERIFY_ACCOUNT_TOKEN;
 
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
 }

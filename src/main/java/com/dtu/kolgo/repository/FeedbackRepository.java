@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
 
-    List<Feedback> findAllByUser(User user);
+    List<Feedback> findAllBySender(User sender);
+
+    List<Feedback> findAllByReceiver(User receiver);
 
 }

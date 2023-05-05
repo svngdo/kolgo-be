@@ -39,7 +39,8 @@ public class SecurityConfig {
     };
     private final String[] AUTH_WHITELIST = {
             "/campaigns/**",
-            "/user/**"
+            "/user/**",
+            "/bookings/**"
     };
     private final String[] WEBSOCKET_WHITELIST = {
             "/conversations/**",

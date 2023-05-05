@@ -1,12 +1,14 @@
 package com.dtu.kolgo.controller;
 
+import com.dtu.kolgo.dto.booking.BookingCreateDto;
 import com.dtu.kolgo.service.BookingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,10 +16,13 @@ public class BookingController {
 
     private final BookingService service;
 
-    @GetMapping("bookings")
-    public ResponseEntity<?> getAll() {
+    @PostMapping("bookings")
+    public ResponseEntity<?> post(
+            Principal principal,
+            @RequestBody @Valid BookingCreateDto dto
+    ) {
         return new ResponseEntity<>(
-                service.getAllDto(),
+                service.create(principal, dto),
                 HttpStatus.OK
         );
     }
@@ -27,17 +32,27 @@ public class BookingController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getDto(id),
+                service.getDtoById(id),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("bookings/user/{userId}")
-    public ResponseEntity<?> getAllOfUser(
+    public ResponseEntity<?> getAll(
             @PathVariable("userId") int userId
     ) {
         return new ResponseEntity<>(
-                service.getAllDto(userId),
+                service.getAllDtoByUserId(userId),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("bookings/user")
+    public ResponseEntity<?> getAll(
+            Principal principal
+    ) {
+        return new ResponseEntity<>(
+                service.getAllDtoByPrincipal(principal),
                 HttpStatus.OK
         );
     }

@@ -27,8 +27,16 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedbackDto> getAllDto(User user) {
-        return repo.findAllByUser(user)
+    public List<FeedbackDto> getAllBySender(User sender) {
+        return repo.findAllBySender(sender)
+                .stream()
+                .map(feedback -> mapper.map(feedback, FeedbackDto.class))
+                .toList();
+    }
+
+    @Override
+    public List<FeedbackDto> getAllByReceiver(User receiver) {
+        return repo.findAllByReceiver(receiver)
                 .stream()
                 .map(feedback -> mapper.map(feedback, FeedbackDto.class))
                 .toList();

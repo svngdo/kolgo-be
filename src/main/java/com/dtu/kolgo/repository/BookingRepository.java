@@ -2,6 +2,7 @@ package com.dtu.kolgo.repository;
 
 import com.dtu.kolgo.model.Booking;
 import com.dtu.kolgo.model.Kol;
+import com.dtu.kolgo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,9 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findAllByKol(Kol kol);
+
+    boolean existsByUserAndKol(User user, Kol kol);
+
+    List<Booking> findAllByUser(User user);
 
 }

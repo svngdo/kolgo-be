@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class EntProfileDto {
+public class EnterpriseProfileDto {
 
     @NotBlank
     private String firstName;

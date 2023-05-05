@@ -21,7 +21,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -44,43 +46,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllDto() {
-        System.out.println("user service");
         return repo.findAll().stream()
                 .map(user -> mapper.map(user, UserDto.class))
                 .toList();
     }
 
     @Override
-    public User get(int id) {
+    public User getById(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("User ID not found: " + id));
     }
 
     @Override
-    public UserDto getDto(int id) {
-        return mapper.map(get(id), UserDto.class);
+    public UserDto getDtoById(int id) {
+        return mapper.map(getById(id), UserDto.class);
     }
 
     @Override
-    public User get(String email) {
+    public User getByEmail(String email) {
         return repo.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Email not found: " + email));
     }
 
     @Override
-    public User get(Principal principal) {
-        return get(principal.getName());
+    public User getByPrincipal(Principal principal) {
+        return getByEmail(principal.getName());
     }
 
     @Override
-    public ApiResponse update(int id, UserDto dto, MultipartFile avatar) {
-        User user = get(id);
-        return update(user, dto, avatar);
+    public ApiResponse updateById(int id, UserDto dto) {
+        User user = getById(id);
+        return updateByUser(user, dto);
     }
 
     @Override
-    public ApiResponse update(User user, UserDto dto, MultipartFile avatar) {
-        updateAvatar(user, avatar);
+    public ApiResponse updateByUser(User user, UserDto dto) {
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         repo.save(user);
@@ -89,13 +89,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAvatar(User user, MultipartFile avatar) {
-        if (avatar == null) return;
+    public Map<String, Object> updateAvatar(Principal principal, MultipartFile avatar) {
+        User user = getByPrincipal(principal);
+        if (avatar == null) {
+            throw new InvalidException("Avatar is null");
+        }
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(avatar.getOriginalFilename()));
         user.setAvatar(fileName);
         repo.save(user);
         String uploadDir = imagePath;
         FileUtils.saveImage(uploadDir, fileName, avatar);
+        return new HashMap<>() {{
+            put("avatar", fileName);
+        }};
     }
 
     @Override
@@ -103,7 +109,7 @@ public class UserServiceImpl implements UserService {
         if (repo.existsByEmail(dto.getEmail())) {
             throw new ExistsException("Email already in use: " + dto.getEmail());
         }
-        User user = get(principal);
+        User user = getByPrincipal(principal);
         user.setEmail(dto.getEmail());
         repo.save(user);
 
@@ -112,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse updatePassword(Principal principal, PasswordUpdateDTO request) {
-        User user = get(principal);
+        User user = getByPrincipal(principal);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new InvalidException("Incorrect password");
@@ -125,7 +131,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse delete(int userId) {
+    public ApiResponse deleteById(int userId) {
         repo.deleteById(userId);
         return new ApiResponse("Deleted user successfully");
     }

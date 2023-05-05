@@ -17,11 +17,11 @@ public class Feedback extends BaseInt {
     @Column(name = "comment")
     private String comment;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "sender_id")
+    private User sender;
     @ManyToOne
-    @JoinColumn(name = "kol_id")
-    private Kol kol;
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;

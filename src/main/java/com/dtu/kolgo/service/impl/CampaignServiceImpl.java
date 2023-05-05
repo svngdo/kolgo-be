@@ -40,7 +40,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public List<CampaignDto> getAllDtoEnt(Principal principal) {
-        Enterprise ent = entService.get(principal);
+        Enterprise ent = entService.getByPrincipal(principal);
         return repo.findAllByEnterprise(ent)
                 .stream()
                 .map(campaign -> mapper.map(campaign, CampaignDto.class))

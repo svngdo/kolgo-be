@@ -21,7 +21,6 @@ public class UserController {
 
     @GetMapping("users")
     public ResponseEntity<?> getAll() {
-        System.out.println("Get all users");
         return new ResponseEntity<>(
                 service.getAllDto(),
                 HttpStatus.OK
@@ -33,7 +32,7 @@ public class UserController {
             @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
-                service.getDto(userId),
+                service.getDtoById(userId),
                 HttpStatus.OK
         );
     }
@@ -41,11 +40,10 @@ public class UserController {
     @PutMapping("users/{id}")
     public ResponseEntity<?> put(
             @PathVariable("id") int id,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @ModelAttribute @Valid UserDto dto
+            @RequestBody @Valid UserDto dto
     ) {
         return new ResponseEntity<>(
-                service.update(id, dto, avatar),
+                service.updateById(id, dto),
                 HttpStatus.OK
         );
     }
@@ -55,7 +53,7 @@ public class UserController {
             @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
-                service.delete(userId),
+                service.deleteById(userId),
                 HttpStatus.OK
         );
     }
@@ -78,6 +76,17 @@ public class UserController {
     ) {
         return new ResponseEntity<>(
                 service.updatePassword(principal, request),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("user/avatar")
+    public ResponseEntity<?> putAvatar(
+            Principal principal,
+            @RequestParam("avatar") MultipartFile avatar
+    ) {
+        return new ResponseEntity<>(
+                service.updateAvatar(principal, avatar),
                 HttpStatus.OK
         );
     }

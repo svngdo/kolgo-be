@@ -1,13 +1,12 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.enterprise.EntProfileDto;
+import com.dtu.kolgo.dto.enterprise.EnterpriseProfileDto;
 import com.dtu.kolgo.service.EnterpriseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -28,10 +27,10 @@ public class EnterpriseController {
 
     @GetMapping("ents/{id}")
     public ResponseEntity<?> get(
-            @PathVariable("id") int entId
+            @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getDetails(entId),
+                service.getDetailsById(id),
                 HttpStatus.OK
         );
     }
@@ -41,19 +40,7 @@ public class EnterpriseController {
             @PathVariable("fieldId") short fieldId
     ) {
         return new ResponseEntity<>(
-                service.getAllDtoByField(fieldId),
-                HttpStatus.OK
-        );
-    }
-
-    @PutMapping("ents/{id}")
-    public ResponseEntity<?> put(
-            @PathVariable("id") int entId,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @RequestBody EntProfileDto dto
-    ) {
-        return new ResponseEntity<>(
-                service.update(entId, dto, avatar),
+                service.getAllDtoByFieldId(fieldId),
                 HttpStatus.OK
         );
     }
@@ -63,29 +50,28 @@ public class EnterpriseController {
             @PathVariable("id") int entId
     ) {
         return new ResponseEntity<>(
-                service.delete(entId),
+                service.deleteById(entId),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("ent/profile")
-    public ResponseEntity<?> getEnterpriseProfile(
+    public ResponseEntity<?> getProfile(
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getDto(principal),
+                service.getProfileByPrincipal(principal),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("ent/profile")
-    public ResponseEntity<?> updateEnterpriseProfile(
+    public ResponseEntity<?> putProfile(
             Principal principal,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @ModelAttribute EntProfileDto dto
+            @RequestBody EnterpriseProfileDto profile
     ) {
         return new ResponseEntity<>(
-                service.update(principal, dto, avatar),
+                service.updateProfileByPrincipal(principal, profile),
                 HttpStatus.OK
         );
     }

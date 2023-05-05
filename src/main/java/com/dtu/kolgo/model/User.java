@@ -39,11 +39,13 @@ public class User extends BaseInt implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private List<Payment> payments;
+    private List<Payment> sentPayments;
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     private List<Payment> receivedPayments;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks;
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Feedback> sentFeedbacks;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<Feedback> receivedFeedbacks;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

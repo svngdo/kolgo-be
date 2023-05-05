@@ -1,23 +1,25 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.BookingDto;
 import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.booking.BookingCreateDto;
+import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.model.Booking;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface BookingService {
 
-    ApiResponse save(Booking booking);
+    BookingDto create(Principal principal, BookingCreateDto dto);
 
-    List<BookingDto> getAllDto();
+    List<BookingDto> getAllDtoByUserId(int userId);
 
-    List<BookingDto> getAllDto(int userId);
+    List<BookingDto> getAllDtoByPrincipal(Principal principal);
 
-    Booking get(int id);
+    Booking getById(int id);
 
-    BookingDto getDto(int id);
+    BookingDto getDtoById(int id);
 
-    ApiResponse update(int id, BookingDto request);
+    ApiResponse updateById(int id, BookingDto request);
 
 }

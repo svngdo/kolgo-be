@@ -31,7 +31,7 @@ public class KolController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getDetails(id),
+                service.getDetailsById(id),
                 HttpStatus.OK
         );
     }
@@ -41,20 +41,7 @@ public class KolController {
             @PathVariable("fieldId") short fieldId
     ) {
         return new ResponseEntity<>(
-                service.getAllDtoByField(fieldId),
-                HttpStatus.OK
-        );
-    }
-
-    @PutMapping("kols/{id}")
-    public ResponseEntity<?> update(
-            @PathVariable("id") int kolId,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            @ModelAttribute @Valid KolProfileDto dto
-            ) {
-        return new ResponseEntity<>(
-                service.updateProfile(kolId, dto, avatar, images),
+                service.getAllDtoByFieldId(fieldId),
                 HttpStatus.OK
         );
     }
@@ -64,7 +51,7 @@ public class KolController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.delete(id),
+                service.deleteById(id),
                 HttpStatus.OK
         );
     }
@@ -77,7 +64,7 @@ public class KolController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getDetails(principal),
+                service.getProfileByPrincipal(principal),
                 HttpStatus.OK
         );
     }
@@ -85,12 +72,21 @@ public class KolController {
     @PutMapping("kol/profile")
     public ResponseEntity<?> updateProfile(
             Principal principal,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            @ModelAttribute @Valid KolProfileDto dto
+            @RequestBody @Valid KolProfileDto dto
     ) {
         return new ResponseEntity<>(
-                service.updateProfile(principal, dto, avatar, images),
+                service.updateProfileByPrincipal(principal, dto),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("kol/images")
+    public ResponseEntity<?> updateImages(
+            Principal principal,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
+    ) {
+        return new ResponseEntity<>(
+                service.updateImages(principal, images),
                 HttpStatus.OK
         );
     }

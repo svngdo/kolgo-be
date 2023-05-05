@@ -1,7 +1,6 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.dto.kol.KolProfileDto;
 import com.dtu.kolgo.enums.FieldType;
@@ -23,8 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +53,7 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public List<KolDto> getAllDtoByField(short fieldId) {
+    public List<KolDto> getAllDtoByFieldId(short fieldId) {
         Field field = fieldService.get(fieldId);
         if (field.getType() != FieldType.KOL) {
             throw new InvalidException("Invalid field type");
@@ -65,61 +63,62 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public Kol get(int id) {
+    public Kol getById(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Kol ID not found: " + id));
     }
 
     @Override
-    public Kol get(User user) {
+    public Kol getByUser(User user) {
         return repo.findByUser(user)
-                .orElseThrow(() -> new NotFoundException("User ID not found: " + user.getId()));
+                .orElseThrow(() -> new NotFoundException("Kol user ID not found: " + user.getId()));
     }
 
     @Override
-    public Kol get(Principal principal) {
-        User user = userService.get(principal);
-        return get(user);
+    public Kol getByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        return getByUser(user);
     }
 
     @Override
-    public KolDetailsDto getDetails(Kol kol) {
-        KolDetailsDto dto = mapper.map(kol, KolDetailsDto.class);
-        dto.setImages(kol.getImages().stream().map(Image::getName).toList());
-        return dto;
+    public ApiResponse getDetailsById(int id) {
+        Kol kol = getById(id);
+        KolDto dto = mapper.map(kol, KolDto.class);
+        List<String> images = kol.getImages().stream().map(Image::getName).toList();
+
+        return new ApiResponse(null, new HashMap<>() {{
+            put("kol", dto);
+            put("images", images);
+        }}, null);
     }
 
     @Override
-    public KolDetailsDto getDetails(int id) {
-        Kol kol = get(id);
-        return getDetails(kol);
+    public Map<String, Object> getProfileByPrincipal(Principal principal) {
+        Kol kol = getByPrincipal(principal);
+        KolProfileDto profile = mapper.map(kol, KolProfileDto.class);
+        List<String> images = kol.getImages().stream().map(Image::getName).toList();
+
+        return new HashMap<>() {{
+            put("kol", profile);
+            put("images", images);
+        }};
     }
 
     @Override
-    public KolDetailsDto getDetails(Principal principal) {
-        Kol kol = get(principal);
-        return getDetails(kol);
-    }
+    public ApiResponse updateProfileByPrincipal(Principal principal, KolProfileDto profile) {
+        Kol kol = getByPrincipal(principal);
 
-    @Override
-    public ApiResponse updateProfile(
-            int id, KolProfileDto dto, MultipartFile avatar, List<MultipartFile> images) {
-        Kol kol = get(id);
-
-        userService.updateAvatar(kol.getUser(), avatar);
-        updateImages(kol, images);
-
-        kol.getUser().setFirstName(dto.getFirstName());
-        kol.getUser().setLastName(dto.getLastName());
-        kol.setPhone(dto.getPhone());
-        kol.setGender(dto.getGender());
-        kol.getAddress().setCity(cityService.get(dto.getCityId()));
-        kol.getAddress().setDetails(dto.getAddressDetails());
-        kol.setField(fieldService.get(dto.getFieldId()));
-        kol.setFacebookUrl(dto.getFacebookUrl());
-        kol.setInstagramUrl(dto.getInstagramUrl());
-        kol.setTiktokUrl(dto.getTiktokUrl());
-        kol.setYoutubeUrl(dto.getYoutubeUrl());
+        kol.getUser().setFirstName(profile.getFirstName());
+        kol.getUser().setLastName(profile.getLastName());
+        kol.setPhone(profile.getPhone());
+        kol.setGender(profile.getGender());
+        kol.getAddress().setCity(cityService.get(profile.getCityId()));
+        kol.getAddress().setDetails(profile.getAddressDetails());
+        kol.setField(fieldService.get(profile.getFieldId()));
+        kol.setFacebookUrl(profile.getFacebookUrl());
+        kol.setInstagramUrl(profile.getInstagramUrl());
+        kol.setTiktokUrl(profile.getTiktokUrl());
+        kol.setYoutubeUrl(profile.getYoutubeUrl());
 
         repo.save(kol);
 
@@ -127,25 +126,26 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public ApiResponse updateProfile(
-            Principal principal, KolProfileDto dto, MultipartFile avatar, List<MultipartFile> images) {
-        Kol kol = get(principal);
-        return updateProfile(kol.getId(), dto, avatar, images);
-    }
-
-    @Override
-    public void updateImages(Kol kol, List<MultipartFile> images) {
-        if (images == null) return;
+    public Map<String, Object> updateImages(Principal principal, List<MultipartFile> images) {
+        Kol kol = getByPrincipal(principal);
+        if (images == null) {
+            throw new InvalidException("Images is null");
+        }
+        List<String> imageList = new ArrayList<>();
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
             imageService.save(new Image(fileName, kol));
             String uploadDir = imagePath;
             FileUtils.saveImage(uploadDir, fileName, image);
+            imageList.add(fileName);
         });
+        return new HashMap<>() {{
+            put("images", imageList);
+        }};
     }
 
     @Override
-    public ApiResponse delete(int id) {
+    public ApiResponse deleteById(int id) {
         repo.deleteById(id);
         return new ApiResponse("Delete KOL successfully !!");
     }

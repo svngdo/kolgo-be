@@ -116,7 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthDto login(LoginDto request) {
-        User user = userService.get(request.getEmail());
+        User user = userService.getByEmail(request.getEmail());
 
         authenticate(user.getId(), request.getPassword());
 
@@ -164,7 +164,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
 
         // get user from token
-        User user = userService.get(jwtProvider.extractUserId(refreshToken));
+        User user = userService.getById(jwtProvider.extractUserId(refreshToken));
 
         tokenService.revoke(refreshToken);
 
@@ -184,7 +184,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     public ApiResponse forgotPassword(EmailDto request) {
-        User user = userService.get(request.getEmail());
+        User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
         String url = String.format("http://%s:3000/reset_password?reset_password_token=%s",
@@ -218,7 +218,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         // Get user
         int userId = jwtProvider.extractUserId(resetPasswordToken);
-        User user = userService.get(userId);
+        User user = userService.getById(userId);
 
         // Update password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));

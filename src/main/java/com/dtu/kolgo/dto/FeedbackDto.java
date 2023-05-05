@@ -12,7 +12,7 @@ public class FeedbackDto {
     private int id;
     private short rating;
     private String comment;
-    private UserDto user;
-    private BookingDto booking;
+    private UserDto sender;
+    private UserDto receiver;
 
 }

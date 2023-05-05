@@ -1,9 +1,9 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.enterprise.EntDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EntDto;
-import com.dtu.kolgo.dto.enterprise.EntProfileDto;
+import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
+import com.dtu.kolgo.dto.enterprise.EnterpriseProfileDto;
 import com.dtu.kolgo.enums.FieldType;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
@@ -11,12 +11,14 @@ import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.Field;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.EnterpriseRepository;
-import com.dtu.kolgo.service.*;
+import com.dtu.kolgo.service.CityService;
+import com.dtu.kolgo.service.EnterpriseService;
+import com.dtu.kolgo.service.FieldService;
+import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -47,7 +49,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public List<EntDto> getAllDtoByField(short fieldId) {
+    public List<EntDto> getAllDtoByFieldId(short fieldId) {
         Field field = fieldService.get(fieldId);
         if (field.getType() != FieldType.ENTERPRISE) {
             throw new InvalidException("Invalid field type");
@@ -59,66 +61,57 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public Enterprise get(int id) {
+    public Enterprise getById(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Enterprise ID not found: " + id));
     }
 
     @Override
-    public Enterprise get(User user) {
+    public Enterprise getByUser(User user) {
         return repo.findByUser(user)
                 .orElseThrow(() -> new NotFoundException("Enterprise not found with User ID: " + user.getId()));
     }
 
     @Override
-    public Enterprise get(Principal principal) {
-        User user = userService.get(principal);
-        return get(user);
+    public Enterprise getByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        return getByUser(user);
     }
 
     @Override
-    public EntDetailsDto getDetails(int id) {
-        Enterprise ent = get(id);
-        return mapper.map(ent, EntDetailsDto.class);
+    public EnterpriseDetailsDto getDetailsById(int id) {
+        Enterprise ent = getById(id);
+        return null;
     }
 
     @Override
-    public EntDto getDto(Principal principal) {
-        Enterprise ent = get(principal);
-        return mapper.map(ent, EntDto.class);
+    public EnterpriseProfileDto getProfileByPrincipal(Principal principal) {
+        Enterprise ent = getByPrincipal(principal);
+        return mapper.map(ent, EnterpriseProfileDto.class);
     }
 
     @Override
-    public ApiResponse update(int id, EntProfileDto dto, MultipartFile avatar) {
-        Enterprise ent = get(id);
+    public ApiResponse updateProfileByPrincipal(Principal principal, EnterpriseProfileDto profile) {
+        Enterprise ent = getByPrincipal(principal);
 
-        userService.updateAvatar(ent.getUser(), avatar);
-
-        ent.getUser().setFirstName(dto.getFirstName());
-        ent.getUser().setLastName(dto.getLastName());
-        ent.setName(dto.getName());
-        ent.setPhone(dto.getPhone());
-        ent.setTaxId(dto.getTaxId());
-        ent.getAddress().setCity(cityService.get(dto.getCityId()));
-        ent.getAddress().setDetails(dto.getAddressDetails());
-        ent.setField(fieldService.get(dto.getFieldId()));
+        ent.getUser().setFirstName(profile.getFirstName());
+        ent.getUser().setLastName(profile.getLastName());
+        ent.setName(profile.getName());
+        ent.setPhone(profile.getPhone());
+        ent.setTaxId(profile.getTaxId());
+        ent.getAddress().setCity(cityService.get(profile.getCityId()));
+        ent.getAddress().setDetails(profile.getAddressDetails());
+        ent.setField(fieldService.get(profile.getFieldId()));
 
         repo.save(ent);
 
-        return new ApiResponse("Updated successfully Enterprise with ID " + id);
+        return new ApiResponse("Updated profile successfully");
     }
 
     @Override
-    public ApiResponse update(
-            Principal principal, EntProfileDto dto, MultipartFile avatar) {
-        Enterprise ent = get(principal);
-        return update(ent.getId(), dto, avatar);
-    }
-
-    @Override
-    public ApiResponse delete(int id) {
+    public ApiResponse deleteById(int id) {
         repo.deleteById(id);
-        return new ApiResponse("Deleted successfully Enterprise with ID " + id);
+        return new ApiResponse("Deleted enterprise successfully");
     }
 
 }

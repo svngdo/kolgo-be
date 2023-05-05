@@ -29,6 +29,8 @@ create table if not exists kols
     phone         varchar(20) null,
     address_id    int         null references addresses (id),
     field_id      smallint    null references fields (id) on delete set null,
+    post_price    numeric     not null default 0,
+    video_price   numeric     not null default 0,
     facebook_url  varchar,
     instagram_url varchar,
     tiktok_url    varchar,

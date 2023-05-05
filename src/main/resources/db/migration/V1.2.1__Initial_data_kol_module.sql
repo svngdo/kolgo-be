@@ -88,9 +88,9 @@ values ('sang', 'kol', 'sangkol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oc
        ('chan', 'kol', 'chankol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oczpJBKLQ2iFQdlf1zpD.cCFqLa', null, 'KOL'),
        ('hieu', 'kol', 'hieukol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oczpJBKLQ2iFQdlf1zpD.cCFqLa', null, 'KOL');
 
-insert into kols (user_id, gender, phone, address_id, field_id, facebook_url, instagram_url, tiktok_url, youtube_url)
-values (2, 'MALE', '0123456789', 1, 1, 'https://facebook.com/sangkol', 'https://instagram.com/sangkol', 'https://tiktok.com/sangkol', 'https://youtube.com/sangkol'),
-       (3, 'FEMALE', '0123456789', 2, 2, 'https://facebook.com/sangkol', 'https://instagram.com/huykol', 'https://tiktok.com/huykol', 'https://youtube.com/huykol'),
-       (4, 'MALE', '0123456789', 3, 3, 'https://facebook.com/sangkol', 'https://instagram.com/thangkol', 'https://tiktok.com/thangkol', 'https://youtube.com/thangkol'),
-       (5, 'FEMALE', '0123456789', 4, 4, 'https://facebook.com/sangkol', 'https://instagram.com/chankol', 'https://tiktok.com/chankol', 'https://youtube.com/chankol'),
-       (6, 'FEMALE', '0123456789', 5, 5, 'https://facebook.com/sangkol', 'https://instagram.com/hieukol', 'https://tiktok.com/hieukol', 'https://youtube.com/hieukol');
+insert into kols (user_id, gender, phone, address_id, field_id, post_price, video_price, facebook_url, instagram_url, tiktok_url, youtube_url)
+values (2, 'MALE', '0123456789', 1, 1, 500000, 10000000, 'https://facebook.com/sangkol', 'https://instagram.com/sangkol', 'https://tiktok.com/sangkol', 'https://youtube.com/sangkol'),
+       (3, 'FEMALE', '0123456789', 2, 2, 300000, 500000, 'https://facebook.com/sangkol', 'https://instagram.com/huykol', 'https://tiktok.com/huykol', 'https://youtube.com/huykol'),
+       (4, 'MALE', '0123456789', 3, 3, 100000, 300000, 'https://facebook.com/sangkol', 'https://instagram.com/thangkol', 'https://tiktok.com/thangkol', 'https://youtube.com/thangkol'),
+       (5, 'FEMALE', '0123456789', 4, 4, 50000, 100000, 'https://facebook.com/sangkol', 'https://instagram.com/chankol', 'https://tiktok.com/chankol', 'https://youtube.com/chankol'),
+       (6, 'FEMALE', '0123456789', 5, 5, 30000, 50000, 'https://facebook.com/sangkol', 'https://instagram.com/hieukol', 'https://tiktok.com/hieukol', 'https://youtube.com/hieukol');

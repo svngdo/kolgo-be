@@ -1,14 +1,15 @@
 package com.dtu.kolgo.service;
 
+import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.EmailDto;
 import com.dtu.kolgo.dto.PasswordUpdateDTO;
 import com.dtu.kolgo.dto.UserDto;
-import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -16,24 +17,24 @@ public interface UserService {
 
     List<UserDto> getAllDto();
 
-    User get(int id);
+    User getById(int id);
 
-    User get(String email);
+    User getByEmail(String email);
 
-    User get(Principal principal);
+    User getByPrincipal(Principal principal);
 
-    UserDto getDto(int id);
+    UserDto getDtoById(int id);
 
-    ApiResponse update(int id, UserDto dto, MultipartFile avatar);
+    ApiResponse updateById(int id, UserDto dto);
 
-    ApiResponse update(User user, UserDto dto, MultipartFile avatar);
+    ApiResponse updateByUser(User user, UserDto dto);
 
-    void updateAvatar(User user, MultipartFile avatar);
+    Map<String, Object> updateAvatar(Principal principal, MultipartFile avatar);
 
     ApiResponse updateEmail(Principal principal, EmailDto dto);
 
     ApiResponse updatePassword(Principal principal, PasswordUpdateDTO request);
 
-    ApiResponse delete(int userId);
+    ApiResponse deleteById(int userId);
 
 }
