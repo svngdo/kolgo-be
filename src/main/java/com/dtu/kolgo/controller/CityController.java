@@ -16,7 +16,7 @@ public class CityController {
     private final CityService service;
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> get() {
         return new ResponseEntity<>(
                 service.getAll(),
                 HttpStatus.OK

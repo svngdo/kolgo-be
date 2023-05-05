@@ -15,6 +15,6 @@ public class City extends BaseShort {
     @Column
     private String name;
     @Column
-    private String abbreviation;
+    private String code;
 
 }

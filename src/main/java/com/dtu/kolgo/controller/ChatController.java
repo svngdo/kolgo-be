@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.ConversationRequest;
+import com.dtu.kolgo.dto.ChatDto;
 import com.dtu.kolgo.dto.request.MessageRequest;
 import com.dtu.kolgo.dto.response.MessageResponse;
 import com.dtu.kolgo.service.ChatService;
@@ -58,10 +58,10 @@ public class ChatController {
     @PostMapping("conversations")
     public ResponseEntity<?> addConversation(
             Principal principal,
-            @RequestBody @Valid ConversationRequest request
+            @RequestBody @Valid ChatDto dto
     ) {
         return new ResponseEntity<>(
-                service.addConversation(principal, request),
+                service.addConversation(principal, dto),
                 HttpStatus.OK
         );
     }

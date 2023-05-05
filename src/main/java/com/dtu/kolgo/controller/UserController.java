@@ -1,14 +1,15 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.PasswordUpdateRequest;
-import com.dtu.kolgo.dto.request.UserRequest;
+import com.dtu.kolgo.dto.EmailDto;
+import com.dtu.kolgo.dto.PasswordUpdateDTO;
+import com.dtu.kolgo.dto.UserDto;
 import com.dtu.kolgo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -21,7 +22,7 @@ public class UserController {
     @GetMapping("users")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAllResponses(),
+                service.getAllDto(),
                 HttpStatus.OK
         );
     }
@@ -31,18 +32,18 @@ public class UserController {
             @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
-                service.getResponse(userId),
+                service.getDtoById(userId),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("users/{id}")
-    public ResponseEntity<?> update(
-            @PathVariable("id") int userId,
-            @RequestBody UserRequest request
+    public ResponseEntity<?> put(
+            @PathVariable("id") int id,
+            @RequestBody @Valid UserDto dto
     ) {
         return new ResponseEntity<>(
-                service.update(userId, request),
+                service.updateById(id, dto),
                 HttpStatus.OK
         );
     }
@@ -52,26 +53,26 @@ public class UserController {
             @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
-                service.delete(userId),
+                service.deleteById(userId),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("user/email")
-    public ResponseEntity<?> updateUserEmail(
+    public ResponseEntity<?> putEmail(
             Principal principal,
-            @RequestBody @Valid EmailRequest request
+            @RequestBody @Valid EmailDto dto
     ) {
         return new ResponseEntity<>(
-                service.updateEmail(principal, request),
+                service.updateEmail(principal, dto),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("user/password")
-    public ResponseEntity<?> updateUserPassword(
+    public ResponseEntity<?> putPassword(
             Principal principal,
-            @RequestBody @Valid PasswordUpdateRequest request
+            @RequestBody @Valid PasswordUpdateDTO request
     ) {
         return new ResponseEntity<>(
                 service.updatePassword(principal, request),
@@ -79,5 +80,15 @@ public class UserController {
         );
     }
 
+    @PutMapping("user/avatar")
+    public ResponseEntity<?> putAvatar(
+            Principal principal,
+            @RequestParam("avatar") MultipartFile avatar
+    ) {
+        return new ResponseEntity<>(
+                service.updateAvatar(principal, avatar),
+                HttpStatus.OK
+        );
+    }
 
 }

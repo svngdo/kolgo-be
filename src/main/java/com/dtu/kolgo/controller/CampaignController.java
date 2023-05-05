@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.request.CampaignRequest;
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class CampaignController {
     @GetMapping("campaigns")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAllResponses(),
+                service.getAllDto(),
                 HttpStatus.OK
         );
     }
@@ -29,7 +29,7 @@ public class CampaignController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getResponse(id),
+                service.getDtoById(id),
                 HttpStatus.OK
         );
     }
@@ -37,10 +37,10 @@ public class CampaignController {
     @PutMapping("campaigns/{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") int id,
-            @RequestBody @Valid CampaignRequest request
+            @RequestBody @Valid CampaignDto dto
     ) {
         return new ResponseEntity<>(
-                service.update(id, request),
+                service.update(id, dto),
                 HttpStatus.OK
         );
     }
@@ -55,56 +55,12 @@ public class CampaignController {
         );
     }
 
-    @PostMapping("campaigns/ent")
-    public ResponseEntity<?> addEntCampaign(
-            Principal principal,
-            CampaignRequest request
-    ) {
-        return new ResponseEntity<>(
-                service.save(principal, request),
-                HttpStatus.OK
-        );
-    }
-
     @GetMapping("campaigns/ent")
     public ResponseEntity<?> getAll(
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getAllResponsesEnt(principal),
-                HttpStatus.OK
-        );
-    }
-
-    @PutMapping("campaigns/{id}/ent")
-    public ResponseEntity<?> updateEntCampaign(
-            Principal principal,
-            @PathVariable("id") int id,
-            @RequestBody @Valid CampaignRequest request
-    ) {
-        return new ResponseEntity<>(
-                service.update(principal, id, request),
-                HttpStatus.OK
-        );
-    }
-
-    @DeleteMapping("campaigns/{id}/ent")
-    public ResponseEntity<?> deleteEntCampaign(
-            Principal principal,
-            @PathVariable("id") int id
-    ) {
-        return new ResponseEntity<>(
-                service.delete(principal, id),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("campaigns/kol")
-    public ResponseEntity<?> getKolCampaigns(
-            Principal principal
-    ) {
-        return new ResponseEntity<>(
-                service.getAllResponsesKol(principal),
+                service.getAllDtoEnt(principal),
                 HttpStatus.OK
         );
     }

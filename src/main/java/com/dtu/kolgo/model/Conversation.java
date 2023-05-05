@@ -1,6 +1,6 @@
 package com.dtu.kolgo.model;
 
-import com.dtu.kolgo.enums.ConversationType;
+import com.dtu.kolgo.enums.ChatType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class Conversation extends BaseInt {
 
     @Enumerated(EnumType.STRING)
-    private ConversationType type;
+    private ChatType type;
     @ManyToMany
     @JoinTable(name = "user_conversations",
     joinColumns = @JoinColumn(name = "conversation_id", referencedColumnName = "id"),

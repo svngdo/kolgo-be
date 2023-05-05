@@ -27,10 +27,8 @@ public class User extends BaseInt implements UserDetails {
     private String lastName;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "phone")
-    private String phone;
     @Column(name = "avatar")
     private String avatar;
     @Enumerated(EnumType.STRING)
@@ -39,9 +37,15 @@ public class User extends BaseInt implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Token> tokens;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Payment> payments;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks;
+    private List<Booking> bookings;
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Payment> sentPayments;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<Payment> receivedPayments;
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Feedback> sentFeedbacks;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<Feedback> receivedFeedbacks;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

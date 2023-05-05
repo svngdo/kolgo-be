@@ -1,16 +1,16 @@
 package com.dtu.kolgo.security;
 
+import com.dtu.kolgo.enums.GrantType;
+import com.dtu.kolgo.enums.JwtKey;
 import com.dtu.kolgo.exception.CustomJwtException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.model.User;
-import com.dtu.kolgo.enums.GrantType;
-import com.dtu.kolgo.enums.JwtKey;
-import com.dtu.kolgo.env.JwtEnv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -25,6 +25,17 @@ import java.util.function.Function;
 @Component
 public class JwtProvider {
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+    @Value("${jwt.access-token-exp-ms}")
+    private long jwtAccessTokenExpMs;
+    @Value("${jwt.refresh-token-exp-ms}")
+    private long jwtRefreshTokenExpMs;
+    @Value("${jwt.reset-password-exp-ms}")
+    private long jwtResetPasswordExpMs;
+    @Value("${jwt.verify-account-exp-ms}")
+    private long jwtVerifyAccountExpMs;
+
     public String resolveToken(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer")) {
@@ -34,7 +45,7 @@ public class JwtProvider {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = JwtEnv.SECRET.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
         byte[] key64UrlBytes = Encoders.BASE64URL.encode(keyBytes).getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(key64UrlBytes);
     }
@@ -59,7 +70,7 @@ public class JwtProvider {
     public String generateAccessToken(User user) {
         return generateToken(
                 String.valueOf(user.getId()),
-                JwtEnv.ACCESS_EXPIRATION,
+                jwtAccessTokenExpMs,
                 GrantType.ACCESS_TOKEN
         );
     }
@@ -67,7 +78,7 @@ public class JwtProvider {
     public String generateRefreshToken(User user) {
         return generateToken(
                 String.valueOf(user.getId()),
-                JwtEnv.REFRESH_EXPIRATION,
+                jwtRefreshTokenExpMs,
                 GrantType.REFRESH_TOKEN
         );
     }
@@ -77,7 +88,7 @@ public class JwtProvider {
         extraClaims.put(JwtKey.PASSWORD.toString(), user.getPassword());
         return generateToken(
                 String.valueOf(user.getId()),
-                JwtEnv.RESET_PASSWORD_EXPIRATION,
+                jwtResetPasswordExpMs,
                 GrantType.RESET_PASSWORD_TOKEN,
                 extraClaims
         );
@@ -93,7 +104,7 @@ public class JwtProvider {
         extraClaims.put(JwtKey.PASSWORD.toString(), password);
         return generateToken(
                 "0",
-                JwtEnv.VERIFY_ACCOUNT_EXPIRATION,
+                jwtVerifyAccountExpMs,
                 GrantType.VERIFY_ACCOUNT_TOKEN,
                 extraClaims
         );

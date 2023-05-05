@@ -31,7 +31,6 @@ public class SecurityConfig {
             "/kols/**",
             "/ents/**",
             "/cities/**",
-            "/genders/**",
             "/fields/**",
             "/images/**",
     };
@@ -40,7 +39,8 @@ public class SecurityConfig {
     };
     private final String[] AUTH_WHITELIST = {
             "/campaigns/**",
-            "/user/**"
+            "/user/**",
+            "/bookings/**"
     };
     private final String[] WEBSOCKET_WHITELIST = {
             "/conversations/**",
@@ -84,6 +84,7 @@ public class SecurityConfig {
 
         // Entry points
         http.authorizeHttpRequests()
+                .requestMatchers("/vnpay/**").permitAll()
                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                 .requestMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
                 .requestMatchers(WEBSOCKET_WHITELIST).permitAll()

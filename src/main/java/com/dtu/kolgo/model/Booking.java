@@ -1,9 +1,13 @@
 package com.dtu.kolgo.model;
 
+import com.dtu.kolgo.enums.BookingStatus;
+import com.dtu.kolgo.enums.DateTimeFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @NoArgsConstructor
@@ -15,11 +19,24 @@ import java.util.List;
 @Table(name = "bookings")
 public class Booking extends BaseInt {
 
-    @Column
-    private LocalDate date;
+    @Column(name = "date")
+    private LocalDateTime date;
+    @Column(name = "post_price")
+    private BigDecimal postPrice;
+    @Column(name = "post_number")
+    private Integer postNumber;
+    @Column(name = "video_price")
+    private BigDecimal videoPrice;
+    @Column(name = "video_number")
+    private Integer videoNumber;
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private BookingStatus status;
     @ManyToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise enterprise;
+    @JoinColumn(name = "user_id")
+    private User user;
     @ManyToOne
     @JoinColumn(name = "kol_id")
     private Kol kol;
@@ -29,4 +46,11 @@ public class Booking extends BaseInt {
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
 
+    public String getDate() {
+        return date.format(DateTimeFormatter.ofPattern(DateTimeFormat.getSimple()));
+    }
+
+    public void setDate(String date) {
+        this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern(DateTimeFormat.getSimple()));
+    }
 }

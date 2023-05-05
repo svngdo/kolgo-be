@@ -1,7 +1,7 @@
 package com.dtu.kolgo.repository;
 
 import com.dtu.kolgo.model.Enterprise;
-import com.dtu.kolgo.model.EnterpriseField;
+import com.dtu.kolgo.model.Field;
 import com.dtu.kolgo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,6 +14,6 @@ public interface EnterpriseRepository extends JpaRepository<Enterprise, Integer>
 
     Optional<Enterprise> findByUser(User user);
 
-    List<Enterprise> findAllByField(EnterpriseField field);
+    List<Enterprise> findAllByField(Field field);
 
 }

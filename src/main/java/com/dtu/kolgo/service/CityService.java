@@ -8,6 +8,6 @@ public interface CityService {
 
     List<City> getAll();
 
-    City getById(short id);
+    City get(short id);
 
 }

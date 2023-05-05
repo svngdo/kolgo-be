@@ -1,18 +1,16 @@
 package com.dtu.kolgo.dto.request;
 
+import com.dtu.kolgo.dto.UserDto;
 import lombok.Data;
 
 @Data
 public class EntUpdateRequest {
 
-    private String firstName;
-    private String lastName;
     private String name;
-    private Short enterpriseFieldId;
-    private String email;
-    private String phoneNumber;
-    private String taxIdentificationNumber;
-    private String addressDetails;
+    private String address;
     private Short cityId;
+    private Short fieldId;
+    private String taxId;
+    private UserDto user;
 
 }

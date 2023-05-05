@@ -1,5 +1,8 @@
 package com.dtu.kolgo.controller;
 
+import com.dtu.kolgo.dto.EmailDto;
+import com.dtu.kolgo.dto.LoginDto;
+import com.dtu.kolgo.dto.PasswordResetDto;
 import com.dtu.kolgo.dto.request.*;
 import com.dtu.kolgo.service.AuthenticationService;
 import jakarta.validation.Valid;
@@ -30,7 +33,6 @@ public class AuthenticationController {
             @RequestParam("biz") boolean isBiz,
             @RequestParam("verify_account_token") String token
     ) {
-        System.out.println("BIZ " + isBiz);
         return new ResponseEntity<>(
                 service.verify(token, isBiz),
                 HttpStatus.OK
@@ -39,7 +41,7 @@ public class AuthenticationController {
 
     @PostMapping("login")
     public ResponseEntity<?> authenticate(
-            @RequestBody @Valid LoginRequest request
+            @RequestBody @Valid LoginDto request
     ) {
         return new ResponseEntity<>(
                 service.login(request),
@@ -48,7 +50,7 @@ public class AuthenticationController {
 
     @PostMapping("forgot_password")
     public ResponseEntity<?> forgotPassword(
-            @RequestBody @Valid EmailRequest request
+            @RequestBody @Valid EmailDto request
     ) {
         return new ResponseEntity<>(
                 service.forgotPassword(request),
@@ -58,7 +60,7 @@ public class AuthenticationController {
     @PostMapping("reset_password")
     public ResponseEntity<?> resetPassword(
             @RequestParam("reset_password_token") String token,
-            @RequestBody @Valid PasswordResetRequest request
+            @RequestBody @Valid PasswordResetDto request
     ) {
         return new ResponseEntity<>(
                 service.resetPassword(token, request),

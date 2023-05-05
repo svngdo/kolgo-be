@@ -1,116 +1,108 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.BookingRequest;
-import com.dtu.kolgo.dto.response.ApiResponse;
-import com.dtu.kolgo.dto.response.BookingResponse;
-import com.dtu.kolgo.dto.response.FeedbackResponse;
+import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.booking.BookingCreateDto;
+import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.enums.DateTimeFormat;
+import com.dtu.kolgo.enums.Role;
+import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Booking;
-import com.dtu.kolgo.enums.Role;
+import com.dtu.kolgo.model.Kol;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.BookingRepository;
-import com.dtu.kolgo.service.*;
+import com.dtu.kolgo.service.BookingService;
+import com.dtu.kolgo.service.KolService;
+import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository repo;
     private final UserService userService;
+    private final ModelMapper mapper;
     private final KolService kolService;
-    private final EnterpriseService entService;
-    private final FeedbackService feedbackService;
 
     @Override
-    public ApiResponse save(Booking booking) {
-        repo.save(booking);
-        return new ApiResponse("Saved booking successfully");
+    public BookingDto create(Principal principal, BookingCreateDto dto) {
+        User user = userService.getByPrincipal(principal);
+        Kol kol = kolService.getById(dto.getKolId());
+
+        if (repo.existsByUserAndKol(user, kol)) throw new ExistsException("Booking existed");
+
+        Booking booking = repo.save(new Booking(
+                LocalDateTime.parse(dto.getDate(), DateTimeFormatter.ofPattern(DateTimeFormat.getSimple())),
+                dto.getPostPrice(),
+                dto.getPostNumber(),
+                dto.getVideoPrice(),
+                dto.getVideoNumber(),
+                dto.getTotalPrice(),
+                dto.getStatus(),
+                user,
+                kol,
+                null,
+                new ArrayList<>()
+        ));
+
+        return mapper.map(booking, BookingDto.class);
     }
 
     @Override
-    public List<Booking> getAll() {
-        return repo.findAll();
-    }
+    public List<BookingDto> getAllDtoByUserId(int userId) {
+        User user = userService.getById(userId);
+        List<Booking> bookings = user.getBookings();
 
-    @Override
-    public List<BookingResponse> getAllResponses() {
-        return mapEntitiesToDtos(getAll());
-    }
-
-    @Override
-    public List<BookingResponse> getAllResponses(int userId) {
-        User user = userService.get(userId);
-//        String userRole = userService.getRole(userId);
-        List<BookingResponse> bookings = new ArrayList<>();
-        if (user.getRole().equals(Role.KOL)) {
-            bookings = mapEntitiesToDtos(kolService.get(user).getBookings());
-        } else if (user.getRole().equals(Role.ENTERPRISE)) {
-            bookings = mapEntitiesToDtos(entService.get(user).getBookings());
+        if (user.getRole() == Role.KOL) {
+            bookings.addAll(repo.findAllByKol(kolService.getByUser(user)));
         }
-        return bookings;
+        return bookings.stream()
+                .map(booking -> mapper.map(booking, BookingDto.class))
+                .toList();
     }
 
     @Override
-    public Booking get(int id) {
+    public List<BookingDto> getAllDtoByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        return repo.findAllByUser(user).stream()
+                .map(booking -> mapper.map(booking, BookingDto.class))
+                .toList();
+    }
+
+    @Override
+    public Booking getById(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found Booking with ID: " + id));
     }
 
     @Override
-    public BookingResponse getResponse(int id) {
-        return mapEntityToDto(get(id));
+    public BookingDto getDtoById(int id) {
+        Booking booking = getById(id);
+        BookingDto bookingDto = mapper.map(booking, BookingDto.class);
+//        bookingDto.setDate(booking.getDate().format(DateTimeFormatter.ofPattern(DateTimeFormat.getSimple())));
+        return bookingDto;
     }
 
     @Override
-    public ApiResponse update(int id, BookingRequest request) {
-        Booking booking = get(id);
-        booking.setDate(request.getDate());
-        repo.save(booking);
+    public ApiResponse updateById(int id, BookingDto request) {
+//        LocalDateTime date = LocalDateTime.parse(request.getDate(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+//
+//        Booking booking = getById(id);
+//        booking.setDate();
+//        repo.save(booking);
 
         return new ApiResponse("Updated Booking successfully");
-    }
-
-    @Override
-    public ApiResponse delete(int id) {
-        repo.deleteById(id);
-        return new ApiResponse("Deleted Feedback successfully");
-    }
-
-    @Override
-    public BookingResponse mapEntityToDto(Booking booking) {
-        List<FeedbackResponse> feedbacks = new ArrayList<>();
-        if (booking.getFeedbacks() != null) {
-            feedbacks = booking.getFeedbacks().stream()
-                    .map(feedbackService::mapEntityToDto)
-                    .collect(Collectors.toList());
-        }
-        return BookingResponse.builder()
-                .id(booking.getId())
-                .date(booking.getDate())
-                .entId(booking.getEnterprise().getId())
-                .entFirstName(booking.getEnterprise().getUser().getFirstName())
-                .entLastName(booking.getEnterprise().getUser().getLastName())
-                .entName(booking.getEnterprise().getName())
-                .kolId(booking.getKol().getId())
-                .kolFirstName(booking.getKol().getUser().getFirstName())
-                .kolLastName(booking.getKol().getUser().getLastName())
-                .paymentAmountPaid(booking.getPayment().getAmountPaid())
-                .paymentStatus(booking.getPayment().getStatus())
-                .feedbacks(feedbacks)
-                .build();
-    }
-
-    @Override
-    public List<BookingResponse> mapEntitiesToDtos(List<Booking> bookings) {
-        return bookings.stream()
-                .map(this::mapEntityToDto)
-                .collect(Collectors.toList());
     }
 
 }

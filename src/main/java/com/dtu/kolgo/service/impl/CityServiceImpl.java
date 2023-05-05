@@ -21,10 +21,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public City getById(short id) {
-        if (id <= 0) {
-            return null;
-        }
+    public City get(short id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("City ID not found: " + id));
     }

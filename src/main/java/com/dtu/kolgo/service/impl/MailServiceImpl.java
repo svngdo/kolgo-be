@@ -1,11 +1,11 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.MailDetails;
+import com.dtu.kolgo.dto.MailDto;
 import com.dtu.kolgo.service.MailService;
-import com.dtu.kolgo.env.MailEnv;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -20,9 +20,13 @@ import java.util.Objects;
 @Slf4j
 public class MailServiceImpl implements MailService {
 
+    @Value("${spring.mail.username}")
+    private String username;
+    @Value("${mail.display-name}")
+    private String senderName;
     private final JavaMailSender mailSender;
 
-    public void send(MailDetails details, boolean isHtml) {
+    public void send(MailDto details, boolean isHtml) {
         // Creating a mime message
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
@@ -30,7 +34,7 @@ public class MailServiceImpl implements MailService {
         // Try block to check for exceptions
         try {
             mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-            mimeMessageHelper.setFrom(MailEnv.SENDER, MailEnv.DISPLAY_NAME);
+            mimeMessageHelper.setFrom(username, senderName);
             mimeMessageHelper.setTo(details.getRecipient());
             mimeMessageHelper.setSubject(details.getSubject());
             mimeMessageHelper.setText(details.getBody(), isHtml);
@@ -44,7 +48,7 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-    public String sendMailWithAttachment(MailDetails details) {
+    public String sendMailWithAttachment(MailDto details) {
         // Creating a mime message
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
@@ -52,7 +56,7 @@ public class MailServiceImpl implements MailService {
         try {
             // Setting multipart as true for attachments to be sent
             mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
-            mimeMessageHelper.setFrom(MailEnv.SENDER, MailEnv.DISPLAY_NAME);
+            mimeMessageHelper.setFrom(username, senderName);
             mimeMessageHelper.setTo(details.getRecipient());
             mimeMessageHelper.setSubject(details.getSubject());
             mimeMessageHelper.setText(details.getBody());

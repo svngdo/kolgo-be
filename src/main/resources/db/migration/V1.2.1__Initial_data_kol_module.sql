@@ -1,9 +1,4 @@
-insert into genders(name)
-values ('male'),
-       ('female'),
-       ('others');
-
-insert into cities(name, abbreviation)
+insert into cities(name, code)
 values ('An Giang', 'AG'),
        ('Bà Rịa - Vũng Tàu', 'BRVT'),
        ('Bắc Giang', 'BG'),
@@ -68,20 +63,34 @@ values ('An Giang', 'AG'),
        ('Vĩnh Phúc', 'VP'),
        ('Yên Bái', 'YB');
 
-insert into kol_fields(name)
-values ('Làm Đẹp (Beauty)'),
-       ('Ẩm Thực (Food)'),
-       ('Du Lịch (Travel)'),
-       ('Thể Thao (Sport)'),
-       ('Đời Sống (Life Style)'),
-       ('Thời Trang (Fashion)'),
-       ('Sức Khoẻ (Health)'),
-       ('Công Nghệ (Tech)'),
-       ('Giải Trí (Entertainment)');
+insert into addresses(city_id, details)
+values (1, null),
+       (2, null),
+       (3, null),
+       (4, null),
+       (5, null);
 
-insert into kols (gender_id, city_id, kol_field_id,facebook_url, instagram_url, tiktok_url, youtube_url, user_id)
-values (1, 14, 1, 'https://facebook.com/sangkol', 'https://instagram.com/sangkol', 'https://tiktok.com/sangkol', 'https://youtube.com/sangkol', 2),
-       (2, 15, 2, 'https://facebook.com/huykol', 'https://instagram.com/huykol', 'https://tiktok.com/huykol', 'https://youtube.com/huykol', 3),
-       (1, 16, 3, 'https://facebook.com/thangkol', 'https://instagram.com/thangkol', 'https://tiktok.com/thangkol', 'https://youtube.com/thangkol', 4),
-       (2, 17, 4, 'https://facebook.com/chankol', 'https://instagram.com/chankol', 'https://tiktok.com/chankol', 'https://youtube.com/chankol', 5),
-       (1, 18, 5, 'https://facebook.com/hieukol', 'https://instagram.com/hieukol', 'https://tiktok.com/hieukol', 'https://youtube.com/hieukol', 6);
+insert into fields(name, type)
+values ('Làm Đẹp (Beauty)', 'KOL'),
+       ('Ẩm Thực (Food)', 'KOL'),
+       ('Du Lịch (Travel)', 'KOL'),
+       ('Thể Thao (Sport)', 'KOL'),
+       ('Đời Sống (Life Style)', 'KOL'),
+       ('Thời Trang (Fashion)', 'KOL'),
+       ('Sức Khoẻ (Health)', 'KOL'),
+       ('Công Nghệ (Tech)', 'KOL'),
+       ('Giải Trí (Entertainment)', 'KOL');
+
+insert into users(first_name, last_name, email, password, avatar, role)
+values ('sang', 'kol', 'sangkol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oczpJBKLQ2iFQdlf1zpD.cCFqLa', null, 'KOL'),
+       ('huy', 'kol', 'huykol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oczpJBKLQ2iFQdlf1zpD.cCFqLa', null, 'KOL'),
+       ('thang', 'kol', 'thangkol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oczpJBKLQ2iFQdlf1zpD.cCFqLa', null, 'KOL'),
+       ('chan', 'kol', 'chankol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oczpJBKLQ2iFQdlf1zpD.cCFqLa', null, 'KOL'),
+       ('hieu', 'kol', 'hieukol@kolgo.com', '$2a$10$4zkmuZDURkxgJBmH8g2JyOF6U6oczpJBKLQ2iFQdlf1zpD.cCFqLa', null, 'KOL');
+
+insert into kols (user_id, gender, phone, address_id, field_id, post_price, video_price, facebook_url, instagram_url, tiktok_url, youtube_url)
+values (2, 'MALE', '0123456789', 1, 1, 500000, 10000000, 'https://facebook.com/sangkol', 'https://instagram.com/sangkol', 'https://tiktok.com/sangkol', 'https://youtube.com/sangkol'),
+       (3, 'FEMALE', '0123456789', 2, 2, 300000, 500000, 'https://facebook.com/sangkol', 'https://instagram.com/huykol', 'https://tiktok.com/huykol', 'https://youtube.com/huykol'),
+       (4, 'MALE', '0123456789', 3, 3, 100000, 300000, 'https://facebook.com/sangkol', 'https://instagram.com/thangkol', 'https://tiktok.com/thangkol', 'https://youtube.com/thangkol'),
+       (5, 'FEMALE', '0123456789', 4, 4, 50000, 100000, 'https://facebook.com/sangkol', 'https://instagram.com/chankol', 'https://tiktok.com/chankol', 'https://youtube.com/chankol'),
+       (6, 'FEMALE', '0123456789', 5, 5, 30000, 50000, 'https://facebook.com/sangkol', 'https://instagram.com/hieukol', 'https://tiktok.com/hieukol', 'https://youtube.com/hieukol');

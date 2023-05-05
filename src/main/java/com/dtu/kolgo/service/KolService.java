@@ -1,43 +1,38 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.request.KolUpdateRequest;
-import com.dtu.kolgo.dto.response.ApiResponse;
-import com.dtu.kolgo.dto.response.KolResponse;
+import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.kol.KolDto;
+import com.dtu.kolgo.dto.kol.KolProfileDto;
 import com.dtu.kolgo.model.Kol;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 public interface KolService {
 
-    ApiResponse save(Kol kol);
+    void save(Kol kol);
 
-    List<KolResponse> getAllResponses();
+    List<KolDto> getAllDto();
 
-    List<KolResponse> getAllResponses(short fieldId);
+    List<KolDto> getAllDtoByFieldId(short fieldId);
 
-    Kol get(int kolId);
+    Kol getById(int id);
 
-    Kol get(User user);
+    Kol getByUser(User user);
 
-    Kol get(Principal principal);
+    Kol getByPrincipal(Principal principal);
 
-    KolResponse getProfile(int kolId);
+    ApiResponse getDetailsById(int id);
 
-    KolResponse getProfile(Principal principal);
+    Map<String, Object> getProfileByPrincipal(Principal principal);
 
-    ApiResponse updateProfile(int kolId, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
+    ApiResponse updateProfileByPrincipal(Principal principal, KolProfileDto profile);
 
-    ApiResponse updateProfile(Principal principal, KolUpdateRequest request, MultipartFile avatar, List<MultipartFile> images);
+    Map<String, Object> updateImages(Principal principal, List<MultipartFile> images);
 
-    void updateImages(Kol kol, List<MultipartFile> images);
-
-    ApiResponse delete(int kolId);
-
-    KolResponse mapEntityToDto(Kol kol);
-
-    List<KolResponse> mapEntityToDto(List<Kol> kols);
+    ApiResponse deleteById(int id);
 
 }

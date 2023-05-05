@@ -1,14 +1,11 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.request.ConversationRequest;
+import com.dtu.kolgo.dto.ChatDto;
 import com.dtu.kolgo.dto.request.MessageRequest;
-import com.dtu.kolgo.dto.response.ConversationResponse;
 import com.dtu.kolgo.dto.response.MessageResponse;
 import com.dtu.kolgo.model.Conversation;
 import com.dtu.kolgo.model.User;
-import com.dtu.kolgo.repository.ConversationRepository;
-import com.dtu.kolgo.repository.MessageRepository;
-import com.dtu.kolgo.repository.UserRepository;
+import com.dtu.kolgo.repository.ChatRepository;
 import com.dtu.kolgo.service.ChatService;
 import com.dtu.kolgo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,26 +20,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
-    private final ConversationRepository conversationRepo;
-    private final MessageRepository messageRepo;
+    private final ChatRepository conversationRepo;
     private final UserService userService;
-    private final UserRepository userRepo;
 
     @Override
-    public ConversationResponse addConversation(Principal principal, ConversationRequest request) {
+    public ChatDto addConversation(Principal principal, ChatDto dto) {
 
-        User sender = userService.get(principal);
-        User receiver = userService.get(request.getReceiverId());
+        User sender = userService.getByPrincipal(principal);
+        User receiver = userService.getById(dto.getReceiverId());
         List<User> users = new ArrayList<>();
         users.add(sender);
         users.add(receiver);
 
         Conversation conversation = conversationRepo.save(new Conversation(
-                request.getType(),
+                dto.getType(),
                 users,
                 new ArrayList<>()));
 
-        return ConversationResponse.builder()
+        return ChatDto.builder()
                 .id(conversation.getId())
                 .type(conversation.getType())
                 .receiverId(receiver.getId())
@@ -53,8 +48,8 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ConversationResponse> getConversations(Principal principal) {
-        User sender = userService.get(principal);
+    public List<ChatDto> getConversations(Principal principal) {
+        User sender = userService.getByPrincipal(principal);
         List<Conversation> conversations = conversationRepo.findAllByUsersContains(sender);
         return conversations.stream().map(c ->
         {
@@ -71,7 +66,7 @@ public class ChatServiceImpl implements ChatService {
                             .timestamp(msg.getTimestamp())
                             .conversationId(msg.getConversation().getId())
                             .build()).toList();
-            return ConversationResponse.builder()
+            return ChatDto.builder()
                     .id(c.getId())
                     .type(c.getType())
                     .receiverId(receiver.getId())
@@ -84,7 +79,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public MessageResponse handlePublicMessage(MessageRequest request) {
-        User author = userService.get(request.getSenderId());
+        User author = userService.getById(request.getSenderId());
         return MessageResponse.builder()
                 .authorId(author.getId())
                 .authorFirstName(author.getFirstName())
@@ -97,7 +92,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public MessageResponse handlePrivateMessage(MessageRequest request) {
-        User sender = userService.get(request.getSenderId());
+        User sender = userService.getById(request.getSenderId());
         return MessageResponse.builder()
                 .conversationId(request.getConversationId())
                 .authorId(request.getSenderId())

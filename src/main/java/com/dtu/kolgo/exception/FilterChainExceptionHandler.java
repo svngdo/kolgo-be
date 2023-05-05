@@ -1,6 +1,6 @@
 package com.dtu.kolgo.exception;
 
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

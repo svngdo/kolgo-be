@@ -1,17 +1,16 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.MailDetails;
-import com.dtu.kolgo.dto.request.EmailRequest;
-import com.dtu.kolgo.dto.request.LoginRequest;
-import com.dtu.kolgo.dto.request.PasswordResetRequest;
+import com.dtu.kolgo.dto.AuthDto;
+import com.dtu.kolgo.dto.EmailDto;
+import com.dtu.kolgo.dto.MailDto;
+import com.dtu.kolgo.dto.UserDto;
+import com.dtu.kolgo.dto.LoginDto;
+import com.dtu.kolgo.dto.PasswordResetDto;
 import com.dtu.kolgo.dto.request.RegisterRequest;
-import com.dtu.kolgo.dto.response.ApiResponse;
-import com.dtu.kolgo.dto.response.TokenResponse;
-import com.dtu.kolgo.dto.response.UserResponse;
+import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.TokenDto;
 import com.dtu.kolgo.enums.GrantType;
 import com.dtu.kolgo.enums.Role;
-import com.dtu.kolgo.env.JwtEnv;
-import com.dtu.kolgo.env.ServerEnv;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.ExpiredException;
 import com.dtu.kolgo.exception.InvalidException;
@@ -20,12 +19,13 @@ import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.Kol;
 import com.dtu.kolgo.model.Token;
 import com.dtu.kolgo.model.User;
-import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,11 @@ import java.time.LocalDateTime;
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    @Value("${jwt.exp-day}")
+    private int jwtExpDay;
+    @Value("${server.host}")
+    private String host;
+
     private final AuthenticationManager authManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
@@ -44,8 +49,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final UserRepository userRepo;
     private final KolService kolService;
-    private final EnterpriseRepository enterpriseRepo;
+    private final EnterpriseService entService;
     private final TokenService tokenService;
+    private final ModelMapper mapper;
 
     @Override
     public ApiResponse register(RegisterRequest request) {
@@ -60,7 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 passwordEncoder.encode(request.getPassword())
         );
         String url = String.format("http://%s:3000/verify_account?biz=%b&verify_account_token=%s",
-                ServerEnv.HOST, request.isBiz(), verifyAccountToken);
+                host, request.isBiz(), verifyAccountToken);
         String subject = "Verify your registration";
         String body = """
                 Dear [[name]],<br><br>
@@ -72,7 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         body = body.replace("[[name]]", request.getFirstName());
         body = body.replace("[[url]]", url);
 
-        mailService.send(new MailDetails(request.getEmail(), subject, body), true);
+        mailService.send(new MailDto(request.getEmail(), subject, body), true);
 
         return new ApiResponse("A verify email was sent to " + request.getEmail());
     }
@@ -95,7 +101,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
         if (isBiz) {
             user.setRole(Role.ENTERPRISE);
-            enterpriseRepo.save(Enterprise.builder()
+            entService.save(Enterprise.builder()
                     .user(user)
                     .build());
         } else {
@@ -109,33 +115,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public UserResponse login(LoginRequest request) {
-        User user = userService.get(request.getEmail());
+    public AuthDto login(LoginDto request) {
+        User user = userService.getByEmail(request.getEmail());
 
         authenticate(user.getId(), request.getPassword());
 
         String newAccessToken = jwtProvider.generateAccessToken(user);
         String newRefreshToken = jwtProvider.generateRefreshToken(user);
 
-        TokenResponse tokenResponse = TokenResponse.builder()
+        TokenDto tokenDto = TokenDto.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();
 
         tokenService.save(Token.builder()
                 .value(newRefreshToken)
-                .expiresIn(LocalDateTime.now().plusDays(JwtEnv.DAY_EXPIRATION))
+                .expiresIn(LocalDateTime.now().plusDays(jwtExpDay))
                 .user(user)
                 .build());
 
-        return UserResponse.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .token(tokenResponse)
-                .build();
+        return new AuthDto(
+                mapper.map(user, UserDto.class),
+                tokenDto
+        );
     }
 
     @Override
@@ -156,13 +158,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public TokenResponse refreshToken(String refreshToken) {
+    public TokenDto refreshToken(String refreshToken) {
         // validate refresh token
         jwtProvider.validate(refreshToken);
         jwtProvider.validateGrantType(refreshToken, GrantType.REFRESH_TOKEN);
 
         // get user from token
-        User user = userService.get(jwtProvider.extractUserId(refreshToken));
+        User user = userService.getById(jwtProvider.extractUserId(refreshToken));
 
         tokenService.revoke(refreshToken);
 
@@ -173,20 +175,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // save new refresh token
         tokenService.save(Token.builder()
                 .value(newRefreshToken)
-                .expiresIn(LocalDateTime.now().plusDays(JwtEnv.DAY_EXPIRATION))
+                .expiresIn(LocalDateTime.now().plusDays(jwtExpDay))
                 .user(user)
                 .build());
 
         // return new RefreshTokenResponse
-        return new TokenResponse(newAccessToken, newRefreshToken);
+        return new TokenDto(newAccessToken, newRefreshToken);
     }
 
-    public ApiResponse forgotPassword(EmailRequest request) {
-        User user = userService.get(request.getEmail());
+    public ApiResponse forgotPassword(EmailDto request) {
+        User user = userService.getByEmail(request.getEmail());
 
         String resetPasswordToken = jwtProvider.generateResetPasswordToken(user);
         String url = String.format("http://%s:3000/reset_password?reset_password_token=%s",
-                ServerEnv.HOST, resetPasswordToken);
+                host, resetPasswordToken);
         String subject = "Reset password";
         String body = """
                 Dear [[name]],<br><br>
@@ -198,13 +200,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         body = body.replace("[[name]]", user.getUsername());
         body = body.replace("[[url]]", url);
 
-        mailService.send(new MailDetails(request.getEmail(), subject, body), true);
+        mailService.send(new MailDto(request.getEmail(), subject, body), true);
 
         return new ApiResponse("A reset password email was sent to " + request.getEmail());
     }
 
     @Override
-    public ApiResponse resetPassword(String resetPasswordToken, PasswordResetRequest request) {
+    public ApiResponse resetPassword(String resetPasswordToken, PasswordResetDto request) {
         // Validate token
         jwtProvider.validate(resetPasswordToken);
         jwtProvider.validateGrantType(resetPasswordToken, GrantType.RESET_PASSWORD_TOKEN);
@@ -216,7 +218,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         // Get user
         int userId = jwtProvider.extractUserId(resetPasswordToken);
-        User user = userService.get(userId);
+        User user = userService.getById(userId);
 
         // Update password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));

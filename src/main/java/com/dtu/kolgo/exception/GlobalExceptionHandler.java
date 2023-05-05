@@ -1,6 +1,6 @@
 package com.dtu.kolgo.exception;
 
-import com.dtu.kolgo.dto.response.ApiResponse;
+import com.dtu.kolgo.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +20,17 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ApiResponse handleException(Exception e) {
+        log.error("Global Exception Handler", e);
         return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), null, new HashMap<>() {{
             put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }});
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ApiResponse handleException(MethodArgumentTypeMismatchException e) {
+        return new ApiResponse(e.getMessage(), null, new HashMap<>() {{
+            put("code", HttpStatus.BAD_REQUEST.value());
         }});
     }
 
