@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -24,6 +26,8 @@ public class KolProfileDto {
     private String addressDetails;
     @NotNull
     private Short fieldId;
+    private BigDecimal postPrice;
+    private BigDecimal videoPrice;
     private String facebookUrl;
     private String instagramUrl;
     private String tiktokUrl;

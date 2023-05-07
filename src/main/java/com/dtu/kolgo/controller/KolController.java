@@ -19,9 +19,12 @@ public class KolController {
     private final KolService service;
 
     @GetMapping("kols")
-    public ResponseEntity<?> get() {
+    public ResponseEntity<?> getAll(
+            @RequestParam(required = false) Short fieldId
+    ) {
+        System.out.println("FIELD ID " + fieldId);
         return new ResponseEntity<>(
-                service.getAllDto(),
+                service.getAllDto(fieldId),
                 HttpStatus.OK
         );
     }
@@ -32,16 +35,6 @@ public class KolController {
     ) {
         return new ResponseEntity<>(
                 service.getDetailsById(id),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("kols/fields/{fieldId}")
-    public ResponseEntity<?> get(
-            @PathVariable("fieldId") short fieldId
-    ) {
-        return new ResponseEntity<>(
-                service.getAllDtoByFieldId(fieldId),
                 HttpStatus.OK
         );
     }

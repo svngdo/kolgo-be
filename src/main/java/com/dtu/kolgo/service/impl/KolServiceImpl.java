@@ -45,11 +45,15 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public List<KolDto> getAllDto() {
-        return repo.findAll()
-                .stream()
-                .map(kol -> mapper.map(kol, KolDto.class))
-                .toList();
+    public List<KolDto> getAllDto(Short fieldId) {
+        if (fieldId == null) {
+            return repo.findAll()
+                    .stream()
+                    .map(kol -> mapper.map(kol, KolDto.class))
+                    .toList();
+        } else {
+            return getAllDtoByFieldId(fieldId);
+        }
     }
 
     @Override
@@ -81,15 +85,15 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public ApiResponse getDetailsById(int id) {
+    public Map<String, Object> getDetailsById(int id) {
         Kol kol = getById(id);
         KolDto dto = mapper.map(kol, KolDto.class);
         List<String> images = kol.getImages().stream().map(Image::getName).toList();
 
-        return new ApiResponse(null, new HashMap<>() {{
+        return new HashMap<>() {{
             put("kol", dto);
             put("images", images);
-        }}, null);
+        }};
     }
 
     @Override

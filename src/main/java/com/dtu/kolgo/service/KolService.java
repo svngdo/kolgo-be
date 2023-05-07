@@ -15,7 +15,7 @@ public interface KolService {
 
     void save(Kol kol);
 
-    List<KolDto> getAllDto();
+    List<KolDto> getAllDto(Short fieldId);
 
     List<KolDto> getAllDtoByFieldId(short fieldId);
 
@@ -25,7 +25,7 @@ public interface KolService {
 
     Kol getByPrincipal(Principal principal);
 
-    ApiResponse getDetailsById(int id);
+    Map<String, Object> getDetailsById(int id);
 
     Map<String, Object> getProfileByPrincipal(Principal principal);
 
