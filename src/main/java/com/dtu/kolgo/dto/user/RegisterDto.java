@@ -1,4 +1,4 @@
-package com.dtu.kolgo.dto.request;
+package com.dtu.kolgo.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+public class RegisterDto {
 
     @NotNull
     @NotBlank

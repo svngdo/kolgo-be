@@ -1,20 +1,18 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.ChatDto;
-import com.dtu.kolgo.dto.request.MessageRequest;
-import com.dtu.kolgo.dto.response.MessageResponse;
+import com.dtu.kolgo.dto.message.ChatDetailsDto;
+import com.dtu.kolgo.dto.message.ChatDto;
+import com.dtu.kolgo.model.Chat;
 
 import java.security.Principal;
 import java.util.List;
 
 public interface ChatService {
 
-    ChatDto addConversation(Principal principal, ChatDto dto);
+    ChatDetailsDto save(Principal principal, ChatDto dto);
 
-    List<ChatDto> getConversations(Principal principal);
+    List<ChatDetailsDto> getAllDetailsByPrincipal(Principal principal);
 
-    MessageResponse handlePublicMessage(MessageRequest request);
-
-    MessageResponse handlePrivateMessage(MessageRequest request);
+    Chat getById(int id);
 
 }

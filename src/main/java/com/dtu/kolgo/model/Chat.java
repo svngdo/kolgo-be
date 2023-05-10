@@ -1,0 +1,35 @@
+package com.dtu.kolgo.model;
+
+import com.dtu.kolgo.enums.ChatType;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@Entity
+@Table(name = "chats")
+public class Chat extends BaseInt {
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private ChatType type;
+    @Column(name = "date")
+    private LocalDateTime date;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "chat_users",
+            joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private List<User> users;
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    private List<ChatMessage> chatMessages;
+
+}

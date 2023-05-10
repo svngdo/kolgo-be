@@ -37,16 +37,6 @@ public class BookingController {
         );
     }
 
-    @GetMapping("bookings/user/{userId}")
-    public ResponseEntity<?> getAll(
-            @PathVariable("userId") int userId
-    ) {
-        return new ResponseEntity<>(
-                service.getAllDtoByUserId(userId),
-                HttpStatus.OK
-        );
-    }
-
     @GetMapping("bookings/user")
     public ResponseEntity<?> getAll(
             Principal principal

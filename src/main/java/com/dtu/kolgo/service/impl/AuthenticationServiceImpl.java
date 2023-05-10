@@ -1,14 +1,14 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.AuthDto;
-import com.dtu.kolgo.dto.EmailDto;
+import com.dtu.kolgo.dto.user.AuthDto;
+import com.dtu.kolgo.dto.user.EmailDto;
 import com.dtu.kolgo.dto.MailDto;
-import com.dtu.kolgo.dto.UserDto;
-import com.dtu.kolgo.dto.LoginDto;
-import com.dtu.kolgo.dto.PasswordResetDto;
-import com.dtu.kolgo.dto.request.RegisterRequest;
+import com.dtu.kolgo.dto.user.UserDto;
+import com.dtu.kolgo.dto.user.LoginDto;
+import com.dtu.kolgo.dto.user.PasswordResetDto;
+import com.dtu.kolgo.dto.user.RegisterDto;
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.TokenDto;
+import com.dtu.kolgo.dto.user.TokenDto;
 import com.dtu.kolgo.enums.GrantType;
 import com.dtu.kolgo.enums.Role;
 import com.dtu.kolgo.exception.ExistsException;
@@ -54,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ModelMapper mapper;
 
     @Override
-    public ApiResponse register(RegisterRequest request) {
+    public ApiResponse register(RegisterDto request) {
         if (userRepo.existsByEmail(request.getEmail())) {
             throw new ExistsException("Email already in use");
         }

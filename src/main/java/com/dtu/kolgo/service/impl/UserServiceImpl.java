@@ -1,8 +1,8 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.EmailDto;
-import com.dtu.kolgo.dto.PasswordUpdateDTO;
-import com.dtu.kolgo.dto.UserDto;
+import com.dtu.kolgo.dto.user.EmailDto;
+import com.dtu.kolgo.dto.user.PasswordUpdateDto;
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.InvalidException;
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse updatePassword(Principal principal, PasswordUpdateDTO request) {
+    public ApiResponse updatePassword(Principal principal, PasswordUpdateDto request) {
         User user = getByPrincipal(principal);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {

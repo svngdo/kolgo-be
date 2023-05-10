@@ -1,8 +1,8 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.EmailDto;
-import com.dtu.kolgo.dto.PasswordUpdateDTO;
-import com.dtu.kolgo.dto.UserDto;
+import com.dtu.kolgo.dto.user.EmailDto;
+import com.dtu.kolgo.dto.user.PasswordUpdateDto;
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("users/{id}")
-    public ResponseEntity<?> get(
+    public ResponseEntity<?> getUser(
             @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("users/{id}")
-    public ResponseEntity<?> put(
+    public ResponseEntity<?> putUser(
             @PathVariable("id") int id,
             @RequestBody @Valid UserDto dto
     ) {
@@ -72,7 +72,7 @@ public class UserController {
     @PutMapping("user/password")
     public ResponseEntity<?> putPassword(
             Principal principal,
-            @RequestBody @Valid PasswordUpdateDTO request
+            @RequestBody @Valid PasswordUpdateDto request
     ) {
         return new ResponseEntity<>(
                 service.updatePassword(principal, request),
@@ -90,5 +90,9 @@ public class UserController {
                 HttpStatus.OK
         );
     }
+
+    // TODO:
+    //  GET - user/bookings
+    //  GET - user/payments
 
 }

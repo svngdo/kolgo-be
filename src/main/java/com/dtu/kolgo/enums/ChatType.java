@@ -4,6 +4,6 @@ public enum ChatType {
 
     PUBLIC,
     GROUP,
-    PRIVATE
+    PRIVATE;
 
 }

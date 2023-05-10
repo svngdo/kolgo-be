@@ -1,6 +1,6 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.VnPayDto;
+import com.dtu.kolgo.dto.payment.VnPayDto;
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Payment;

@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,5 +47,10 @@ public class Payment extends BaseInt {
     @ManyToOne
     @JoinColumn(name = "receiver_id")
     private User receiver;
+    @ManyToMany
+    @JoinTable(name = "payment_users",
+            joinColumns = @JoinColumn(name = "payment_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private List<User> users;
 
 }

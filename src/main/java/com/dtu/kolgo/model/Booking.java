@@ -1,13 +1,11 @@
 package com.dtu.kolgo.model;
 
 import com.dtu.kolgo.enums.BookingStatus;
-import com.dtu.kolgo.enums.DateTimeFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @NoArgsConstructor
@@ -46,11 +44,4 @@ public class Booking extends BaseInt {
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
 
-    public String getDate() {
-        return date.format(DateTimeFormatter.ofPattern(DateTimeFormat.getSimple()));
-    }
-
-    public void setDate(String date) {
-        this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern(DateTimeFormat.getSimple()));
-    }
 }

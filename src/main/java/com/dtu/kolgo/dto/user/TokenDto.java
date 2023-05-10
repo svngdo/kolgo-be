@@ -1,5 +1,4 @@
-package com.dtu.kolgo.dto;
-
+package com.dtu.kolgo.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthDto {
+public class TokenDto {
 
-    UserDto user;
-    TokenDto token;
+    private String accessToken;
+    private String refreshToken;
 
 }

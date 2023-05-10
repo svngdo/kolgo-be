@@ -38,14 +38,14 @@ public class User extends BaseInt implements UserDetails {
     private List<Token> tokens;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private List<Payment> sentPayments;
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-    private List<Payment> receivedPayments;
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private List<Feedback> sentFeedbacks;
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-    private List<Feedback> receivedFeedbacks;
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Payment> payments;
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks;
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Chat> chats;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Notification> notifications;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

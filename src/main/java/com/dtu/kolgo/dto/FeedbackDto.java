@@ -1,5 +1,6 @@
 package com.dtu.kolgo.dto;
 
+import com.dtu.kolgo.dto.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

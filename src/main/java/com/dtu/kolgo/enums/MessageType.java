@@ -2,8 +2,7 @@ package com.dtu.kolgo.enums;
 
 public enum MessageType {
 
-    JOIN,
-    LEAVE,
-    MESSAGE
+    CHAT_MESSAGE,
+    NOTIFICATION;
 
 }

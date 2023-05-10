@@ -1,4 +1,4 @@
-package com.dtu.kolgo.dto;
+package com.dtu.kolgo.dto.user;
 
 import com.dtu.kolgo.enums.Role;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDto {
 
-    private int id;
+    private Integer id;
     @NotBlank
     private String firstName;
     @NotBlank

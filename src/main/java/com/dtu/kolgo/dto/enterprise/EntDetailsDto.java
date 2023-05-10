@@ -1,7 +1,7 @@
 package com.dtu.kolgo.dto.enterprise;
 
 import com.dtu.kolgo.dto.CampaignDto;
-import com.dtu.kolgo.dto.UserDto;
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.model.Address;
 import com.dtu.kolgo.model.Field;
 import lombok.Data;

@@ -10,8 +10,4 @@ public enum DateTimeFormat {
         this.format = format;
     }
 
-    public static String getSimple() {
-        return SIMPLE.format;
-    }
-
 }

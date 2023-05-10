@@ -1,9 +1,9 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.EmailDto;
-import com.dtu.kolgo.dto.PasswordUpdateDTO;
-import com.dtu.kolgo.dto.UserDto;
+import com.dtu.kolgo.dto.user.EmailDto;
+import com.dtu.kolgo.dto.user.PasswordUpdateDto;
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +33,7 @@ public interface UserService {
 
     ApiResponse updateEmail(Principal principal, EmailDto dto);
 
-    ApiResponse updatePassword(Principal principal, PasswordUpdateDTO request);
+    ApiResponse updatePassword(Principal principal, PasswordUpdateDto request);
 
     ApiResponse deleteById(int userId);
 

@@ -1,107 +1,85 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.ChatDto;
-import com.dtu.kolgo.dto.request.MessageRequest;
-import com.dtu.kolgo.dto.response.MessageResponse;
-import com.dtu.kolgo.model.Conversation;
+import com.dtu.kolgo.dto.message.ChatDetailsDto;
+import com.dtu.kolgo.dto.message.ChatDto;
+import com.dtu.kolgo.dto.message.ChatMessageDto;
+import com.dtu.kolgo.dto.user.UserDto;
+import com.dtu.kolgo.exception.NotFoundException;
+import com.dtu.kolgo.model.Chat;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.ChatRepository;
 import com.dtu.kolgo.service.ChatService;
 import com.dtu.kolgo.service.UserService;
+import com.dtu.kolgo.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
-    private final ChatRepository conversationRepo;
+    private final ChatRepository repo;
     private final UserService userService;
+    private final ModelMapper mapper;
 
     @Override
-    public ChatDto addConversation(Principal principal, ChatDto dto) {
+    public ChatDetailsDto save(Principal principal, ChatDto dto) {
+        User user = userService.getByPrincipal(principal);
 
-        User sender = userService.getByPrincipal(principal);
-        User receiver = userService.getById(dto.getReceiverId());
         List<User> users = new ArrayList<>();
-        users.add(sender);
-        users.add(receiver);
+        dto.getUserIds().forEach(id -> users.add(userService.getById(id)));
 
-        Conversation conversation = conversationRepo.save(new Conversation(
+        Chat chat = repo.save(new Chat(
                 dto.getType(),
+                DateTimeUtils.convertToLocalDateTime(dto.getDate()),
+                user,
                 users,
-                new ArrayList<>()));
-
-        return ChatDto.builder()
-                .id(conversation.getId())
-                .type(conversation.getType())
-                .receiverId(receiver.getId())
-                .receiverFirstName(receiver.getFirstName())
-                .receiverLastName(receiver.getLastName())
-                .messages(new ArrayList<>())
-                .build();
+                new ArrayList<>())
+        );
+        return new ChatDetailsDto(
+                chat.getId(),
+                chat.getType(),
+                DateTimeUtils.convertToString(chat.getDate()),
+                mapper.map(chat.getUsers(), UserDto.class),
+                chat.getUsers().stream()
+                        .map(u -> mapper.map(u, UserDto.class))
+                        .filter(u -> !u.getId().equals(user.getId())).toList(),
+                chat.getChatMessages().stream()
+                        .map(msg -> mapper.map(msg, ChatMessageDto.class)).toList()
+        );
     }
 
     @Override
-    public List<ChatDto> getConversations(Principal principal) {
-        User sender = userService.getByPrincipal(principal);
-        List<Conversation> conversations = conversationRepo.findAllByUsersContains(sender);
-        return conversations.stream().map(c ->
-        {
-            User receiver =
-                    c.getUsers().stream()
-                            .filter(u -> !u.getId().equals(sender.getId())).toList().get(0);
-            List<MessageResponse> messages =
-                    c.getMessages().stream().map(msg -> MessageResponse.builder()
-                            .authorId(msg.getUser().getId())
-                            .authorFirstName(msg.getUser().getFirstName())
-                            .authorLastName(msg.getUser().getLastName())
-                            .messageType(msg.getType())
-                            .content(msg.getContent())
-                            .timestamp(msg.getTimestamp())
-                            .conversationId(msg.getConversation().getId())
-                            .build()).toList();
-            return ChatDto.builder()
-                    .id(c.getId())
-                    .type(c.getType())
-                    .receiverId(receiver.getId())
-                    .receiverFirstName(receiver.getFirstName())
-                    .receiverLastName(receiver.getLastName())
-                    .messages(messages)
-                    .build();
-        }).collect(Collectors.toList());
+    public List<ChatDetailsDto> getAllDetailsByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        return repo.findAllByUsersContains(user)
+                .stream()
+                .map(chat -> {
+                    List<UserDto> userDtoList = chat.getUsers().stream()
+                            .map(u -> mapper.map(u, UserDto.class))
+                            .filter(u -> !u.getId().equals(user.getId())).toList();
+                    List<ChatMessageDto> chatMessageDtoList
+                            = chat.getChatMessages().stream()
+                            .map(msg -> mapper.map(msg, ChatMessageDto.class)).toList();
+                    return new ChatDetailsDto(
+                            chat.getId(),
+                            chat.getType(),
+                            DateTimeUtils.convertToString(chat.getDate()),
+                            mapper.map(chat.getUser(), UserDto.class),
+                            userDtoList,
+                            chatMessageDtoList);
+                }).toList();
     }
 
     @Override
-    public MessageResponse handlePublicMessage(MessageRequest request) {
-        User author = userService.getById(request.getSenderId());
-        return MessageResponse.builder()
-                .authorId(author.getId())
-                .authorFirstName(author.getFirstName())
-                .authorLastName(author.getLastName())
-                .messageType(request.getMessageType())
-                .content(request.getContent())
-                .timestamp(request.getTimestamp())
-                .build();
-    }
-
-    @Override
-    public MessageResponse handlePrivateMessage(MessageRequest request) {
-        User sender = userService.getById(request.getSenderId());
-        return MessageResponse.builder()
-                .conversationId(request.getConversationId())
-                .authorId(request.getSenderId())
-                .authorFirstName(sender.getFirstName())
-                .authorLastName(sender.getLastName())
-                .messageType(request.getMessageType())
-                .content(request.getContent())
-                .timestamp(request.getTimestamp())
-                .build();
+    public Chat getById(int id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Chat ID not found: " + id));
     }
 
 }

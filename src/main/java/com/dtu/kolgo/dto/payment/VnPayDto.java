@@ -1,5 +1,6 @@
-package com.dtu.kolgo.dto;
+package com.dtu.kolgo.dto.payment;
 
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.PaymentMethod;
 import lombok.Data;
 

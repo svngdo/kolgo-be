@@ -1,6 +1,6 @@
 package com.dtu.kolgo.dto.booking;
 
-import com.dtu.kolgo.dto.UserDto;
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.enums.BookingStatus;
 import lombok.AllArgsConstructor;

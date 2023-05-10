@@ -40,12 +40,14 @@ public class SecurityConfig {
     private final String[] AUTH_WHITELIST = {
             "/campaigns/**",
             "/user/**",
-            "/bookings/**"
+            "/bookings/**",
+            "/notification/**",
+            "/chats/**"
     };
     private final String[] WEBSOCKET_WHITELIST = {
-            "/conversations/**",
-            "/websocket/**",
-            "/chat/**",
+            "/ws/**",
+            "/app/**",
+
     };
     private final String[] KOL_WHITELIST = {
             "/demo/kol",

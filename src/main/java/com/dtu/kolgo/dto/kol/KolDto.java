@@ -1,6 +1,6 @@
 package com.dtu.kolgo.dto.kol;
 
-import com.dtu.kolgo.dto.UserDto;
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.Gender;
 import com.dtu.kolgo.model.Address;
 import com.dtu.kolgo.model.Field;

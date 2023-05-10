@@ -1,10 +1,7 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.booking.BookingCreateDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
-import com.dtu.kolgo.enums.DateTimeFormat;
-import com.dtu.kolgo.enums.Role;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Booking;
@@ -14,14 +11,13 @@ import com.dtu.kolgo.repository.BookingRepository;
 import com.dtu.kolgo.service.BookingService;
 import com.dtu.kolgo.service.KolService;
 import com.dtu.kolgo.service.UserService;
+import com.dtu.kolgo.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
         if (repo.existsByUserAndKol(user, kol)) throw new ExistsException("Booking existed");
 
         Booking booking = repo.save(new Booking(
-                LocalDateTime.parse(dto.getDate(), DateTimeFormatter.ofPattern(DateTimeFormat.getSimple())),
+                DateTimeUtils.convertToLocalDateTime(dto.getDate()),
                 dto.getPostPrice(),
                 dto.getPostNumber(),
                 dto.getVideoPrice(),
@@ -57,19 +53,6 @@ public class BookingServiceImpl implements BookingService {
         ));
 
         return mapper.map(booking, BookingDto.class);
-    }
-
-    @Override
-    public List<BookingDto> getAllDtoByUserId(int userId) {
-        User user = userService.getById(userId);
-        List<Booking> bookings = user.getBookings();
-
-        if (user.getRole() == Role.KOL) {
-            bookings.addAll(repo.findAllByKol(kolService.getByUser(user)));
-        }
-        return bookings.stream()
-                .map(booking -> mapper.map(booking, BookingDto.class))
-                .toList();
     }
 
     @Override
@@ -89,20 +72,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto getDtoById(int id) {
         Booking booking = getById(id);
-        BookingDto bookingDto = mapper.map(booking, BookingDto.class);
-//        bookingDto.setDate(booking.getDate().format(DateTimeFormatter.ofPattern(DateTimeFormat.getSimple())));
-        return bookingDto;
-    }
-
-    @Override
-    public ApiResponse updateById(int id, BookingDto request) {
-//        LocalDateTime date = LocalDateTime.parse(request.getDate(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-//
-//        Booking booking = getById(id);
-//        booking.setDate();
-//        repo.save(booking);
-
-        return new ApiResponse("Updated Booking successfully");
+        return mapper.map(booking, BookingDto.class);
     }
 
 }

@@ -1,9 +1,9 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.EmailDto;
-import com.dtu.kolgo.dto.LoginDto;
-import com.dtu.kolgo.dto.PasswordResetDto;
-import com.dtu.kolgo.dto.request.*;
+import com.dtu.kolgo.dto.user.EmailDto;
+import com.dtu.kolgo.dto.user.LoginDto;
+import com.dtu.kolgo.dto.user.PasswordResetDto;
+import com.dtu.kolgo.dto.user.RegisterDto;
 import com.dtu.kolgo.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class AuthenticationController {
 
     @PostMapping("register")
     public ResponseEntity<?> register(
-            @RequestBody @Valid RegisterRequest request
+            @RequestBody @Valid RegisterDto request
     ) {
         return new ResponseEntity<>(
                 service.register(request),

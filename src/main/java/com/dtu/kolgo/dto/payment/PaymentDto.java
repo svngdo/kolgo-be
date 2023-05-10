@@ -1,4 +1,4 @@
-package com.dtu.kolgo.dto;
+package com.dtu.kolgo.dto.payment;
 
 import com.dtu.kolgo.enums.BankCode;
 import com.dtu.kolgo.enums.PaymentMethod;

@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.VnPayDto;
+import com.dtu.kolgo.dto.payment.VnPayDto;
 import com.dtu.kolgo.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
