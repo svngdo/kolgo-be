@@ -15,8 +15,8 @@ public class Field extends BaseShort {
 
     @Column(name = "name")
     private String name;
-    @Column(name = "type")
     @Enumerated(EnumType.STRING)
+    @Column(name = "type")
     private FieldType type;
 
 }

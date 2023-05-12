@@ -26,6 +26,14 @@ public class GlobalExceptionHandler {
         }});
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ApiResponse handleException(AccessDeniedException e) {
+        return new ApiResponse(e.getMessage(), null, new HashMap<>() {{
+            put("code", HttpStatus.FORBIDDEN.value());
+        }});
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ApiResponse handleException(MethodArgumentTypeMismatchException e) {

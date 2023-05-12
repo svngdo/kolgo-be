@@ -1,14 +1,18 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.user.EmailDto;
+import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.dto.payment.PaymentDto;
 import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
-import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
+import com.dtu.kolgo.model.Booking;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
+import com.dtu.kolgo.service.BookingService;
 import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.util.FileUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repo;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
+    private final BookingService bookingService;
 
     @Override
     public ApiResponse save(User user) {
@@ -45,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllDto() {
+    public List<UserDto> getDtos() {
         return repo.findAll().stream()
                 .map(user -> mapper.map(user, UserDto.class))
                 .toList();
@@ -105,15 +110,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse updateEmail(Principal principal, EmailDto dto) {
-        if (repo.existsByEmail(dto.getEmail())) {
-            throw new ExistsException("Email already in use: " + dto.getEmail());
-        }
+    public ApiResponse updateEmail(Principal principal, String email) {
         User user = getByPrincipal(principal);
-        user.setEmail(dto.getEmail());
+        if (email == null || email.length() == 0) {
+            throw new InvalidException("Invalid email");
+        }
+        if (repo.existsByEmail(email)) {
+            throw new ExistsException("Email already in use: " + email);
+        }
+        user.setEmail(email);
         repo.save(user);
-
-        return new ApiResponse("Updated email successfully");
+        return new ApiResponse("Update email successfully");
     }
 
     @Override
@@ -134,6 +141,42 @@ public class UserServiceImpl implements UserService {
     public ApiResponse deleteById(int userId) {
         repo.deleteById(userId);
         return new ApiResponse("Deleted user successfully");
+    }
+
+    @Override
+    public List<BookingDto> getBookingsByPrincipal(Principal principal) {
+        User user = getByPrincipal(principal);
+        return user.getBookings().stream()
+                .map(booking -> mapper.map(booking, BookingDto.class))
+                .toList();
+    }
+
+    @Override
+    public List<PaymentDto> getPaymentsByPrincipal(Principal principal) {
+        User user = getByPrincipal(principal);
+        return user.getPayments().stream()
+                .map(payment -> mapper.map(payment, PaymentDto.class))
+                .toList();
+    }
+
+    @Override
+    public BookingDto getBookingByPrincipal(Principal principal, int bookingId) {
+        User user = getByPrincipal(principal);
+        Booking booking = bookingService.getById(bookingId);
+
+        bookingService.validateBookingUser(user, bookingId);
+
+        return mapper.map(booking, BookingDto.class);
+    }
+
+    @Override
+    public BookingDto updateBookingStatus(Principal principal, int bookingId, BookingStatus status) {
+        User user = getByPrincipal(principal);
+
+        bookingService.validateBookingUser(user, bookingId);
+        Booking booking = bookingService.updateStatus(bookingId, status);
+
+        return mapper.map(booking, BookingDto.class);
     }
 
 }

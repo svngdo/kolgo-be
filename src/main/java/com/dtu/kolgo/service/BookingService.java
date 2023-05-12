@@ -1,20 +1,25 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.booking.BookingCreateDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.model.Booking;
+import com.dtu.kolgo.model.Kol;
+import com.dtu.kolgo.model.User;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface BookingService {
 
-    BookingDto create(Principal principal, BookingCreateDto dto);
+    Booking save(Booking booking);
 
-    List<BookingDto> getAllDtoByPrincipal(Principal principal);
+    List<BookingDto> getDtosByKol(Kol kol);
 
     Booking getById(int id);
 
     BookingDto getDtoById(int id);
+
+    Booking updateStatus(int id, BookingStatus status);
+
+    void validateBookingUser(User user, int bookingId);
 
 }

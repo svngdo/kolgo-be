@@ -1,9 +1,11 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.user.EmailDto;
+import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.dto.payment.PaymentDto;
 import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
+import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +17,7 @@ public interface UserService {
 
     ApiResponse save(User user);
 
-    List<UserDto> getAllDto();
+    List<UserDto> getDtos();
 
     User getById(int id);
 
@@ -31,10 +33,18 @@ public interface UserService {
 
     Map<String, Object> updateAvatar(Principal principal, MultipartFile avatar);
 
-    ApiResponse updateEmail(Principal principal, EmailDto dto);
+    ApiResponse updateEmail(Principal principal, String email);
 
     ApiResponse updatePassword(Principal principal, PasswordUpdateDto request);
 
     ApiResponse deleteById(int userId);
+
+    List<BookingDto> getBookingsByPrincipal(Principal principal);
+
+    List<PaymentDto> getPaymentsByPrincipal(Principal principal);
+
+    BookingDto getBookingByPrincipal(Principal principal, int bookingId);
+
+    BookingDto updateBookingStatus(Principal principal, int bookingId, BookingStatus status);
 
 }

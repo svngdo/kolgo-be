@@ -33,7 +33,7 @@ public class Notification extends BaseInt {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public String getTimeStamp() {
+    public String getTimestamp() {
         return DateTimeUtils.convertToString(timestamp);
     }
 

@@ -27,7 +27,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedbackDto> getAllBySender(User sender) {
+    public List<FeedbackDto> getDtosBySender(User sender) {
         return repo.findAllBySender(sender)
                 .stream()
                 .map(feedback -> mapper.map(feedback, FeedbackDto.class))
@@ -35,7 +35,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedbackDto> getAllByReceiver(User receiver) {
+    public List<FeedbackDto> getDtosByReceiver(User receiver) {
         return repo.findAllByReceiver(receiver)
                 .stream()
                 .map(feedback -> mapper.map(feedback, FeedbackDto.class))

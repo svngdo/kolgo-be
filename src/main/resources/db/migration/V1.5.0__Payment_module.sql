@@ -10,7 +10,7 @@ create table if not exists payments
         constraint valid_bank_code check ( bank_code in ('VNPAYQR', 'VNBANK', 'INTCARD')),
     amount      numeric      not null    default 0,
     description text         not null,
-    date        timestamp with time zone default now(),
+    timestamp        timestamp with time zone default now(),
     status      varchar(20)  not null
         constraint valid_payment_status check ( status in ('FAILED, SUCCESS, REFUNDED') ),
     sender_id   int          not null references users (id),

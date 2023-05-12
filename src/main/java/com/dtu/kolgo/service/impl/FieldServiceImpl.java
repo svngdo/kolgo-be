@@ -22,12 +22,12 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<Field> getAll(FieldType type) {
+    public List<Field> getAllByType(FieldType type) {
         return repo.findAllByType(type);
     }
 
     @Override
-    public Field get(short id) {
+    public Field getById(short id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException(" Field ID not found: " + id));
     }

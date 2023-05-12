@@ -23,7 +23,6 @@ public class ApplicationStartupRunner implements CommandLineRunner {
         System.out.println("KOLgo is running at: " + apiUrl);
         System.out.println("Swagger UI: " + apiUrl + "/swagger-ui/index.html");
         System.out.println("=============================================");
-
     }
 
 }

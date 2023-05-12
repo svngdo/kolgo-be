@@ -26,9 +26,11 @@ public class Enterprise extends BaseInt {
     private Address address;
     @Column(name = "phone")
     private String phone;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "field_id")
-    private Field field;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "enterprise_fields",
+            joinColumns = @JoinColumn(name = "enterprise_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "field_id", referencedColumnName = "id"))
+    private List<Field> fields;
     @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
     private List<Campaign> campaigns;
 

@@ -1,25 +1,21 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.booking.BookingCreateDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
-import com.dtu.kolgo.exception.ExistsException;
+import com.dtu.kolgo.enums.BookingStatus;
+import com.dtu.kolgo.exception.AccessDeniedException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Booking;
 import com.dtu.kolgo.model.Kol;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.BookingRepository;
 import com.dtu.kolgo.service.BookingService;
-import com.dtu.kolgo.service.KolService;
-import com.dtu.kolgo.service.UserService;
-import com.dtu.kolgo.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,40 +23,17 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository repo;
-    private final UserService userService;
     private final ModelMapper mapper;
-    private final KolService kolService;
 
     @Override
-    public BookingDto create(Principal principal, BookingCreateDto dto) {
-        User user = userService.getByPrincipal(principal);
-        Kol kol = kolService.getById(dto.getKolId());
-
-        if (repo.existsByUserAndKol(user, kol)) throw new ExistsException("Booking existed");
-
-        Booking booking = repo.save(new Booking(
-                DateTimeUtils.convertToLocalDateTime(dto.getDate()),
-                dto.getPostPrice(),
-                dto.getPostNumber(),
-                dto.getVideoPrice(),
-                dto.getVideoNumber(),
-                dto.getTotalPrice(),
-                dto.getStatus(),
-                user,
-                kol,
-                null,
-                new ArrayList<>()
-        ));
-
-        return mapper.map(booking, BookingDto.class);
+    public Booking save(Booking booking) {
+        return repo.save(booking);
     }
 
     @Override
-    public List<BookingDto> getAllDtoByPrincipal(Principal principal) {
-        User user = userService.getByPrincipal(principal);
-        return repo.findAllByUser(user).stream()
-                .map(booking -> mapper.map(booking, BookingDto.class))
-                .toList();
+    public List<BookingDto> getDtosByKol(Kol kol) {
+        return repo.findAllByKol(kol).stream()
+                .map(booking -> mapper.map(booking, BookingDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -73,6 +46,21 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto getDtoById(int id) {
         Booking booking = getById(id);
         return mapper.map(booking, BookingDto.class);
+    }
+
+    @Override
+    public Booking updateStatus(int id, BookingStatus status) {
+        Booking booking = getById(id);
+        booking.setStatus(status);
+        return repo.save(booking);
+    }
+
+    @Override
+    public void validateBookingUser(User user, int id) {
+        Booking booking = getById(id);
+        if (!user.getBookings().contains(booking)) {
+            throw new AccessDeniedException();
+        }
     }
 
 }

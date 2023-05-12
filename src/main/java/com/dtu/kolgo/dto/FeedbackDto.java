@@ -1,5 +1,6 @@
 package com.dtu.kolgo.dto;
 
+import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class FeedbackDto {
     private String comment;
     private UserDto sender;
     private UserDto receiver;
+    private BookingDto booking;
 
 }

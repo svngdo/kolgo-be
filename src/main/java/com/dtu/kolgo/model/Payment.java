@@ -4,6 +4,7 @@ package com.dtu.kolgo.model;
 import com.dtu.kolgo.enums.BankCode;
 import com.dtu.kolgo.enums.PaymentMethod;
 import com.dtu.kolgo.enums.PaymentStatus;
+import com.dtu.kolgo.util.DateTimeUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,8 +37,8 @@ public class Payment extends BaseInt {
     private BigDecimal amount;
     @Column(name = "description")
     private String description;
-    @Column(name = "date")
-    private LocalDateTime date;
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PaymentStatus status;
@@ -52,5 +53,9 @@ public class Payment extends BaseInt {
             joinColumns = @JoinColumn(name = "payment_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private List<User> users;
+
+    public String getTimestamp() {
+        return DateTimeUtils.convertToString(timestamp);
+    }
 
 }

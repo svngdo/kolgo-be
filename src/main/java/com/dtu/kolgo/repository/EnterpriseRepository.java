@@ -14,6 +14,7 @@ public interface EnterpriseRepository extends JpaRepository<Enterprise, Integer>
 
     Optional<Enterprise> findByUser(User user);
 
-    List<Enterprise> findAllByField(Field field);
+    List<Enterprise> findAllByFieldsIn(List<Field> fields);
+//    List<Enterprise> findAllByField(Field field);
 
 }

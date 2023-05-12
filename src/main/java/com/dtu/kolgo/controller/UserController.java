@@ -1,8 +1,8 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.user.EmailDto;
 import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
+import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,10 +22,8 @@ public class UserController {
 
     @GetMapping("users")
     public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(
-                service.getAllDto(),
-                HttpStatus.OK
-        );
+        List<UserDto> users = service.getDtos();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("users/{id}")
@@ -38,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("users/{id}")
-    public ResponseEntity<?> putUser(
+    public ResponseEntity<?> updateUser(
             @PathVariable("id") int id,
             @RequestBody @Valid UserDto dto
     ) {
@@ -49,7 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping("users/{id}")
-    public ResponseEntity<?> delete(
+    public ResponseEntity<?> deleteUser(
             @PathVariable("id") int userId
     ) {
         return new ResponseEntity<>(
@@ -58,13 +57,56 @@ public class UserController {
         );
     }
 
-    @PutMapping("user/email")
-    public ResponseEntity<?> putEmail(
-            Principal principal,
-            @RequestBody @Valid EmailDto dto
+    @GetMapping("user/bookings")
+    public ResponseEntity<?> getBookings(
+            Principal principal
     ) {
         return new ResponseEntity<>(
-                service.updateEmail(principal, dto),
+                service.getBookingsByPrincipal(principal),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("user/bookings/{bookingId}")
+    public ResponseEntity<?> getBooking(
+            Principal principal,
+            @PathVariable("bookingId") int bookingId
+    ) {
+        return new ResponseEntity<>(
+                service.getBookingByPrincipal(principal, bookingId),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("user/bookings/{bookingId}")
+    public ResponseEntity<?> updateBookingStatus(
+            Principal principal,
+            @RequestParam("status") BookingStatus status,
+            @PathVariable("bookingId") int bookingId
+    ) {
+        return new ResponseEntity<>(
+                service.updateBookingStatus(principal, bookingId, status),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("user/payments")
+    public ResponseEntity<?> getPayments(
+            Principal principal
+    ) {
+        return new ResponseEntity<>(
+                service.getPaymentsByPrincipal(principal),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("user/email")
+    public ResponseEntity<?> updateEmail(
+            Principal principal,
+            @RequestParam("email") String email
+    ) {
+        return new ResponseEntity<>(
+                service.updateEmail(principal, email),
                 HttpStatus.OK
         );
     }
@@ -81,7 +123,7 @@ public class UserController {
     }
 
     @PutMapping("user/avatar")
-    public ResponseEntity<?> putAvatar(
+    public ResponseEntity<?> updateAvatar(
             Principal principal,
             @RequestParam("avatar") MultipartFile avatar
     ) {
@@ -90,9 +132,5 @@ public class UserController {
                 HttpStatus.OK
         );
     }
-
-    // TODO:
-    //  GET - user/bookings
-    //  GET - user/payments
 
 }

@@ -6,12 +6,20 @@ create table if not exists bookings
     video_price  numeric     not null     default 0,
     video_number int         not null     default 0,
     total_price  numeric     not null     default 0,
-    date         timestamp with time zone default now(),
+    description  text        not null,
+    timestamp    timestamp with time zone default now(),
     status       varchar(20) not null
         constraint valid_booking_status check ( status in ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELED')),
     user_id      int         not null references users (id),
     kol_id       int         not null references kols (id),
     payment_id   int         null references payments (id)
+);
+
+create table if not exists booking_users
+(
+    booking_id int not null references bookings (id),
+    user_id    int not null references users (id),
+    primary key (booking_id, user_id)
 );
 
 create table if not exists feedbacks

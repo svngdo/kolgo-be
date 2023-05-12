@@ -34,17 +34,17 @@ public class User extends BaseInt implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Token> tokens;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     private List<Booking> bookings;
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     private List<Payment> payments;
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     private List<Feedback> feedbacks;
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     private List<Chat> chats;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
 
     @Override

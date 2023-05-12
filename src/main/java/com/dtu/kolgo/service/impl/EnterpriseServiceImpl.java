@@ -1,11 +1,8 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.enterprise.EntDto;
-import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
+import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseProfileDto;
-import com.dtu.kolgo.enums.FieldType;
-import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.Field;
@@ -41,29 +38,24 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public List<EntDto> getAllDto() {
+    public List<EnterpriseDto> getDtos() {
         return repo.findAll()
                 .stream()
-                .map(ent -> mapper.map(ent, EntDto.class))
+                .map(ent -> mapper.map(ent, EnterpriseDto.class))
                 .toList();
     }
 
     @Override
-    public List<EntDto> getAllDtoByFieldId(short fieldId) {
-        Field field = fieldService.get(fieldId);
-        if (field.getType() != FieldType.ENTERPRISE) {
-            throw new InvalidException("Invalid field type");
-        }
-        return repo.findAllByField(field)
-                .stream()
-                .map(ent -> mapper.map(ent, EntDto.class))
-                .toList();
+    public List<EnterpriseDto> getDtosByFieldIds(List<Short> fieldIds) {
+        List<Field> fields = fieldIds.stream().map(fieldService::getById).toList();
+
+        return repo.findAllByFieldsIn(fields).stream().map(ent -> mapper.map(ent, EnterpriseDto.class)).toList();
     }
 
     @Override
     public Enterprise getById(int id) {
         return repo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Enterprise ID not found: " + id));
+                .orElseThrow(() -> new NotFoundException("Enterprise not found with ID: " + id));
     }
 
     @Override
@@ -79,9 +71,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EnterpriseDetailsDto getDetailsById(int id) {
-        Enterprise ent = getById(id);
-        return null;
+    public EnterpriseDto getDtoById(int id) {
+        return mapper.map(repo.findById(id), EnterpriseDto.class);
     }
 
     @Override
@@ -93,6 +84,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public ApiResponse updateProfileByPrincipal(Principal principal, EnterpriseProfileDto profile) {
         Enterprise ent = getByPrincipal(principal);
+        List<Field> fields = profile.getFieldIds().stream().map(fieldService::getById).toList();
 
         ent.getUser().setFirstName(profile.getFirstName());
         ent.getUser().setLastName(profile.getLastName());
@@ -101,7 +93,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         ent.setTaxId(profile.getTaxId());
         ent.getAddress().setCity(cityService.get(profile.getCityId()));
         ent.getAddress().setDetails(profile.getAddressDetails());
-        ent.setField(fieldService.get(profile.getFieldId()));
+        ent.setFields(fields);
 
         repo.save(ent);
 

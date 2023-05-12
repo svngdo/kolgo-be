@@ -12,9 +12,9 @@ public interface FeedbackService {
 
     ApiResponse save(Feedback feedback);
 
-    List<FeedbackDto> getAllBySender(User sender);
+    List<FeedbackDto> getDtosBySender(User sender);
 
-    List<FeedbackDto> getAllByReceiver(User receiver);
+    List<FeedbackDto> getDtosByReceiver(User receiver);
 
     Feedback get(int id);
 

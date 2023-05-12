@@ -27,9 +27,11 @@ public class Kol extends BaseInt {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "field_id")
-    private Field field;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "kol_fields",
+            joinColumns = @JoinColumn(name = "kol_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "field_id", referencedColumnName = "id"))
+    private List<Field> fields;
     @Column(name = "post_price")
     private BigDecimal postPrice;
     @Column(name = "video_price")
@@ -46,10 +48,6 @@ public class Kol extends BaseInt {
     private List<Image> images;
     @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
     private List<Booking> bookings;
-    //    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
-//    private List<Payment> payments;
-//    @OneToMany(mappedBy = "kol")
-//    private List<Feedback> feedbacks;
     @ManyToMany(mappedBy = "kols")
     private List<Campaign> campaigns;
 

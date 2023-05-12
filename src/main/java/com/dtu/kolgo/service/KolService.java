@@ -1,10 +1,11 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.dto.kol.KolProfileDto;
 import com.dtu.kolgo.model.Kol;
-import com.dtu.kolgo.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -15,24 +16,20 @@ public interface KolService {
 
     void save(Kol kol);
 
-    List<KolDto> getAllDto(Short fieldId);
+    List<KolDto> getDtos();
 
-    List<KolDto> getAllDtoByFieldId(short fieldId);
+    List<KolDto> getDtosByFieldIds(List<Short> fieldIds);
 
-    Kol getById(int id);
-
-    Kol getByUser(User user);
-
-    Kol getByPrincipal(Principal principal);
-
-    Map<String, Object> getDetailsById(int id);
+    KolDetailsDto getDetailsById(int id);
 
     Map<String, Object> getProfileByPrincipal(Principal principal);
 
-    ApiResponse updateProfileByPrincipal(Principal principal, KolProfileDto profile);
+    ApiResponse updateProfileByPrincipal(Principal principal, KolProfileDto dto);
 
     Map<String, Object> updateImages(Principal principal, List<MultipartFile> images);
 
-    ApiResponse deleteById(int id);
+    List<BookingDto> getBookingsById(int id);
+
+    BookingDto createBooking(Principal principal, int id, BookingDto bookingDto);
 
 }

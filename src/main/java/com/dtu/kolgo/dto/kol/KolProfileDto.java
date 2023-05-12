@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class KolProfileDto {
     private Short cityId;
     private String addressDetails;
     @NotNull
-    private Short fieldId;
+    private List<Short> fieldIds;
     private BigDecimal postPrice;
     private BigDecimal videoPrice;
     private String facebookUrl;

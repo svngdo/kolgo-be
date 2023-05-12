@@ -1,9 +1,11 @@
 package com.dtu.kolgo.controller;
 
+import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.kol.KolProfileDto;
 import com.dtu.kolgo.service.KolService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,23 +16,23 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class KolController {
 
     private final KolService service;
 
     @GetMapping("kols")
     public ResponseEntity<?> getAll(
-            @RequestParam(required = false) Short fieldId
+            @RequestParam(name = "fieldIds", required = false) List<Short> fieldIds
     ) {
-        System.out.println("FIELD ID " + fieldId);
-        return new ResponseEntity<>(
-                service.getAllDto(fieldId),
-                HttpStatus.OK
-        );
+        if (fieldIds != null && !fieldIds.isEmpty()) {
+            return new ResponseEntity<>(service.getDtosByFieldIds(fieldIds), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(service.getDtos(), HttpStatus.OK);
     }
 
     @GetMapping("kols/{id}")
-    public ResponseEntity<?> get(
+    public ResponseEntity<?> getDetails(
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
@@ -39,12 +41,24 @@ public class KolController {
         );
     }
 
-    @DeleteMapping("kols/{id}")
-    public ResponseEntity<?> delete(
+    @GetMapping("kols/{id}/bookings")
+    public ResponseEntity<?> getBookings(
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.deleteById(id),
+                service.getBookingsById(id),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("kols/{id}/bookings")
+    public ResponseEntity<?> createBooking(
+            Principal principal,
+            @PathVariable("id") int id,
+            @RequestBody @Valid BookingDto dto
+    ) {
+        return new ResponseEntity<>(
+                service.createBooking(principal, id, dto),
                 HttpStatus.OK
         );
     }

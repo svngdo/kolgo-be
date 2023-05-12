@@ -1,5 +1,6 @@
 package com.dtu.kolgo.dto.payment;
 
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.BankCode;
 import com.dtu.kolgo.enums.PaymentMethod;
 import com.dtu.kolgo.enums.PaymentStatus;
@@ -19,8 +20,9 @@ public class PaymentDto {
     private String description;
     private String txnNo;
     private BankCode bankCode;
-    private String date;
+    private String timestamp;
     private PaymentStatus status;
-    private int userId;
+    private UserDto sender;
+    private UserDto receiver;
 
 }

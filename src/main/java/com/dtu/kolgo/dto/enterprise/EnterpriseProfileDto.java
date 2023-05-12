@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class EnterpriseProfileDto {
 
@@ -18,6 +20,6 @@ public class EnterpriseProfileDto {
     private Short cityId;
     private String addressDetails;
     @NotNull
-    private Short fieldId;
+    private List<Short> fieldIds;
 
 }

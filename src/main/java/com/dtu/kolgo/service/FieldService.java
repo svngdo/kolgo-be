@@ -9,8 +9,8 @@ public interface FieldService {
 
     List<Field> getAll();
 
-    List<Field> getAll(FieldType type);
+    List<Field> getAllByType(FieldType type);
 
-    Field get(short id);
+    Field getById(short id);
 
 }

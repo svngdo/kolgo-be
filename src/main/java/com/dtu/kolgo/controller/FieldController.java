@@ -6,11 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("fields")
 @RequiredArgsConstructor
 public class FieldController {
 
@@ -24,18 +22,18 @@ public class FieldController {
         );
     }
 
-    @GetMapping("kol")
+    @GetMapping("fields/kol")
     public ResponseEntity<?> getAllTypeKol() {
         return new ResponseEntity<>(
-                service.getAll(FieldType.KOL),
+                service.getAllByType(FieldType.KOL),
                 HttpStatus.OK
         );
     }
 
-    @GetMapping("ent")
+    @GetMapping("fields/ent")
     public ResponseEntity<?> getAllTypeEnt() {
         return new ResponseEntity<>(
-                service.getAll(FieldType.ENTERPRISE),
+                service.getAllByType(FieldType.ENTERPRISE),
                 HttpStatus.OK
         );
     }

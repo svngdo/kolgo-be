@@ -1,7 +1,6 @@
-package com.dtu.kolgo.dto.kol;
+package com.dtu.kolgo.dto.booking;
 
 import com.dtu.kolgo.dto.FeedbackDto;
-import com.dtu.kolgo.dto.booking.BookingDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class KolDetailsDto {
+public class BookingDetailsDto {
 
-    private KolDto kol;
-    private List<String> images;
-    private List<BookingDto> bookings;
+    private BookingDto booking;
     private List<FeedbackDto> feedbacks;
 
 }

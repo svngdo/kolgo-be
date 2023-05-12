@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,11 +19,13 @@ public class EnterpriseController {
     private final EnterpriseService service;
 
     @GetMapping("ents")
-    public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(
-                service.getAllDto(),
-                HttpStatus.OK
-        );
+    public ResponseEntity<?> getAll(
+            @RequestParam(name = "fieldIds", required = false) List<Short> fieldIds
+    ) {
+        if (fieldIds != null && !fieldIds.isEmpty()) {
+            return new ResponseEntity<>(service.getDtosByFieldIds(fieldIds), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(service.getDtos(), HttpStatus.OK);
     }
 
     @GetMapping("ents/{id}")
@@ -30,27 +33,7 @@ public class EnterpriseController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getDetailsById(id),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("ents/fields/{fieldId}")
-    public ResponseEntity<?> getAllByField(
-            @PathVariable("fieldId") short fieldId
-    ) {
-        return new ResponseEntity<>(
-                service.getAllDtoByFieldId(fieldId),
-                HttpStatus.OK
-        );
-    }
-
-    @DeleteMapping("ents/{id}")
-    public ResponseEntity<?> delete(
-            @PathVariable("id") int entId
-    ) {
-        return new ResponseEntity<>(
-                service.deleteById(entId),
+                service.getDtoById(id),
                 HttpStatus.OK
         );
     }
@@ -72,6 +55,16 @@ public class EnterpriseController {
     ) {
         return new ResponseEntity<>(
                 service.updateProfileByPrincipal(principal, profile),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("ents/{id}")
+    public ResponseEntity<?> delete(
+            @PathVariable("id") int entId
+    ) {
+        return new ResponseEntity<>(
+                service.deleteById(entId),
                 HttpStatus.OK
         );
     }

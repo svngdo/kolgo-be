@@ -5,6 +5,12 @@ create table if not exists enterprises
     name       varchar(255) null,
     phone      varchar(20)  null,
     tax_id     varchar(20)  null,
-    address_id int          not null references addresses (id) on delete set null,
-    field_id   smallint     null references fields (id) on delete set null
+    address_id int          not null references addresses (id) on delete set null
+);
+
+create table if not exists enterprise_fields
+(
+    enterprise_id int      not null references enterprises (id),
+    field_id      smallint not null references fields (id),
+    primary key (enterprise_id, field_id)
 );
