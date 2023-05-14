@@ -1,24 +1,15 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.user.AuthDto;
-import com.dtu.kolgo.dto.user.EmailDto;
-import com.dtu.kolgo.dto.MailDto;
-import com.dtu.kolgo.dto.user.UserDto;
-import com.dtu.kolgo.dto.user.LoginDto;
-import com.dtu.kolgo.dto.user.PasswordResetDto;
-import com.dtu.kolgo.dto.user.RegisterDto;
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.user.TokenDto;
+import com.dtu.kolgo.dto.MailDto;
+import com.dtu.kolgo.dto.user.*;
 import com.dtu.kolgo.enums.GrantType;
 import com.dtu.kolgo.enums.Role;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.ExpiredException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.UserException;
-import com.dtu.kolgo.model.Enterprise;
-import com.dtu.kolgo.model.Kol;
-import com.dtu.kolgo.model.Token;
-import com.dtu.kolgo.model.User;
+import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
@@ -31,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final EnterpriseService entService;
     private final TokenService tokenService;
     private final ModelMapper mapper;
+    private final FieldService fieldService;
 
     @Override
     public ApiResponse register(RegisterDto request) {
@@ -93,21 +87,34 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ExpiredException("This link has already been used or expired");
         }
 
-        User user = userRepo.save(User.builder()
+        User user = User.builder()
                 .firstName(jwtProvider.extractFirstName(token))
                 .lastName(jwtProvider.extractLastName(token))
                 .email(email)
                 .password(jwtProvider.extractPassword(token))
-                .build());
+                .build();
+        List<Field> fields = new ArrayList<>() {{
+            add(fieldService.getById((short) 1));
+        }};
         if (isBiz) {
             user.setRole(Role.ENTERPRISE);
+            userService.save(user);
             entService.save(Enterprise.builder()
                     .user(user)
+                    .address(new Address())
+                    .fields(fields)
+                    .campaigns(new ArrayList<>())
                     .build());
         } else {
             user.setRole(Role.KOL);
+            userService.save(user);
             kolService.save(Kol.builder()
                     .user(user)
+                    .address(new Address())
+                    .fields(fields)
+                    .images(new ArrayList<>())
+                    .bookings(new ArrayList<>())
+                    .campaigns(new ArrayList<>())
                     .build());
         }
 

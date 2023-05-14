@@ -4,9 +4,7 @@ import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseProfileDto;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.Enterprise;
-import com.dtu.kolgo.model.Field;
-import com.dtu.kolgo.model.User;
+import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.CityService;
 import com.dtu.kolgo.service.EnterpriseService;
@@ -18,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -78,13 +77,18 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public EnterpriseProfileDto getProfileByPrincipal(Principal principal) {
         Enterprise ent = getByPrincipal(principal);
-        return mapper.map(ent, EnterpriseProfileDto.class);
+        EnterpriseProfileDto profile = mapper.map(ent, EnterpriseProfileDto.class);
+        profile.setFieldIds(ent.getFields().stream().map(BaseShort::getId).toList());
+        return profile;
     }
 
     @Override
     public ApiResponse updateProfileByPrincipal(Principal principal, EnterpriseProfileDto profile) {
         Enterprise ent = getByPrincipal(principal);
-        List<Field> fields = profile.getFieldIds().stream().map(fieldService::getById).toList();
+       
+        if (ent.getAddress() == null) {
+            ent.setAddress(new Address());
+        }
 
         ent.getUser().setFirstName(profile.getFirstName());
         ent.getUser().setLastName(profile.getLastName());
@@ -93,7 +97,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         ent.setTaxId(profile.getTaxId());
         ent.getAddress().setCity(cityService.get(profile.getCityId()));
         ent.getAddress().setDetails(profile.getAddressDetails());
-        ent.setFields(fields);
+        ent.setFields(new ArrayList<>() {{
+            profile.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
+        }});
 
         repo.save(ent);
 

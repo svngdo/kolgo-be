@@ -101,7 +101,10 @@ public class KolServiceImpl implements KolService {
     @Override
     public ApiResponse updateProfileByPrincipal(Principal principal, KolProfileDto profile) {
         Kol kol = getByPrincipal(principal);
-        List<Field> fields = profile.getFieldIds().stream().map(fieldService::getById).toList();
+
+        if (kol.getAddress() == null) {
+            kol.setAddress(new Address());
+        }
 
         kol.getUser().setFirstName(profile.getFirstName());
         kol.getUser().setLastName(profile.getLastName());
@@ -109,7 +112,9 @@ public class KolServiceImpl implements KolService {
         kol.setGender(profile.getGender());
         kol.getAddress().setCity(cityService.get(profile.getCityId()));
         kol.getAddress().setDetails(profile.getAddressDetails());
-        kol.setFields(fields);
+        kol.setFields(new ArrayList<>() {{
+            profile.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
+        }});
         kol.setFacebookUrl(profile.getFacebookUrl());
         kol.setInstagramUrl(profile.getInstagramUrl());
         kol.setTiktokUrl(profile.getTiktokUrl());
