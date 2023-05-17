@@ -13,6 +13,7 @@ public class FeedbackDto {
     private Integer id;
     private Short rating;
     private String comment;
+    private String timestamp;
     private UserDto user;
 
 }

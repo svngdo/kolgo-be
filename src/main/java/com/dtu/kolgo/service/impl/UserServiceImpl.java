@@ -19,6 +19,7 @@ import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.BookingService;
 import com.dtu.kolgo.service.UserService;
+import com.dtu.kolgo.util.DateTimeUtils;
 import com.dtu.kolgo.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -195,7 +196,11 @@ public class UserServiceImpl implements UserService {
 
         validateBookingAndPayment(booking, user.getBookings());
 
-        booking.setFeedback(new Feedback(feedbackDto.getRating(), feedbackDto.getComment(), user));
+        booking.setFeedback(new Feedback(
+                feedbackDto.getRating(),
+                feedbackDto.getComment(),
+                DateTimeUtils.convertToLocalDateTime(feedbackDto.getTimestamp()),
+                user));
 
         bookingService.save(booking);
 
