@@ -47,6 +47,8 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUser().getLastName(), EnterpriseProfileDto::setLastName)
                 .addMapping(src -> src.getAddress().getCity().getId(), EnterpriseProfileDto::setCityId)
                 .addMapping(src -> src.getAddress().getDetails(), EnterpriseProfileDto::setAddressDetails);
+//        modelMapper.typeMap(Feedback.class, FeedbackDto.class)
+//                .addMapping(src -> src.getSender().getkk)
         return modelMapper;
     }
 

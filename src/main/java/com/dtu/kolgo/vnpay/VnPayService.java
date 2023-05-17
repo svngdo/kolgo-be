@@ -1,6 +1,6 @@
 package com.dtu.kolgo.vnpay;
 
-import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.exception.InvalidException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -38,15 +39,20 @@ public class VnPayService {
     protected void doPost(HttpServletRequest req, HttpServletResponse res) {
         try {
             String locale = req.getParameter("language");
-            String amount = req.getParameter("amount");
+            String amountString = req.getParameter("amount");
+            BigDecimal amount = new BigDecimal(amountString);
             String orderInfo = req.getParameter("orderInfo");
             String orderType = req.getParameter("orderType");
+
+            if (amountString.length() == 0) {
+                throw new InvalidException("Invalid amount");
+            }
 
             Map<String, String> vnpParams = new HashMap<>();
             String vnp_Version = version;
             String vnp_Command = "pay";
             String vnp_TmnCode = merchantId;
-            String vnp_Amount = String.valueOf((amount != null && !amount.isEmpty()) ? Integer.parseInt(amount) * 100 : 10000000); // req.getParameter("amount")
+            String vnp_Amount = amount.multiply(BigDecimal.valueOf(100)).toString();
             String vnp_BankCode = req.getParameter("bankCode");
             String vnp_CreateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             String vnp_CurrCode = "VND";
@@ -56,7 +62,11 @@ public class VnPayService {
             String vnp_OrderType = (orderType != null && !orderType.isEmpty()) ? orderType : "Other";
             String vnp_ReturnUrl = returnUrl;
             String vnp_ExpireDate = LocalDateTime.now().plusMinutes(15).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-            String vnp_TxnRef = String.valueOf(System.currentTimeMillis());
+            String vnp_TxnRef = req.getParameter("txnRef");
+
+            if (vnp_TxnRef == null || vnp_TxnRef.length() == 0) {
+                throw new InvalidException("Invalid txnRef");
+            }
 
             vnpParams.put("vnp_Version", vnp_Version);
             vnpParams.put("vnp_Command", vnp_Command);
@@ -75,17 +85,15 @@ public class VnPayService {
 
             String paymentUrl = vnPayUtil.createRequestUrl(vnpParams);
             log.info(paymentUrl);
-            ApiResponse apiResponse = new ApiResponse();
-            apiResponse.setData(new HashMap<>() {{
+            Map<String, Object> response = new HashMap<>() {{
                 put("code", "00");
                 put("message", "success");
                 put("paymentUrl", paymentUrl);
-            }});
-            log.info(apiResponse.toString());
+            }};
+            log.info(response.toString());
             final ObjectMapper mapper = new ObjectMapper();
             res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//        res.setStatus(statusCode);
-            mapper.writeValue(res.getOutputStream(), apiResponse);
+            mapper.writeValue(res.getOutputStream(), response);
         } catch (Exception e) {
             log.error("VNPayService Exception", e);
         }

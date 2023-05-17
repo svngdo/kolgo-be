@@ -1,7 +1,7 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.FeedbackDto;
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
@@ -41,7 +41,6 @@ public class KolServiceImpl implements KolService {
     private final CityService cityService;
     private final ModelMapper mapper;
     private final BookingService bookingService;
-    private final FeedbackService feedbackService;
 
     private Kol getById(int id) {
         return repo.findById(id).orElseThrow(() -> new NotFoundException("KOL ID not found: " + id));
@@ -80,9 +79,9 @@ public class KolServiceImpl implements KolService {
         KolDto kolDto = mapper.map(kol, KolDto.class);
         List<String> images = kol.getImages().stream().map(Image::getName).toList();
         List<BookingDto> bookings = kol.getBookings().stream().map(booking -> mapper.map(booking, BookingDto.class)).toList();
-        List<FeedbackDto> feedbacks = feedbackService.getDtosByReceiver(kol.getUser());
+        List<CampaignDto> campaigns = kol.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
 
-        return new KolDetailsDto(kolDto, images, bookings, feedbacks);
+        return new KolDetailsDto(kolDto, images, bookings, campaigns);
     }
 
     @Override
@@ -152,15 +151,13 @@ public class KolServiceImpl implements KolService {
 
     @Override
     public BookingDto createBooking(Principal principal, int id, BookingDto bookingDto) {
-        log.info(bookingDto.toString());
+        System.out.println(bookingDto);
         User user = userService.getByPrincipal(principal);
         Kol kol = getById(id);
-        List<User> users = new ArrayList<>() {{
-            add(user);
-            add(kol.getUser());
-        }};
 
-        log.info(users.toString());
+        if (kol.getUser().equals(user)) {
+            throw new InvalidException("You cannot book yourself");
+        }
 
         LocalDateTime timestamp = DateTimeUtils.convertToLocalDateTime(bookingDto.getTimestamp());
 
@@ -176,8 +173,7 @@ public class KolServiceImpl implements KolService {
                 user,
                 kol,
                 null,
-                new ArrayList<>(),
-                users
+                null
         ));
         return mapper.map(booking, BookingDto.class);
     }

@@ -22,7 +22,6 @@ public class PaymentDto {
     private BankCode bankCode;
     private String timestamp;
     private PaymentStatus status;
-    private UserDto sender;
-    private UserDto receiver;
+    private UserDto user;
 
 }

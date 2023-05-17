@@ -3,8 +3,6 @@ package com.dtu.kolgo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -18,19 +16,8 @@ public class Feedback extends BaseInt {
     private Short rating;
     @Column(name = "comment")
     private String comment;
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private User sender;
-    @ManyToOne
-    @JoinColumn(name = "receiver_id")
-    private User receiver;
-    @ManyToOne
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
-    @ManyToMany
-    @JoinTable(name = "feedback_users",
-            joinColumns = @JoinColumn(name = "feedback_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private List<User> users;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

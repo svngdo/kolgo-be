@@ -36,16 +36,16 @@ public class User extends BaseInt implements UserDetails {
     private Role role;
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
-    @ManyToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
-    @ManyToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<Payment> payments;
-    @ManyToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<Feedback> feedbacks;
-    @ManyToMany(mappedBy = "users")
-    private List<Chat> chats;
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
+    @ManyToMany(mappedBy = "users")
+    private List<Chat> chats;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

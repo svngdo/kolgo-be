@@ -2,14 +2,19 @@ package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.dto.feedback.FeedbackDto;
 import com.dtu.kolgo.dto.payment.PaymentDto;
+import com.dtu.kolgo.dto.payment.VnPayDto;
 import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.BookingStatus;
+import com.dtu.kolgo.enums.PaymentStatus;
+import com.dtu.kolgo.exception.AccessDeniedException;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Booking;
+import com.dtu.kolgo.model.Feedback;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.BookingService;
@@ -164,7 +169,7 @@ public class UserServiceImpl implements UserService {
         User user = getByPrincipal(principal);
         Booking booking = bookingService.getById(bookingId);
 
-        bookingService.validateBookingUser(user, bookingId);
+        validateBookingUser(booking, user);
 
         return mapper.map(booking, BookingDto.class);
     }
@@ -172,11 +177,66 @@ public class UserServiceImpl implements UserService {
     @Override
     public BookingDto updateBookingStatus(Principal principal, int bookingId, BookingStatus status) {
         User user = getByPrincipal(principal);
+        Booking booking = bookingService.getById(bookingId);
 
-        bookingService.validateBookingUser(user, bookingId);
-        Booking booking = bookingService.updateStatus(bookingId, status);
+        validateBookingUser(booking, user);
+
+        booking.setStatus(status);
+        bookingService.save(booking);
 
         return mapper.map(booking, BookingDto.class);
+    }
+
+    @Override
+    public ApiResponse addBookingFeedback(Principal principal, int bookingId, FeedbackDto feedbackDto) {
+        System.out.println(feedbackDto);
+        User user = getByPrincipal(principal);
+        Booking booking = bookingService.getById(bookingId);
+
+        validateBookingAndPayment(booking, user.getBookings());
+
+        booking.setFeedback(new Feedback(feedbackDto.getRating(), feedbackDto.getComment(), user));
+
+        bookingService.save(booking);
+
+        return new ApiResponse("Add feedback successfully");
+    }
+
+    @Override
+    public ApiResponse addBookingVnPayPayment(Principal principal, int bookingId, VnPayDto vnPayDto) {
+        System.out.println(vnPayDto);
+        User user = getByPrincipal(principal);
+        Booking booking = bookingService.getById(bookingId);
+
+        validateBookingAndPayment(booking, user.getBookings());
+
+//        booking.setPayment(new Payment(
+//                PaymentMethod.VNPAY,
+//                vnPayDto.getVnp_TxnRef(),
+//                vnPayDto.getVnp_TransactionNo(),
+//                vnPayDto.getVnp_BankTranNo(),
+//                BankCode.valueOf(vnPayDto.getVnp_BankCode()),
+//                vnPayDto.getVnp_Amount(),
+//                vnPayDto.getVnp_OrderInfo(),
+//                DateTimeUtils.convertToLocalDateTime(vnPayDto.getVnp_PayDate()),
+//                PaymentStatus.valueOf(vnPayDto.getVnp_TransactionStatus()),
+//                user
+//        ));
+//        bookingService.save(booking);
+        return new ApiResponse("Add VNPay payment successfully");
+    }
+
+    private void validateBookingUser(Booking booking, User user) {
+        if (!booking.getUser().equals(user) && !booking.getKol().getUser().equals(user)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private void validateBookingAndPayment(Booking booking, List<Booking> userBookings) {
+        if (userBookings == null || userBookings.size() == 0) throw new InvalidException("Invalid user bookings");
+        if (!userBookings.contains(booking)) throw new AccessDeniedException();
+        if (booking.getPayment() == null || booking.getPayment().getStatus() != PaymentStatus.SUCCESS)
+            throw new InvalidException("Invalid payment");
     }
 
 }

@@ -7,7 +7,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,13 +43,9 @@ public class Booking extends BaseInt {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "payment_id")
     private Payment payment;
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "booking_users",
-            joinColumns = @JoinColumn(name = "booking_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private List<User> users;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "feedback_id")
+    private Feedback feedback;
 
     public String getTimestamp() {
         return DateTimeUtils.convertToString(timestamp);

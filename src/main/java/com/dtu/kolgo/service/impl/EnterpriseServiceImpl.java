@@ -85,7 +85,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public ApiResponse updateProfileByPrincipal(Principal principal, EnterpriseProfileDto profile) {
         Enterprise ent = getByPrincipal(principal);
-       
+
         if (ent.getAddress() == null) {
             ent.setAddress(new Address());
         }
