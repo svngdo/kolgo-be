@@ -16,8 +16,10 @@ values ('Làm Đẹp (Beauty)', 'KOL'),
        ('khách Sạn (Hotel)', 'KOL'),
        ('Sách (Book)', 'KOL'),
        ('Thiết Kế (Design)', 'KOL'),
-       ('Đồ Gia Dụng (Houseware)', 'KOL'),
-       ('Nông Nghiệp và Khai Thác', 'ENTERPRISE'),
+       ('Đồ Gia Dụng (Houseware)', 'KOL');
+
+insert into fields(name, type)
+values ('Nông Nghiệp và Khai Thác', 'ENTERPRISE'),
        ('Thông Tin', 'ENTERPRISE'),
        ('Vận Tải', 'ENTERPRISE'),
        ('Dịch Vụ Tài Chính', 'ENTERPRISE'),

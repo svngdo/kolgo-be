@@ -76,6 +76,8 @@ public class KolServiceImpl implements KolService {
     public KolDetailsDto getDetailsById(int id) {
         Kol kol = getById(id);
         KolDto kolDto = mapper.map(kol, KolDto.class);
+        kolDto.setFieldIds(kol.getFields().stream().map(BaseShort::getId).toList());
+
         List<String> images = kol.getImages().stream().map(Image::getName).toList();
         List<BookingDto> bookings = kol.getBookings().stream().map(booking -> mapper.map(booking, BookingDto.class)).toList();
         List<CampaignDto> campaigns = kol.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
@@ -88,6 +90,7 @@ public class KolServiceImpl implements KolService {
         Kol kol = getByPrincipal(principal);
         KolDto dto = mapper.map(kol, KolDto.class);
         dto.setFieldIds(kol.getFields().stream().map(BaseShort::getId).toList());
+
         List<String> images = kol.getImages().stream().map(Image::getName).toList();
 
         return new HashMap<>() {{
