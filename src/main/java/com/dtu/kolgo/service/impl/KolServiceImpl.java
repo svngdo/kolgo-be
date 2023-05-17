@@ -5,7 +5,6 @@ import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
-import com.dtu.kolgo.dto.kol.KolProfileDto;
 import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
@@ -85,39 +84,35 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public Map<String, Object> getProfileByPrincipal(Principal principal) {
+    public Map<String, Object> getDtoByPrincipal(Principal principal) {
         Kol kol = getByPrincipal(principal);
-        KolProfileDto profile = mapper.map(kol, KolProfileDto.class);
-        profile.setFieldIds(kol.getFields().stream().map(BaseShort::getId).toList());
+        KolDto dto = mapper.map(kol, KolDto.class);
+        dto.setFieldIds(kol.getFields().stream().map(BaseShort::getId).toList());
         List<String> images = kol.getImages().stream().map(Image::getName).toList();
 
         return new HashMap<>() {{
-            put("kol", profile);
+            put("kol", dto);
             put("images", images);
         }};
     }
 
     @Override
-    public ApiResponse updateProfileByPrincipal(Principal principal, KolProfileDto profile) {
+    public ApiResponse updateByPrincipal(Principal principal, KolDto dto) {
         Kol kol = getByPrincipal(principal);
 
-        if (kol.getAddress() == null) {
-            kol.setAddress(new Address());
-        }
-
-        kol.getUser().setFirstName(profile.getFirstName());
-        kol.getUser().setLastName(profile.getLastName());
-        kol.setPhone(profile.getPhone());
-        kol.setGender(profile.getGender());
-        kol.getAddress().setCity(cityService.get(profile.getCityId()));
-        kol.getAddress().setDetails(profile.getAddressDetails());
+        kol.getUser().setFirstName(dto.getFirstName());
+        kol.getUser().setLastName(dto.getLastName());
+        kol.setPhone(dto.getPhone());
+        kol.setGender(dto.getGender());
+        kol.setCity(cityService.getById(dto.getCityId()));
+        kol.setAddressDetails(dto.getAddressDetails());
         kol.setFields(new ArrayList<>() {{
-            profile.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
+            dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
         }});
-        kol.setFacebookUrl(profile.getFacebookUrl());
-        kol.setInstagramUrl(profile.getInstagramUrl());
-        kol.setTiktokUrl(profile.getTiktokUrl());
-        kol.setYoutubeUrl(profile.getYoutubeUrl());
+        kol.setFacebookUrl(dto.getFacebookUrl());
+        kol.setInstagramUrl(dto.getInstagramUrl());
+        kol.setTiktokUrl(dto.getTiktokUrl());
+        kol.setYoutubeUrl(dto.getYoutubeUrl());
 
         repo.save(kol);
 

@@ -2,9 +2,11 @@ package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
-import com.dtu.kolgo.dto.enterprise.EnterpriseProfileDto;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.*;
+import com.dtu.kolgo.model.BaseShort;
+import com.dtu.kolgo.model.Enterprise;
+import com.dtu.kolgo.model.Field;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.CityService;
 import com.dtu.kolgo.service.EnterpriseService;
@@ -75,30 +77,26 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EnterpriseProfileDto getProfileByPrincipal(Principal principal) {
+    public EnterpriseDto getDtoByPrincipal(Principal principal) {
         Enterprise ent = getByPrincipal(principal);
-        EnterpriseProfileDto profile = mapper.map(ent, EnterpriseProfileDto.class);
-        profile.setFieldIds(ent.getFields().stream().map(BaseShort::getId).toList());
-        return profile;
+        EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
+        dto.setFieldIds(ent.getFields().stream().map(BaseShort::getId).toList());
+        return dto;
     }
 
     @Override
-    public ApiResponse updateProfileByPrincipal(Principal principal, EnterpriseProfileDto profile) {
+    public ApiResponse updateByPrincipal(Principal principal, EnterpriseDto dto) {
         Enterprise ent = getByPrincipal(principal);
 
-        if (ent.getAddress() == null) {
-            ent.setAddress(new Address());
-        }
-
-        ent.getUser().setFirstName(profile.getFirstName());
-        ent.getUser().setLastName(profile.getLastName());
-        ent.setName(profile.getName());
-        ent.setPhone(profile.getPhone());
-        ent.setTaxId(profile.getTaxId());
-        ent.getAddress().setCity(cityService.get(profile.getCityId()));
-        ent.getAddress().setDetails(profile.getAddressDetails());
+        ent.getUser().setFirstName(dto.getFirstName());
+        ent.getUser().setLastName(dto.getLastName());
+        ent.setName(dto.getName());
+        ent.setPhone(dto.getPhone());
+        ent.setTaxId(dto.getTaxId());
+        ent.setCity(cityService.getById(dto.getCityId()));
+        ent.setAddressDetails(dto.getAddressDetails());
         ent.setFields(new ArrayList<>() {{
-            profile.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
+            dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
         }});
 
         repo.save(ent);

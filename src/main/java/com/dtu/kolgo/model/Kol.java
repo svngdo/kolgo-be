@@ -24,9 +24,11 @@ public class Kol extends BaseInt {
     private Gender gender;
     @Column(name = "phone")
     private String phone;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "city_id")
+    private City city;
+    @Column(name = "address_details")
+    private String addressDetails;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "kol_fields",
             joinColumns = @JoinColumn(name = "kol_id", referencedColumnName = "id"),

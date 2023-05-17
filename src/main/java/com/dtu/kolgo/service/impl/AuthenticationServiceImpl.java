@@ -9,7 +9,10 @@ import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.ExpiredException;
 import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.UserException;
-import com.dtu.kolgo.model.*;
+import com.dtu.kolgo.model.Enterprise;
+import com.dtu.kolgo.model.Kol;
+import com.dtu.kolgo.model.Token;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.security.JwtProvider;
 import com.dtu.kolgo.service.*;
@@ -22,8 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -93,29 +94,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(email)
                 .password(jwtProvider.extractPassword(token))
                 .build();
-        List<Field> fields = new ArrayList<>() {{
-            add(fieldService.getById((short) 1));
-        }};
+
         if (isBiz) {
             user.setRole(Role.ENTERPRISE);
             userService.save(user);
             entService.save(Enterprise.builder()
-                    .user(user)
-                    .address(new Address())
-                    .fields(fields)
-                    .campaigns(new ArrayList<>())
-                    .build());
+                    .user(user).build());
         } else {
             user.setRole(Role.KOL);
             userService.save(user);
             kolService.save(Kol.builder()
-                    .user(user)
-                    .address(new Address())
-                    .fields(fields)
-                    .images(new ArrayList<>())
-                    .bookings(new ArrayList<>())
-                    .campaigns(new ArrayList<>())
-                    .build());
+                    .user(user).build());
         }
 
         return new ApiResponse("Account has been verified");

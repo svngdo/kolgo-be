@@ -1,8 +1,8 @@
 package com.dtu.kolgo.dto.enterprise;
 
 import com.dtu.kolgo.enums.Role;
-import com.dtu.kolgo.model.City;
-import com.dtu.kolgo.model.Field;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,9 @@ import java.util.List;
 public class EnterpriseDto {
 
     private Integer userId;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
     private String email;
     private String avatar;
@@ -24,8 +26,11 @@ public class EnterpriseDto {
     private String name;
     private String phone;
     private String taxId;
-    private City city;
+    @NotNull
+    private Short cityId;
+    private String cityName;
     private String addressDetails;
-    private List<Field> fields;
+    @NotBlank
+    private List<Short> fieldIds;
 
 }

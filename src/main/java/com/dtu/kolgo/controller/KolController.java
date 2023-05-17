@@ -1,7 +1,7 @@
 package com.dtu.kolgo.controller;
 
 import com.dtu.kolgo.dto.booking.BookingDto;
-import com.dtu.kolgo.dto.kol.KolProfileDto;
+import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.service.KolService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +71,7 @@ public class KolController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getProfileByPrincipal(principal),
+                service.getDtoByPrincipal(principal),
                 HttpStatus.OK
         );
     }
@@ -79,10 +79,10 @@ public class KolController {
     @PutMapping("kol/profile")
     public ResponseEntity<?> updateProfile(
             Principal principal,
-            @RequestBody @Valid KolProfileDto dto
+            @RequestBody @Valid KolDto dto
     ) {
         return new ResponseEntity<>(
-                service.updateProfileByPrincipal(principal, dto),
+                service.updateByPrincipal(principal, dto),
                 HttpStatus.OK
         );
     }

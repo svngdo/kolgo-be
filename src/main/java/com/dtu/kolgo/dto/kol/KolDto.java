@@ -1,8 +1,8 @@
 package com.dtu.kolgo.dto.kol;
 
 import com.dtu.kolgo.enums.Gender;
-import com.dtu.kolgo.model.City;
-import com.dtu.kolgo.model.Field;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,17 +16,23 @@ import java.util.List;
 public class KolDto {
 
     private Integer userId;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
     private String email;
     private String avatar;
     private String role;
     private Integer id;
     private String phone;
+    @NotNull
     private Gender gender;
-    private City city;
+    private Short cityId;
+    private String cityName;
     private String addressDetails;
-    private List<Field> fields;
+    @NotNull
+    private List<Short> fieldIds;
+    private List<String> fieldNames;
     private BigDecimal postPrice;
     private BigDecimal videoPrice;
     private String facebookUrl;

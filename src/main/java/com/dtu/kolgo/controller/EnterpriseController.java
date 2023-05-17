@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.enterprise.EnterpriseProfileDto;
+import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.service.EnterpriseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class EnterpriseController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getProfileByPrincipal(principal),
+                service.getDtoByPrincipal(principal),
                 HttpStatus.OK
         );
     }
@@ -51,10 +51,10 @@ public class EnterpriseController {
     @PutMapping("ent/profile")
     public ResponseEntity<?> putProfile(
             Principal principal,
-            @RequestBody EnterpriseProfileDto profile
+            @RequestBody EnterpriseDto dto
     ) {
         return new ResponseEntity<>(
-                service.updateProfileByPrincipal(principal, profile),
+                service.updateByPrincipal(principal, dto),
                 HttpStatus.OK
         );
     }

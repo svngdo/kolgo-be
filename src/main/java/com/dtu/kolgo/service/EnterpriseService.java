@@ -2,7 +2,6 @@ package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
-import com.dtu.kolgo.dto.enterprise.EnterpriseProfileDto;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.User;
 
@@ -25,9 +24,9 @@ public interface EnterpriseService {
 
     EnterpriseDto getDtoById(int id);
 
-    EnterpriseProfileDto getProfileByPrincipal(Principal principal);
+    EnterpriseDto getDtoByPrincipal(Principal principal);
 
-    ApiResponse updateProfileByPrincipal(Principal principal, EnterpriseProfileDto profile);
+    ApiResponse updateByPrincipal(Principal principal, EnterpriseDto dto);
 
     ApiResponse deleteById(int id);
 

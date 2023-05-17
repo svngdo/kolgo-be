@@ -1,11 +1,12 @@
 create table if not exists enterprises
 (
-    id         int generated always as identity primary key,
-    user_id    int          not null references users (id),
-    name       varchar(255) null,
-    phone      varchar(20)  null,
-    tax_id     varchar(20)  null,
-    address_id int          null references addresses (id) on delete set null
+    id              int generated always as identity primary key,
+    user_id         int          not null references users (id),
+    name            varchar(255) null,
+    phone           varchar(20)  null,
+    tax_id          varchar(20)  null,
+    city_id         int          null references cities (id) on delete set null,
+    address_details varchar(255) null
 );
 
 create table if not exists enterprise_fields

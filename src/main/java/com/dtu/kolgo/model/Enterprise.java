@@ -21,9 +21,11 @@ public class Enterprise extends BaseInt {
     private String name;
     @Column(name = "tax_id")
     private String taxId;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "city_id")
+    private City city;
+    @Column(name = "address_details")
+    private String addressDetails;
     @Column(name = "phone")
     private String phone;
     @ManyToMany(fetch = FetchType.EAGER)
