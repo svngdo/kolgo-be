@@ -18,5 +18,7 @@ public class Field extends BaseShort {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private FieldType type;
+    @Column(name = "icon")
+    private String icon;
 
 }

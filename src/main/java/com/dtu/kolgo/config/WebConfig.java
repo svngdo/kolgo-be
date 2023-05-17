@@ -11,11 +11,17 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${file.image-path}")
     private String imagePath;
 
+    @Value("${file.icon-path}")
+    private String iconPath;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/images/**")
                 .addResourceLocations("file:///" + imagePath);
+
+        registry.addResourceHandler("/icons/**")
+                .addResourceLocations("file:///" + iconPath);
     }
 
 }

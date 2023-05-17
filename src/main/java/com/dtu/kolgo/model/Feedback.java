@@ -3,6 +3,8 @@ package com.dtu.kolgo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -16,6 +18,8 @@ public class Feedback extends BaseInt {
     private Short rating;
     @Column(name = "comment")
     private String comment;
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

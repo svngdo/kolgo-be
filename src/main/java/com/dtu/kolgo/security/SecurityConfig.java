@@ -33,6 +33,7 @@ public class SecurityConfig {
             "/cities/**",
             "/fields/**",
             "/images/**",
+            "/icons/**"
     };
     private final String[] POST_WHITELIST = {
             "/auth/**"

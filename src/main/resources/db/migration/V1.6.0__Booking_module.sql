@@ -18,11 +18,12 @@ create table if not exists payments
 
 create table if not exists feedbacks
 (
-    id      int generated always as identity primary key,
-    rating  smallint not null
+    id        int generated always as identity primary key,
+    rating    smallint not null
         constraint valid_feedback_rating check ( rating between 1 and 5),
-    comment text     null,
-    user_id int      not null references users (id)
+    comment   text     null,
+    timestamp timestamp with time zone default now(),
+    user_id   int      not null references users (id)
 );
 
 create table if not exists bookings
