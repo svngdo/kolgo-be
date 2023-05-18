@@ -19,8 +19,6 @@ public class Enterprise extends BaseInt {
     private User user;
     @Column(name = "name")
     private String name;
-    @Column(name = "tax_id")
-    private String taxId;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     private City city;
@@ -28,6 +26,8 @@ public class Enterprise extends BaseInt {
     private String addressDetails;
     @Column(name = "phone")
     private String phone;
+    @Column(name = "tax_id")
+    private String taxId;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "enterprise_fields",
             joinColumns = @JoinColumn(name = "enterprise_id", referencedColumnName = "id"),
@@ -35,5 +35,13 @@ public class Enterprise extends BaseInt {
     private List<Field> fields;
     @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
     private List<Campaign> campaigns;
+
+    public List<Short> getFieldIds() {
+        return fields.stream().map(BaseShort::getId).toList();
+    }
+
+    public List<String> getFieldNames() {
+        return fields.stream().map(Field::getName).toList();
+    }
 
 }

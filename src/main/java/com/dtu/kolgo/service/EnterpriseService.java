@@ -2,7 +2,6 @@ package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.CampaignDto;
-import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.User;
@@ -24,7 +23,7 @@ public interface EnterpriseService {
 
     Enterprise getByPrincipal(Principal principal);
 
-    EnterpriseDetailsDto getDetailsById(int id);
+    EnterpriseDto getDtoById(int id);
 
     EnterpriseDto getDtoByPrincipal(Principal principal);
 

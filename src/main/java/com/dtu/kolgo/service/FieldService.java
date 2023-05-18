@@ -13,8 +13,4 @@ public interface FieldService {
 
     Field getById(short id);
 
-    List<Short> convertFieldsToIds(List<Field> fields);
-
-    List<String> convertFieldsToNames(List<Field> fields);
-
 }

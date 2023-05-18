@@ -2,7 +2,6 @@ package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.CampaignDto;
-import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Enterprise;
@@ -41,22 +40,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public List<EnterpriseDto> getDtos() {
-        return repo.findAll().stream().map(ent -> {
-            EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
-            dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
-            return dto;
-        }).toList();
+        return repo.findAll().stream().map(ent -> mapper.map(ent, EnterpriseDto.class)).toList();
     }
 
     @Override
     public List<EnterpriseDto> getDtosByFieldIds(List<Short> fieldIds) {
         List<Field> fields = fieldIds.stream().map(fieldService::getById).toList();
-
-        return repo.findAllByFieldsIn(fields).stream().map(ent -> {
-            EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
-            dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
-            return dto;
-        }).toList();
+        return repo.findAllByFieldsIn(fields).stream().map(ent -> mapper.map(ent, EnterpriseDto.class)).toList();
     }
 
     @Override
@@ -78,23 +68,15 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EnterpriseDetailsDto getDetailsById(int id) {
+    public EnterpriseDto getDtoById(int id) {
         Enterprise ent = getById(id);
-        EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
-        dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
-        dto.setFieldNames(fieldService.convertFieldsToNames(ent.getFields()));
-
-        List<CampaignDto> campaigns = ent.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
-
-        return new EnterpriseDetailsDto(dto, campaigns);
+        return mapper.map(ent, EnterpriseDto.class);
     }
 
     @Override
     public EnterpriseDto getDtoByPrincipal(Principal principal) {
         Enterprise ent = getByPrincipal(principal);
-        EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
-        dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
-        return dto;
+        return mapper.map(ent, EnterpriseDto.class);
     }
 
     @Override

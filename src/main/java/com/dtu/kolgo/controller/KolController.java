@@ -32,11 +32,11 @@ public class KolController {
     }
 
     @GetMapping("kols/{id}")
-    public ResponseEntity<?> getDetails(
+    public ResponseEntity<?> get(
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getDetailsById(id),
+                service.getDtoById(id),
                 HttpStatus.OK
         );
     }

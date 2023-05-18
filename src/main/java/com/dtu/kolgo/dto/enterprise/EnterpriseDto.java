@@ -1,5 +1,6 @@
 package com.dtu.kolgo.dto.enterprise;
 
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.enums.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,5 +34,6 @@ public class EnterpriseDto {
     @NotBlank
     private List<Short> fieldIds;
     private List<String> fieldNames;
+    private List<CampaignDto> campaigns;
 
 }

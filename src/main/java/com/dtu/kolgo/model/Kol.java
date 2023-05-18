@@ -56,4 +56,16 @@ public class Kol extends BaseInt {
     @ManyToMany(mappedBy = "kols")
     private List<Campaign> campaigns;
 
+    public List<Short> getFieldIds() {
+        return fields.stream().map(BaseShort::getId).toList();
+    }
+
+    public List<String> getFieldNames() {
+        return fields.stream().map(Field::getName).toList();
+    }
+
+    public List<String> getImageNames() {
+        return images.stream().map(Image::getName).toList();
+    }
+
 }

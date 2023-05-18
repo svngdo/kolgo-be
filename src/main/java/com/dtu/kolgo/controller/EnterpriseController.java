@@ -35,7 +35,7 @@ public class EnterpriseController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getDetailsById(id),
+                service.getDtoById(id),
                 HttpStatus.OK
         );
     }

@@ -23,14 +23,19 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUser().getLastName(), KolDto::setLastName)
                 .addMapping(src -> src.getUser().getEmail(), KolDto::setEmail)
                 .addMapping(src -> src.getUser().getAvatar(), KolDto::setAvatar)
-                .addMapping(src -> src.getUser().getRole(), KolDto::setRole);
+                .addMapping(src -> src.getUser().getRole(), KolDto::setRole)
+                .addMapping(Kol::getFieldIds, KolDto::setFieldIds)
+                .addMapping(Kol::getFieldNames, KolDto::setFieldNames)
+                .addMapping(Kol::getImageNames, KolDto::setImages);
         modelMapper.typeMap(Enterprise.class, EnterpriseDto.class)
                 .addMapping(src -> src.getUser().getId(), EnterpriseDto::setUserId)
                 .addMapping(src -> src.getUser().getFirstName(), EnterpriseDto::setFirstName)
                 .addMapping(src -> src.getUser().getLastName(), EnterpriseDto::setLastName)
                 .addMapping(src -> src.getUser().getEmail(), EnterpriseDto::setEmail)
                 .addMapping(src -> src.getUser().getAvatar(), EnterpriseDto::setAvatar)
-                .addMapping(src -> src.getUser().getRole(), EnterpriseDto::setRole);
+                .addMapping(src -> src.getUser().getRole(), EnterpriseDto::setRole)
+                .addMapping(Enterprise::getFieldIds, EnterpriseDto::setFieldIds)
+                .addMapping(Enterprise::getFieldNames, EnterpriseDto::setFieldNames);
 
         return modelMapper;
     }

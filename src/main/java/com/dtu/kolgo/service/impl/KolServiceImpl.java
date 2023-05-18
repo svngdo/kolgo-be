@@ -1,9 +1,7 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
-import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.exception.InvalidException;
@@ -61,49 +59,25 @@ public class KolServiceImpl implements KolService {
 
     @Override
     public List<KolDto> getDtos() {
-        return repo.findAll().stream().map(kol -> {
-            KolDto dto = mapper.map(kol, KolDto.class);
-            dto.setFieldIds(fieldService.convertFieldsToIds(kol.getFields()));
-            return dto;
-        }).toList();
+        return repo.findAll().stream().map(kol -> mapper.map(kol, KolDto.class)).toList();
     }
 
     @Override
     public List<KolDto> getDtosByFieldIds(List<Short> fieldIds) {
         List<Field> fields = fieldIds.stream().map(fieldService::getById).toList();
-        return repo.findAllByFieldsIn(fields).stream().map(kol -> {
-            KolDto dto = mapper.map(kol, KolDto.class);
-            dto.setFieldIds(fieldService.convertFieldsToIds(kol.getFields()));
-            return dto;
-        }).toList();
+        return repo.findAllByFieldsIn(fields).stream().map(kol -> mapper.map(kol, KolDto.class)).toList();
     }
 
     @Override
-    public KolDetailsDto getDetailsById(int id) {
+    public KolDto getDtoById(int id) {
         Kol kol = getById(id);
-        KolDto kolDto = mapper.map(kol, KolDto.class);
-        kolDto.setFieldIds(fieldService.convertFieldsToIds(kol.getFields()));
-        kolDto.setFieldNames(fieldService.convertFieldsToNames(kol.getFields()));
-
-        List<String> images = kol.getImages().stream().map(Image::getName).toList();
-        List<BookingDto> bookings = kol.getBookings().stream().map(booking -> mapper.map(booking, BookingDto.class)).toList();
-        List<CampaignDto> campaigns = kol.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
-
-        return new KolDetailsDto(kolDto, images, bookings, campaigns);
+        return mapper.map(kol, KolDto.class);
     }
 
     @Override
-    public Map<String, Object> getDtoByPrincipal(Principal principal) {
+    public KolDto getDtoByPrincipal(Principal principal) {
         Kol kol = getByPrincipal(principal);
-        KolDto dto = mapper.map(kol, KolDto.class);
-        dto.setFieldIds(kol.getFields().stream().map(BaseShort::getId).toList());
-
-        List<String> images = kol.getImages().stream().map(Image::getName).toList();
-
-        return new HashMap<>() {{
-            put("kol", dto);
-            put("images", images);
-        }};
+        return mapper.map(kol, KolDto.class);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.dtu.kolgo.dto.kol;
 
+import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,5 +41,8 @@ public class KolDto {
     private String instagramUrl;
     private String tiktokUrl;
     private String youtubeUrl;
+    private List<String> images;
+    private List<BookingDto> bookings;
+    private List<CampaignDto> campaigns;
 
 }
