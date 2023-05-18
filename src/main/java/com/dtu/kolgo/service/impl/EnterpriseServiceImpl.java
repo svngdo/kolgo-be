@@ -1,9 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.BaseShort;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.Field;
 import com.dtu.kolgo.model.User;
@@ -40,17 +41,22 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public List<EnterpriseDto> getDtos() {
-        return repo.findAll()
-                .stream()
-                .map(ent -> mapper.map(ent, EnterpriseDto.class))
-                .toList();
+        return repo.findAll().stream().map(ent -> {
+            EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
+            dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
+            return dto;
+        }).toList();
     }
 
     @Override
     public List<EnterpriseDto> getDtosByFieldIds(List<Short> fieldIds) {
         List<Field> fields = fieldIds.stream().map(fieldService::getById).toList();
 
-        return repo.findAllByFieldsIn(fields).stream().map(ent -> mapper.map(ent, EnterpriseDto.class)).toList();
+        return repo.findAllByFieldsIn(fields).stream().map(ent -> {
+            EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
+            dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
+            return dto;
+        }).toList();
     }
 
     @Override
@@ -72,15 +78,22 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EnterpriseDto getDtoById(int id) {
-        return mapper.map(repo.findById(id), EnterpriseDto.class);
+    public EnterpriseDetailsDto getDetailsById(int id) {
+        Enterprise ent = getById(id);
+        EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
+        dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
+        dto.setFieldNames(fieldService.convertFieldsToNames(ent.getFields()));
+
+        List<CampaignDto> campaigns = ent.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
+
+        return new EnterpriseDetailsDto(dto, campaigns);
     }
 
     @Override
     public EnterpriseDto getDtoByPrincipal(Principal principal) {
         Enterprise ent = getByPrincipal(principal);
         EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
-        dto.setFieldIds(ent.getFields().stream().map(BaseShort::getId).toList());
+        dto.setFieldIds(fieldService.convertFieldsToIds(ent.getFields()));
         return dto;
     }
 
@@ -108,6 +121,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public ApiResponse deleteById(int id) {
         repo.deleteById(id);
         return new ApiResponse("Deleted enterprise successfully");
+    }
+
+    @Override
+    public CampaignDto createCampaign(int id, CampaignDto campaignDto) {
+        return null;
     }
 
 }

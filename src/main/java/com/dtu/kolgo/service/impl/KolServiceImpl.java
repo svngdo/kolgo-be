@@ -61,22 +61,29 @@ public class KolServiceImpl implements KolService {
 
     @Override
     public List<KolDto> getDtos() {
-        return repo.findAll().stream().map(kol -> mapper.map(kol, KolDto.class)).toList();
+        return repo.findAll().stream().map(kol -> {
+            KolDto dto = mapper.map(kol, KolDto.class);
+            dto.setFieldIds(fieldService.convertFieldsToIds(kol.getFields()));
+            return dto;
+        }).toList();
     }
 
     @Override
     public List<KolDto> getDtosByFieldIds(List<Short> fieldIds) {
         List<Field> fields = fieldIds.stream().map(fieldService::getById).toList();
-
-        return repo.findAllByFieldsIn(fields)
-                .stream().map(kol -> mapper.map(kol, KolDto.class)).toList();
+        return repo.findAllByFieldsIn(fields).stream().map(kol -> {
+            KolDto dto = mapper.map(kol, KolDto.class);
+            dto.setFieldIds(fieldService.convertFieldsToIds(kol.getFields()));
+            return dto;
+        }).toList();
     }
 
     @Override
     public KolDetailsDto getDetailsById(int id) {
         Kol kol = getById(id);
         KolDto kolDto = mapper.map(kol, KolDto.class);
-        kolDto.setFieldIds(kol.getFields().stream().map(BaseShort::getId).toList());
+        kolDto.setFieldIds(fieldService.convertFieldsToIds(kol.getFields()));
+        kolDto.setFieldNames(fieldService.convertFieldsToNames(kol.getFields()));
 
         List<String> images = kol.getImages().stream().map(Image::getName).toList();
         List<BookingDto> bookings = kol.getBookings().stream().map(booking -> mapper.map(booking, BookingDto.class)).toList();

@@ -1,7 +1,9 @@
 package com.dtu.kolgo.controller;
 
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.service.EnterpriseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,7 +35,7 @@ public class EnterpriseController {
             @PathVariable("id") int id
     ) {
         return new ResponseEntity<>(
-                service.getDtoById(id),
+                service.getDetailsById(id),
                 HttpStatus.OK
         );
     }
@@ -65,6 +67,17 @@ public class EnterpriseController {
     ) {
         return new ResponseEntity<>(
                 service.deleteById(entId),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("ents/{id}/campaigns")
+    public ResponseEntity<?> createCampaign(
+            @PathVariable("id") int id,
+            @RequestBody @Valid CampaignDto campaignDto
+            ) {
+        return new ResponseEntity<>(
+                service.createCampaign(id, campaignDto),
                 HttpStatus.OK
         );
     }

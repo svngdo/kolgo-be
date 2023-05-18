@@ -32,5 +32,6 @@ public class EnterpriseDto {
     private String addressDetails;
     @NotBlank
     private List<Short> fieldIds;
+    private List<String> fieldNames;
 
 }

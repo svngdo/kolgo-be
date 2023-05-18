@@ -14,7 +14,7 @@ public class FieldController {
 
     private final FieldService service;
 
-    @GetMapping
+    @GetMapping("fields")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
                 service.getAll(),
