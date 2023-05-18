@@ -138,7 +138,8 @@ public class KolServiceImpl implements KolService {
         List<String> imageList = new ArrayList<>();
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
-            imageService.save(new Image(fileName, kol));
+            Image img = imageService.save(new Image(fileName));
+            kol.getImages().add(img);
             String uploadDir = imagePath;
             FileUtils.saveImage(uploadDir, fileName, image);
             imageList.add(fileName);

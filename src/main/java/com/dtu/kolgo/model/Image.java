@@ -12,10 +12,7 @@ import lombok.*;
 @Table(name = "images")
 public class Image extends BaseInt {
 
-    @Column(nullable = false)
+    @Column(name = "name")
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "kol_id")
-    private Kol kol;
 
 }

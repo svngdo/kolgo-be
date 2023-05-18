@@ -46,7 +46,10 @@ public class Kol extends BaseInt {
     private String tiktokUrl;
     @Column(name = "youtube_url")
     private String youtubeUrl;
-    @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "kol_images",
+            joinColumns = @JoinColumn(name = "kol_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id"))
     private List<Image> images;
     @OneToMany(mappedBy = "kol", cascade = CascadeType.ALL)
     private List<Booking> bookings;

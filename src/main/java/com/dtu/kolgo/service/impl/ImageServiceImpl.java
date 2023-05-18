@@ -13,8 +13,11 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository repo;
 
     @Override
-    public void save(Image image) {
-        repo.save(image);
+    public Image save(Image image) {
+        if (repo.existsByName(image.getName())) {
+            return repo.findByName(image.getName());
+        }
+        return repo.save(image);
     }
 
 }

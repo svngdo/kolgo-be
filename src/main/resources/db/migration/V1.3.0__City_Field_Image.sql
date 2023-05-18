@@ -13,3 +13,9 @@ create table if not exists fields
         constraint valid_field_type check ( type in ('KOL', 'ENTERPRISE')),
     icon varchar(255) null
 );
+
+create table if not exists images
+(
+    id     int generated always as identity primary key,
+    name   text
+);

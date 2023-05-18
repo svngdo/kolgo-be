@@ -4,6 +4,6 @@ import com.dtu.kolgo.model.Image;
 
 public interface ImageService {
 
-    void save(Image image);
+    Image save(Image image);
 
 }

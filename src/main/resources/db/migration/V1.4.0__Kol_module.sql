@@ -22,9 +22,9 @@ create table if not exists kol_fields
     primary key (kol_id, field_id)
 );
 
-create table if not exists images
+create table if not exists kol_images
 (
-    id     int generated always as identity primary key,
-    name   varchar,
-    kol_id int not null references kols (id)
-);
+    kol_id   int not null references kols (id),
+    image_id int not null references images (id),
+    primary key (kol_id, image_id)
+)
