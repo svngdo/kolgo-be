@@ -1,7 +1,9 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.exception.InvalidException;
@@ -69,9 +71,12 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public KolDto getDtoById(int id) {
+    public KolDetailsDto getDetailsById(int id) {
         Kol kol = getById(id);
-        return mapper.map(kol, KolDto.class);
+        KolDto dto = mapper.map(kol, KolDto.class);
+        List<BookingDto> bookings = kol.getBookings().stream().map(booking -> mapper.map(booking, BookingDto.class)).toList();
+        List<CampaignDto> campaigns = kol.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
+        return new KolDetailsDto(dto, bookings, campaigns);
     }
 
     @Override

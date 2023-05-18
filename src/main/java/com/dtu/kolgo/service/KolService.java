@@ -2,6 +2,7 @@ package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.model.Kol;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +19,7 @@ public interface KolService {
 
     List<KolDto> getDtosByFieldIds(List<Short> fieldIds);
 
-    KolDto getDtoById(int id);
+    KolDetailsDto getDetailsById(int id);
 
     KolDto getDtoByPrincipal(Principal principal);
 

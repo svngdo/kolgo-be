@@ -2,6 +2,7 @@ package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Enterprise;
@@ -68,9 +69,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EnterpriseDto getDtoById(int id) {
+    public EnterpriseDetailsDto getDetailsById(int id) {
         Enterprise ent = getById(id);
-        return mapper.map(ent, EnterpriseDto.class);
+        EnterpriseDto dto = mapper.map(ent, EnterpriseDto.class);
+        List<CampaignDto> campaigns = ent.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
+        return new EnterpriseDetailsDto(dto, campaigns);
     }
 
     @Override
