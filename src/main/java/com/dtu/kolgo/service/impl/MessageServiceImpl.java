@@ -8,7 +8,6 @@ import com.dtu.kolgo.service.ChatMessageService;
 import com.dtu.kolgo.service.ChatService;
 import com.dtu.kolgo.service.MessageService;
 import com.dtu.kolgo.service.NotificationService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -29,10 +28,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void handlePublicMessage(MessageDto dto) {
         try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            ChatMessageDto chatMessageDto = mapper.readValue(dto.getChatMessage(), ChatMessageDto.class);
-//            System.out.println(chatMessageDto);
-//            chatMessageService.save(chatMessageDto);
+            System.out.println(dto);
         } catch (Exception e) {
             log.error("Message Service Impl Exception", e);
         }
@@ -42,7 +38,6 @@ public class MessageServiceImpl implements MessageService {
     public void handlePrivateMessage(MessageDto dto) {
         System.out.println(dto);
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             if (dto.getType() == MessageType.CHAT_MESSAGE) {
                 ChatMessageDto chatMessageDto = mapper.map(chatMessageService.save(dto.getChatMessage()), ChatMessageDto.class);
                 dto.setChatMessage(chatMessageDto);

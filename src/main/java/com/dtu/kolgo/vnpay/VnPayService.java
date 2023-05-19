@@ -36,13 +36,10 @@ public class VnPayService {
 
     private final VnPayUtil vnPayUtil;
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) {
         try {
-            String locale = req.getParameter("language");
             String amountString = req.getParameter("amount");
             BigDecimal amount = new BigDecimal(amountString);
-            String orderInfo = req.getParameter("orderInfo");
-            String orderType = req.getParameter("orderType");
 
             if (amountString.length() == 0) {
                 throw new InvalidException("Invalid amount");
@@ -57,9 +54,9 @@ public class VnPayService {
             String vnp_CreateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             String vnp_CurrCode = "VND";
             String vnp_IpAddr = vnPayUtil.getIpAddress(req);
-            String vnp_Locale = (locale != null && !locale.isEmpty()) ? locale : "vn";
-            String vnp_OrderInfo = (orderInfo != null && !orderInfo.isEmpty()) ? orderInfo : "Thanh toan dich vu";
-            String vnp_OrderType = (orderType != null && !orderType.isEmpty()) ? orderType : "Other";
+            String vnp_Locale = "vn";
+            String vnp_OrderInfo = "Thanh toan dich vu";
+            String vnp_OrderType = "Other";
             String vnp_ReturnUrl = returnUrl;
             String vnp_ExpireDate = LocalDateTime.now().plusMinutes(15).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             String vnp_TxnRef = req.getParameter("txnRef");

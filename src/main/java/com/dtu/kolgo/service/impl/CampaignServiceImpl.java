@@ -1,19 +1,15 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Campaign;
-import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.repository.CampaignRepository;
 import com.dtu.kolgo.service.CampaignService;
-import com.dtu.kolgo.service.EnterpriseService;
-import com.dtu.kolgo.service.KolService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -21,9 +17,12 @@ import java.util.List;
 public class CampaignServiceImpl implements CampaignService {
 
     private final CampaignRepository repo;
-    private final KolService kolService;
-    private final EnterpriseService entService;
     private final ModelMapper mapper;
+
+    @Override
+    public Campaign save(Campaign campaign) {
+        return repo.save(campaign);
+    }
 
     @Override
     public List<Campaign> getAll() {
@@ -33,15 +32,6 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     public List<CampaignDto> getAllDto() {
         return repo.findAll()
-                .stream()
-                .map(campaign -> mapper.map(campaign, CampaignDto.class))
-                .toList();
-    }
-
-    @Override
-    public List<CampaignDto> getAllDtoEnt(Principal principal) {
-        Enterprise ent = entService.getByPrincipal(principal);
-        return repo.findAllByEnterprise(ent)
                 .stream()
                 .map(campaign -> mapper.map(campaign, CampaignDto.class))
                 .toList();

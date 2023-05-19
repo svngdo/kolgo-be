@@ -4,21 +4,22 @@ import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
+import com.dtu.kolgo.enums.CampaignStatus;
 import com.dtu.kolgo.exception.NotFoundException;
+import com.dtu.kolgo.model.Campaign;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.Field;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.EnterpriseRepository;
-import com.dtu.kolgo.service.CityService;
-import com.dtu.kolgo.service.EnterpriseService;
-import com.dtu.kolgo.service.FieldService;
-import com.dtu.kolgo.service.UserService;
+import com.dtu.kolgo.service.*;
+import com.dtu.kolgo.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private final UserService userService;
     private final ModelMapper mapper;
     private final CityService cityService;
+    private final CampaignService campaignService;
 
     @Override
     public ApiResponse save(Enterprise ent) {
@@ -109,8 +111,45 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public CampaignDto createCampaign(int id, CampaignDto campaignDto) {
-        return null;
+    public CampaignDto createCampaign(Principal principal, CampaignDto campaignDto) {
+        User user = userService.getByPrincipal(principal);
+        Enterprise ent = getByUser(user);
+
+        String name = campaignDto.getName();
+        List<Field> fields = campaignDto.getFieldIds().stream().map(fieldService::getById).toList();
+        LocalDateTime timestamp = DateTimeUtils.convertToLocalDateTime(campaignDto.getTimestamp());
+        LocalDateTime startTime = DateTimeUtils.convertToLocalDateTime(campaignDto.getStartTime());
+        LocalDateTime finishTime = DateTimeUtils.convertToLocalDateTime(campaignDto.getFinishTime());
+        String location = campaignDto.getLocation();
+        String description = campaignDto.getDescription();
+        String details = campaignDto.getDetails();
+        CampaignStatus status = campaignDto.getStatus();
+
+        Campaign campaign = campaignService.save(new Campaign(
+                name,
+                fields,
+                timestamp,
+                startTime,
+                finishTime,
+                location,
+                description,
+                details,
+                status,
+                ent,
+                new ArrayList<>(),
+                new ArrayList<>()
+        ));
+
+        if (ent.getCampaigns() != null) {
+            ent.getCampaigns().add(campaign);
+        } else {
+            ent.setCampaigns(new ArrayList<>() {{
+                add(campaign);
+            }});
+        }
+
+        repo.save(ent);
+        return mapper.map(campaign, CampaignDto.class);
     }
 
 }

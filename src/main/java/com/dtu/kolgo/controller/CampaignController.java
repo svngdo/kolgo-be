@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 @RestController
 @RequiredArgsConstructor
 public class CampaignController {
@@ -51,16 +49,6 @@ public class CampaignController {
     ) {
         return new ResponseEntity<>(
                 service.delete(id),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("campaigns/ent")
-    public ResponseEntity<?> getAll(
-            Principal principal
-    ) {
-        return new ResponseEntity<>(
-                service.getAllDtoEnt(principal),
                 HttpStatus.OK
         );
     }

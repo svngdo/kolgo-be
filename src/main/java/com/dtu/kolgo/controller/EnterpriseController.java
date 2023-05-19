@@ -71,15 +71,17 @@ public class EnterpriseController {
         );
     }
 
-    @PostMapping("ents/{id}/campaigns")
+    @PostMapping("ent/campaigns")
     public ResponseEntity<?> createCampaign(
-            @PathVariable("id") int id,
+            Principal principal,
             @RequestBody @Valid CampaignDto campaignDto
-            ) {
+    ) {
         return new ResponseEntity<>(
-                service.createCampaign(id, campaignDto),
+                service.createCampaign(principal, campaignDto),
                 HttpStatus.OK
         );
     }
+
+//    @GetMapping("ent/campaigns")
 
 }

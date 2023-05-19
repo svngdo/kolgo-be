@@ -32,6 +32,6 @@ public interface EnterpriseService {
 
     ApiResponse deleteById(int id);
 
-    CampaignDto createCampaign(int id, CampaignDto campaignDto);
+    CampaignDto createCampaign(Principal principal, CampaignDto campaignDto);
 
 }

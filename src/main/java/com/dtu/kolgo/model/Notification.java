@@ -20,8 +20,10 @@ public class Notification extends BaseInt {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private NotificationType type;
-    @Column(name = "title")
-    private String title;
+    @Column(name = "kol_id")
+    private Integer kolId;
+    @Column(name = "booking_id")
+    private Integer bookingId;
     @Column(name = "content")
     private String content;
     @Enumerated(EnumType.STRING)

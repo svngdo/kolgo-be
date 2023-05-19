@@ -10,7 +10,8 @@ public class NotificationDto {
 
     private Integer id;
     private NotificationType type;
-    private String title;
+    private Integer kolId;
+    private Integer bookingId;
     private String content;
     private NotificationStatus status;
     private String timestamp;
