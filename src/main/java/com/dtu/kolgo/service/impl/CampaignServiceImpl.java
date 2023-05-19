@@ -68,10 +68,10 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public ApiResponse update(int id, CampaignDto dto) {
-        Campaign campaign = getById(id);
-        campaign.setCost(dto.getCost());
-        campaign.setDescription(dto.getDescription());
-        campaign.setStatus(dto.getStatus());
+//        Campaign campaign = getById(id);
+//        campaign.setCost(dto.getCost());
+//        campaign.setDescription(dto.getDescription());
+//        campaign.setStatus(dto.getStatus());
         return new ApiResponse("Updated campaign successfully");
     }
 
