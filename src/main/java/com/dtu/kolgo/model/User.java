@@ -46,6 +46,10 @@ public class User extends BaseInt implements UserDetails {
     private List<Notification> notifications;
     @ManyToMany(mappedBy = "users")
     private List<Chat> chats;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Kol kol;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Enterprise enterprise;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
