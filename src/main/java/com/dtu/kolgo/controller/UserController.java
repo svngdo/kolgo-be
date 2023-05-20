@@ -1,7 +1,7 @@
 package com.dtu.kolgo.controller;
 
 import com.dtu.kolgo.dto.feedback.FeedbackDto;
-import com.dtu.kolgo.dto.payment.VnPayDto;
+import com.dtu.kolgo.dto.payment.PaymentDto;
 import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.BookingStatus;
@@ -92,14 +92,14 @@ public class UserController {
         );
     }
 
-    @PostMapping("user/bookings/{bookingId}/payments/vnpay")
+    @PostMapping("user/bookings/{bookingId}/payments")
     public ResponseEntity<?> addBookingPayment(
             Principal principal,
             @PathVariable("bookingId") int bookingId,
-            @RequestBody @Valid VnPayDto vnPayDto
+            @RequestBody @Valid PaymentDto paymentDto
     ) {
         return new ResponseEntity<>(
-                service.addBookingVnPayPayment(principal, bookingId, vnPayDto),
+                service.addBookingPayment(principal, bookingId, paymentDto),
                 HttpStatus.OK
         );
     }

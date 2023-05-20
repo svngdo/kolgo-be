@@ -4,7 +4,6 @@ import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.feedback.FeedbackDto;
 import com.dtu.kolgo.dto.payment.PaymentDto;
-import com.dtu.kolgo.dto.payment.VnPayDto;
 import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.BookingStatus;
@@ -15,9 +14,11 @@ import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Booking;
 import com.dtu.kolgo.model.Feedback;
+import com.dtu.kolgo.model.Payment;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.UserRepository;
 import com.dtu.kolgo.service.BookingService;
+import com.dtu.kolgo.service.PaymentService;
 import com.dtu.kolgo.service.UserService;
 import com.dtu.kolgo.util.DateTimeUtils;
 import com.dtu.kolgo.util.FileUtils;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
     private final BookingService bookingService;
+    private final PaymentService paymentService;
 
     @Override
     public ApiResponse save(User user) {
@@ -208,27 +211,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse addBookingVnPayPayment(Principal principal, int bookingId, VnPayDto vnPayDto) {
-        System.out.println(vnPayDto);
+    public PaymentDto addBookingPayment(Principal principal, int bookingId, PaymentDto paymentDto) {
+        System.out.println(paymentDto);
         User user = getByPrincipal(principal);
         Booking booking = bookingService.getById(bookingId);
 
         validateBookingAndPayment(booking, user.getBookings());
 
-//        booking.setPayment(new Payment(
-//                PaymentMethod.VNPAY,
-//                vnPayDto.getVnp_TxnRef(),
-//                vnPayDto.getVnp_TransactionNo(),
-//                vnPayDto.getVnp_BankTranNo(),
-//                BankCode.valueOf(vnPayDto.getVnp_BankCode()),
-//                vnPayDto.getVnp_Amount(),
-//                vnPayDto.getVnp_OrderInfo(),
-//                DateTimeUtils.convertToLocalDateTime(vnPayDto.getVnp_PayDate()),
-//                PaymentStatus.valueOf(vnPayDto.getVnp_TransactionStatus()),
-//                user
-//        ));
-//        bookingService.save(booking);
-        return new ApiResponse("Add VNPay payment successfully");
+        Payment payment = paymentService.save(new Payment(
+                paymentDto.getMethod(),
+                paymentDto.getTxnRef(),
+                paymentDto.getTxnNo(),
+                paymentDto.getBankTxnNo(),
+                paymentDto.getBankCode(),
+                new BigDecimal(paymentDto.getAmount()),
+                paymentDto.getDescription(),
+                DateTimeUtils.convertToLocalDateTime(paymentDto.getTimestamp()),
+                paymentDto.getStatus(),
+                user
+        ));
+        booking.setPayment(payment);
+        bookingService.save(booking);
+        return mapper.map(payment, PaymentDto.class);
     }
 
     private void validateBookingUser(Booking booking, User user) {

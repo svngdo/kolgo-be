@@ -6,8 +6,7 @@ create table if not exists payments
     txn_ref     varchar(100) not null,
     txn_no      varchar(100) not null,
     bank_txn_no varchar(100) not null,
-    bank_code   varchar(20)  not null
-        constraint valid_bank_code check ( bank_code in ('VNPAYQR', 'VNBANK', 'INTCARD')),
+    bank_code   varchar(20)  not null,
     amount      numeric      not null    default 0,
     description text         not null,
     timestamp   timestamp with time zone default now(),

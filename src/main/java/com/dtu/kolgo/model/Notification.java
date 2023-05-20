@@ -20,10 +20,6 @@ public class Notification extends BaseInt {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private NotificationType type;
-    @Column(name = "kol_id")
-    private Integer kolId;
-    @Column(name = "booking_id")
-    private Integer bookingId;
     @Column(name = "content")
     private String content;
     @Enumerated(EnumType.STRING)
@@ -31,6 +27,8 @@ public class Notification extends BaseInt {
     private NotificationStatus status;
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
+    @Column(name = "booking_id")
+    private Integer bookingId;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

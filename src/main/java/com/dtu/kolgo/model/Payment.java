@@ -1,7 +1,6 @@
 package com.dtu.kolgo.model;
 
 
-import com.dtu.kolgo.enums.BankCode;
 import com.dtu.kolgo.enums.PaymentMethod;
 import com.dtu.kolgo.enums.PaymentStatus;
 import com.dtu.kolgo.util.DateTimeUtils;
@@ -29,9 +28,8 @@ public class Payment extends BaseInt {
     private String txnNo;
     @Column(name = "bank_txn_no")
     private String bankTxnNo;
-    @Enumerated(EnumType.STRING)
     @Column(name = "bank_code")
-    private BankCode bankCode;
+    private String bankCode;
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
     @Column(name = "description")

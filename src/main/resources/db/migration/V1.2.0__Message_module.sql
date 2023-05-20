@@ -3,12 +3,11 @@ create table if not exists notifications
     id         int generated always as identity primary key,
     type       varchar(20)  not null
         constraint valid_notification_type check ( type in ('NOTIFICATION', 'BOOKING', 'CAMPAIGN')),
-    kol_id     int          null,
-    booking_id int          null,
     content    varchar(255) not null,
     status     varchar(20)  not null
         constraint valid_notification_status check ( status in ('READ', 'UNREAD') ),
     timestamp  timestamp with time zone default now(),
+    booking_id int          null,
     user_id    int          not null references users (id)
 );
 

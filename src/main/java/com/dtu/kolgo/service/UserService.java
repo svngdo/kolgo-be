@@ -4,7 +4,6 @@ import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.feedback.FeedbackDto;
 import com.dtu.kolgo.dto.payment.PaymentDto;
-import com.dtu.kolgo.dto.payment.VnPayDto;
 import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.BookingStatus;
@@ -51,6 +50,6 @@ public interface UserService {
 
     ApiResponse addBookingFeedback(Principal principal, int bookingId, FeedbackDto feedbackDto);
 
-    ApiResponse addBookingVnPayPayment(Principal principal, int bookingId, VnPayDto vnPayDto);
+    PaymentDto addBookingPayment(Principal principal, int bookingId, PaymentDto paymentDto);
 
 }

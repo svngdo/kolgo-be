@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface NotificationService {
 
-    Notification save(NotificationDto dto);
+    Notification save(Notification notification);
 
     List<NotificationDto> getAllByPrincipal(Principal principal);
 
