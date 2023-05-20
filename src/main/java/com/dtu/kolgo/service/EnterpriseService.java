@@ -40,5 +40,5 @@ public interface EnterpriseService {
 
     CampaignDto getCampaignDtoByPrincipal(Principal principal, int campaignId);
 
-    void deleteCampaign(Principal principal, int campaignId);
+    ApiResponse deleteCampaign(Principal principal, int campaignId);
 }

@@ -190,13 +190,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void deleteCampaign(Principal principal, int campaignId) {
+    public ApiResponse deleteCampaign(Principal principal, int campaignId) {
         Enterprise ent = getByPrincipal(principal);
         Campaign campaign = campaignService.getById(campaignId);
         if (!campaign.getEnterprise().equals(ent)) {
             throw new AccessDeniedException();
         }
         campaignService.delete(campaignId);
+        return new ApiResponse("Delete campaign successfully");
     }
 
 }
