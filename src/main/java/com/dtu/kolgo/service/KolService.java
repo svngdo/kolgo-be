@@ -1,6 +1,7 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
@@ -30,5 +31,7 @@ public interface KolService {
     List<BookingDto> getBookingsById(int id);
 
     BookingDto createBooking(Principal principal, int id, BookingDto bookingDto);
+
+    CampaignDto joinCampaign(Principal principal, int campaignId);
 
 }

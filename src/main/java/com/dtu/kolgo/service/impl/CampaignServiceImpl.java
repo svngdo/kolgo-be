@@ -4,6 +4,7 @@ import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Campaign;
+import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.repository.CampaignRepository;
 import com.dtu.kolgo.service.CampaignService;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,11 @@ public class CampaignServiceImpl implements CampaignService {
     public ApiResponse delete(int id) {
         repo.deleteById(id);
         return new ApiResponse("Deleted campaign successfully");
+    }
+
+    @Override
+    public List<CampaignDto> getDtosByEnterprise(Enterprise ent) {
+        return repo.findAllByEnterprise(ent).stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
     }
 
 }

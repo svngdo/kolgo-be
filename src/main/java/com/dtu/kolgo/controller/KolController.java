@@ -104,6 +104,15 @@ public class KolController {
     /*
         BOOKING
      */
-//    @Get
+    @PutMapping("kol/campaigns/{campaignId}")
+    public ResponseEntity<?> joinCampaign(
+            Principal principal,
+            @PathVariable("campaignId") int campaignId
+    ) {
+        return new ResponseEntity<>(
+                service.joinCampaign(principal, campaignId),
+                HttpStatus.OK
+        );
+    }
 
 }

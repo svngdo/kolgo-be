@@ -34,4 +34,11 @@ public interface EnterpriseService {
 
     CampaignDto createCampaign(Principal principal, CampaignDto campaignDto);
 
+    CampaignDto updateCampaign(Principal principal, int campaignId, CampaignDto campaignDto);
+
+    List<CampaignDto> getCampaignDtos(Principal principal);
+
+    CampaignDto getCampaignDtoByPrincipal(Principal principal, int campaignId);
+
+    void deleteCampaign(Principal principal, int campaignId);
 }

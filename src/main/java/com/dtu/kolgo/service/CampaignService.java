@@ -3,6 +3,7 @@ package com.dtu.kolgo.service;
 import com.dtu.kolgo.dto.ApiResponse;
 import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.model.Campaign;
+import com.dtu.kolgo.model.Enterprise;
 
 import java.util.List;
 
@@ -22,4 +23,5 @@ public interface CampaignService {
 
     ApiResponse delete(int id);
 
+    List<CampaignDto> getDtosByEnterprise(Enterprise enterprise);
 }

@@ -40,6 +40,7 @@ public class KolServiceImpl implements KolService {
     private final CityService cityService;
     private final ModelMapper mapper;
     private final BookingService bookingService;
+    private final CampaignService campaignService;
 
     private Kol getById(int id) {
         return repo.findById(id).orElseThrow(() -> new NotFoundException("KOL ID not found: " + id));
@@ -161,6 +162,17 @@ public class KolServiceImpl implements KolService {
                 null
         ));
         return mapper.map(booking, BookingDto.class);
+    }
+
+    @Override
+    public CampaignDto joinCampaign(Principal principal, int campaignId) {
+        Kol kol = getByPrincipal(principal);
+        Campaign campaign = campaignService.getById(campaignId);
+        if (campaign.getKols() != null && !campaign.getKols().contains(kol)) {
+            campaign.getKols().add(kol);
+        }
+        campaignService.save(campaign);
+        return mapper.map(campaign, CampaignDto.class);
     }
 
 }

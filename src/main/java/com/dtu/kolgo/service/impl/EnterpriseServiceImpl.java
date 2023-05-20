@@ -5,11 +5,9 @@ import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.enums.CampaignStatus;
+import com.dtu.kolgo.exception.AccessDeniedException;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.Campaign;
-import com.dtu.kolgo.model.Enterprise;
-import com.dtu.kolgo.model.Field;
-import com.dtu.kolgo.model.User;
+import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.DateTimeUtils;
@@ -150,6 +148,55 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
         repo.save(ent);
         return mapper.map(campaign, CampaignDto.class);
+    }
+
+    @Override
+    public CampaignDto updateCampaign(Principal principal, int campaignId, CampaignDto campaignDto) {
+        Enterprise ent = getByPrincipal(principal);
+        Campaign campaign = campaignService.getById(campaignId);
+
+        campaign.setName(campaignDto.getName());
+        campaign.setFields(new ArrayList<>() {{
+            campaignDto.getFieldIds().forEach(id -> {
+                Field field = fieldService.getById(id);
+                this.add(field);
+            });
+        }});
+        campaign.setTimestamp(DateTimeUtils.convertToLocalDateTime(campaignDto.getTimestamp()));
+        campaign.setLocation(campaignDto.getLocation());
+        campaign.setDescription(campaignDto.getDescription());
+        campaign.setDetails(campaignDto.getDetails());
+        campaign.setStatus(campaignDto.getStatus());
+
+        campaignService.save(campaign);
+
+        return mapper.map(campaign, CampaignDto.class);
+    }
+
+    @Override
+    public List<CampaignDto> getCampaignDtos(Principal principal) {
+        Enterprise ent = getByPrincipal(principal);
+        return campaignService.getDtosByEnterprise(ent);
+    }
+
+    @Override
+    public CampaignDto getCampaignDtoByPrincipal(Principal principal, int campaignId) {
+        Enterprise ent = getByPrincipal(principal);
+        Campaign campaign = campaignService.getById(campaignId);
+        if (!campaign.getEnterprise().equals(ent)) {
+            throw new AccessDeniedException();
+        }
+        return mapper.map(campaign, CampaignDto.class);
+    }
+
+    @Override
+    public void deleteCampaign(Principal principal, int campaignId) {
+        Enterprise ent = getByPrincipal(principal);
+        Campaign campaign = campaignService.getById(campaignId);
+        if (!campaign.getEnterprise().equals(ent)) {
+            throw new AccessDeniedException();
+        }
+        campaignService.delete(campaignId);
     }
 
 }

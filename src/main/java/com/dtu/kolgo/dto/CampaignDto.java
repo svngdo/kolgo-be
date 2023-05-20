@@ -1,6 +1,7 @@
 package com.dtu.kolgo.dto;
 
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
+import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.enums.CampaignStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,6 +35,6 @@ public class CampaignDto {
     private String details;
     private CampaignStatus status;
     private EnterpriseDto enterprise;
-
+    private List<KolDto> kols;
 
 }

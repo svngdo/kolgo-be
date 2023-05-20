@@ -82,6 +82,49 @@ public class EnterpriseController {
         );
     }
 
-//    @GetMapping("ent/campaigns")
+    @GetMapping("ent/campaigns")
+    public ResponseEntity<?> getAll(
+            Principal principal
+    ) {
+        return new ResponseEntity<>(
+                service.getCampaignDtos(principal),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("ent/campaigns/{campaignId}")
+    public ResponseEntity<?> get(
+            Principal principal,
+            @PathVariable("campaignId") int campaignId
+    ) {
+        return new ResponseEntity<>(
+                service.getCampaignDtoByPrincipal(principal, campaignId),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("ent/campaigns/{campaignId}")
+    public ResponseEntity<?> updateCampaign(
+            Principal principal,
+            @PathVariable("campaignId") int campaignId,
+            @RequestBody @Valid CampaignDto campaignDto
+    ) {
+        return new ResponseEntity<>(
+                service.updateCampaign(principal, campaignId, campaignDto),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("ent/campaigns/{campaignId}")
+    public ResponseEntity<?> deleteCampaign(
+            Principal principal,
+            @PathVariable("campaignId") int campaignId
+    ) {
+        return new ResponseEntity<>(
+                service.deleteCampaign(principal, campaignId),
+                HttpStatus.OK
+        );
+    }
+
 
 }
