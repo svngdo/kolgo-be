@@ -6,7 +6,7 @@ create table if not exists campaigns
     start_time    timestamp with time zone default now(),
     finish_time   timestamp with time zone default now(),
     location      varchar(255) not null,
-    description   varchar(255) null,
+    description   text         null,
     details       text         null,
     status        varchar(20)  not null
         constraint valid_status check ( status in ('UPCOMING', 'IN_PROGRESS', 'COMPLETED') ),
