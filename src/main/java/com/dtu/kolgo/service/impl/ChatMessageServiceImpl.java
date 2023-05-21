@@ -3,12 +3,10 @@ package com.dtu.kolgo.service.impl;
 import com.dtu.kolgo.dto.message.ChatMessageDto;
 import com.dtu.kolgo.model.Chat;
 import com.dtu.kolgo.model.ChatMessage;
-import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.ChatMessageRepository;
 import com.dtu.kolgo.service.ChatMessageService;
 import com.dtu.kolgo.service.ChatService;
 import com.dtu.kolgo.service.UserService;
-import com.dtu.kolgo.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,16 +23,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ModelMapper mapper;
 
     @Override
-    public ChatMessage save(ChatMessageDto dto) {
-        User user = userService.getById(dto.getUser().getId());
-        Chat chat = chatService.getById(dto.getChatId());
-        return repo.save(new ChatMessage(
-                dto.getType(),
-                DateTimeUtils.convertToLocalDateTime(dto.getTimestamp()),
-                dto.getContent(),
-                user,
-                chat
-        ));
+    public ChatMessage save(ChatMessage chatMessage) {
+        return repo.save(chatMessage);
     }
 
     @Override

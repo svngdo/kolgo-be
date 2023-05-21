@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.message.MessageDto;
+import com.dtu.kolgo.dto.message.ChatMessageDto;
 import com.dtu.kolgo.dto.message.NotificationDto;
 import com.dtu.kolgo.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -15,25 +15,24 @@ public class MessageController {
 
     private final MessageService service;
 
-    @MessageMapping("public/messages")
-    @SendTo("public/chats")
-    public MessageDto handlePublicMessage(@Payload MessageDto dto) {
-        service.handlePublicMessage(dto);
-        return dto;
+    @MessageMapping("chats/public")
+    @SendTo("public/messages")
+    public ChatMessageDto handlePublicMessage(@Payload ChatMessageDto chatMessageDto) {
+        service.handlePublicChatMessage(chatMessageDto);
+        return chatMessageDto;
     }
 
-    @MessageMapping("private/messages")
-    public void handlePrivateMessage(@Payload MessageDto dto) {
-        System.out.println(dto);
-        service.handlePrivateMessage(dto);
+    @MessageMapping("chats/private")
+    public void handlePrivateMessage(@Payload ChatMessageDto chatMessageDto) {
+        service.handlePrivateChatMessage(chatMessageDto);
     }
 
-    @MessageMapping("public/notifications")
+    @MessageMapping("notifications/public")
     public void handlePublicNotification(@Payload NotificationDto notificationDto) {
         System.out.println(notificationDto);
     }
 
-    @MessageMapping("private/notifications")
+    @MessageMapping("notifications/private")
     public void handleNotification(@Payload NotificationDto notificationDto) {
         service.handlePrivateNotification(notificationDto);
     }

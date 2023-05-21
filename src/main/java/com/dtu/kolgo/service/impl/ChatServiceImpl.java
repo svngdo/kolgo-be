@@ -1,9 +1,7 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.message.ChatDetailsDto;
 import com.dtu.kolgo.dto.message.ChatDto;
-import com.dtu.kolgo.dto.message.ChatMessageDto;
-import com.dtu.kolgo.dto.user.UserDto;
+import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Chat;
 import com.dtu.kolgo.model.User;
@@ -28,58 +26,49 @@ public class ChatServiceImpl implements ChatService {
     private final ModelMapper mapper;
 
     @Override
-    public ChatDetailsDto save(Principal principal, ChatDto dto) {
-        User user = userService.getByPrincipal(principal);
-
-        List<User> users = new ArrayList<>();
-        dto.getUserIds().forEach(id -> users.add(userService.getById(id)));
-
-        Chat chat = repo.save(new Chat(
-                dto.getType(),
-                DateTimeUtils.convertToLocalDateTime(dto.getDate()),
-                user,
-                users,
-                new ArrayList<>())
-        );
-        return new ChatDetailsDto(
-                chat.getId(),
-                chat.getType(),
-                DateTimeUtils.convertToString(chat.getDate()),
-                mapper.map(chat.getUsers(), UserDto.class),
-                chat.getUsers().stream()
-                        .map(u -> mapper.map(u, UserDto.class))
-                        .filter(u -> !u.getId().equals(user.getId())).toList(),
-                chat.getChatMessages().stream()
-                        .map(msg -> mapper.map(msg, ChatMessageDto.class)).toList()
-        );
+    public Chat save(Chat chat) {
+        return repo.save(chat);
     }
 
     @Override
-    public List<ChatDetailsDto> getAllDetailsByPrincipal(Principal principal) {
+    public ChatDto save(Principal principal, ChatDto chatDto) {
+        System.out.println(chatDto);
+        List<User> users = new ArrayList<>() {{
+            chatDto.getUserIds().forEach(id -> {
+                this.add(userService.getById(id));
+            });
+        }};
+        if (repo.existsByUsersContains(users.get(0)) && repo.existsByUsersContains(users.get(1))) {
+            throw new InvalidException("Chat existed");
+        }
         User user = userService.getByPrincipal(principal);
-        return repo.findAllByUsersContains(user)
-                .stream()
-                .map(chat -> {
-                    List<UserDto> userDtoList = chat.getUsers().stream()
-                            .map(u -> mapper.map(u, UserDto.class))
-                            .filter(u -> !u.getId().equals(user.getId())).toList();
-                    List<ChatMessageDto> chatMessageDtoList
-                            = chat.getChatMessages().stream()
-                            .map(msg -> mapper.map(msg, ChatMessageDto.class)).toList();
-                    return new ChatDetailsDto(
-                            chat.getId(),
-                            chat.getType(),
-                            DateTimeUtils.convertToString(chat.getDate()),
-                            mapper.map(chat.getUser(), UserDto.class),
-                            userDtoList,
-                            chatMessageDtoList);
-                }).toList();
+        Chat chat = repo.save(new Chat(
+                chatDto.getType(),
+                DateTimeUtils.convertToLocalDateTime(chatDto.getTimestamp()),
+                user,
+                users,
+                new ArrayList<>()
+        ));
+
+        return mapper.map(chat, ChatDto.class);
     }
 
     @Override
     public Chat getById(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Chat ID not found: " + id));
+    }
+
+    @Override
+    public List<ChatDto> getDtosByPrincipal(Principal principal) {
+        User user = userService.getByPrincipal(principal);
+        return repo.findAllByUsersContains(user).stream().map(chat -> mapper.map(chat, ChatDto.class)).toList();
+    }
+
+    @Override
+    public ChatDto getDtoById(int id) {
+        Chat chat = getById(id);
+        return mapper.map(chat, ChatDto.class);
     }
 
 }

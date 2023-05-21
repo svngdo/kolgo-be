@@ -1,5 +1,6 @@
 package com.dtu.kolgo.dto.message;
 
+import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.ChatType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +15,12 @@ import java.util.List;
 @Builder
 public class ChatDto {
 
+    private Integer id;
     private ChatType type;
-    private String date;
-    private Integer userId;
+    private String timestamp;
+    private UserDto user;
     private List<Integer> userIds;
+    private List<UserDto> users;
+    private List<ChatMessageDto> chatMessages;
 
 }

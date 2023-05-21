@@ -13,11 +13,11 @@ create table if not exists notifications
 
 create table if not exists chats
 (
-    id      int generated always as identity primary key,
-    type    varchar(20) not null
+    id        int generated always as identity primary key,
+    type      varchar(20) not null
         constraint valid_chat_type check ( type in ('PUBLIC', 'GROUP', 'PRIVATE') ),
-    date    timestamp with time zone default now(),
-    user_id int         not null references users (id)
+    timestamp timestamp with time zone default now(),
+    user_id   int         not null references users (id)
 );
 
 create table if not exists chat_users

@@ -1,6 +1,5 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.message.ChatDetailsDto;
 import com.dtu.kolgo.dto.message.ChatDto;
 import com.dtu.kolgo.model.Chat;
 
@@ -9,10 +8,13 @@ import java.util.List;
 
 public interface ChatService {
 
-    ChatDetailsDto save(Principal principal, ChatDto dto);
+    Chat save(Chat chat);
 
-    List<ChatDetailsDto> getAllDetailsByPrincipal(Principal principal);
+    ChatDto save(Principal principal, ChatDto dto);
 
     Chat getById(int id);
 
+    List<ChatDto> getDtosByPrincipal(Principal principal);
+
+    ChatDto getDtoById(int id);
 }

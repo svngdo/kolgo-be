@@ -1,14 +1,14 @@
 package com.dtu.kolgo.service;
 
-import com.dtu.kolgo.dto.message.MessageDto;
+import com.dtu.kolgo.dto.message.ChatMessageDto;
 import com.dtu.kolgo.dto.message.NotificationDto;
 
 public interface MessageService {
 
-    void handlePublicMessage(MessageDto dto);
+    void handlePublicChatMessage(ChatMessageDto chatMessageDto);
 
-    void handlePrivateMessage(MessageDto dto);
+    void handlePrivateChatMessage(ChatMessageDto chatMessageDto);
 
-    void handlePrivateNotification(NotificationDto dto);
+    void handlePrivateNotification(NotificationDto notificationDto);
 
 }

@@ -12,4 +12,6 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
 
     List<Chat> findAllByUsersContains(User user);
 
+    boolean existsByUsersContains(User user);
+
 }

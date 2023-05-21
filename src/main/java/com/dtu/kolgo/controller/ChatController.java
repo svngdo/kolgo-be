@@ -2,6 +2,7 @@ package com.dtu.kolgo.controller;
 
 import com.dtu.kolgo.dto.message.ChatDto;
 import com.dtu.kolgo.service.ChatService;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,17 @@ public class ChatController {
             Principal principal
     ) {
         return new ResponseEntity<>(
-                service.getAllDetailsByPrincipal(principal),
+                service.getDtosByPrincipal(principal),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("chats/{id}")
+    public ResponseEntity<?> getChat(
+            @PathVariable("id") int id
+    ) {
+        return new ResponseEntity<>(
+                service.getDtoById(id),
                 HttpStatus.OK
         );
     }

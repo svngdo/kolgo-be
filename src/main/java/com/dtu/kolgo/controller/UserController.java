@@ -99,7 +99,6 @@ public class UserController {
             @RequestBody @Valid PaymentDto paymentDto
     ) {
         return new ResponseEntity<>(
-                service.addBookingPayment(principal, bookingId, paymentDto),
                 HttpStatus.OK
         );
     }

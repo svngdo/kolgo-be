@@ -2,6 +2,8 @@ package com.dtu.kolgo.config;
 
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.dto.kol.KolDto;
+import com.dtu.kolgo.dto.message.ChatDto;
+import com.dtu.kolgo.model.Chat;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.Kol;
 import org.modelmapper.ModelMapper;
@@ -36,6 +38,8 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUser().getRole(), EnterpriseDto::setRole)
                 .addMapping(Enterprise::getFieldIds, EnterpriseDto::setFieldIds)
                 .addMapping(Enterprise::getFieldNames, EnterpriseDto::setFieldNames);
+        modelMapper.typeMap(Chat.class, ChatDto.class)
+                .addMapping(Chat::getUserIds, ChatDto::setUserIds);
 
         return modelMapper;
     }

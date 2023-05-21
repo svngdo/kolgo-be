@@ -1,8 +1,10 @@
 package com.dtu.kolgo.service.impl;
 
-import com.dtu.kolgo.dto.message.MessageDto;
+import com.dtu.kolgo.dto.message.ChatMessageDto;
 import com.dtu.kolgo.dto.message.NotificationDto;
 import com.dtu.kolgo.enums.NotificationStatus;
+import com.dtu.kolgo.model.Chat;
+import com.dtu.kolgo.model.ChatMessage;
 import com.dtu.kolgo.model.Notification;
 import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.service.*;
@@ -22,37 +24,38 @@ public class MessageServiceImpl implements MessageService {
     private final ChatMessageService chatMessageService;
     private final NotificationService notificationService;
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final BookingService bookingService;
     private final UserService userService;
     private final ModelMapper mapper;
 
     @Override
-    public void handlePublicMessage(MessageDto dto) {
-        try {
-            System.out.println(dto);
-        } catch (Exception e) {
-            log.error("Message Service Impl Exception", e);
-        }
+    public void handlePublicChatMessage(ChatMessageDto chatMessageDto) {
+        System.out.println(chatMessageDto);
     }
 
     @Override
-    public void handlePrivateMessage(MessageDto dto) {
-//        System.out.println(dto);
-//        try {
-//            if (dto.getType() == MessageType.CHAT_MESSAGE) {
-//                ChatMessageDto chatMessageDto = mapper.map(chatMessageService.save(dto.getChatMessage()), ChatMessageDto.class);
-//                dto.setChatMessage(chatMessageDto);
-//            dto.getReceiverIds().forEach(id -> {
-//                simpMessagingTemplate.convertAndSendToUser(
-//                        id.toString(),
-//                        "messages",
-//                        dto
-//                );
-//            });
-//        } catch (Exception e) {
-//            log.error("Message Service Impl Exception", e);
-//        }
-//
+    public void handlePrivateChatMessage(ChatMessageDto chatMessageDto) {
+        System.out.println(chatMessageDto);
+        User user = userService.getById(chatMessageDto.getUserId());
+        Chat chat = chatService.getById(chatMessageDto.getChatId());
+        ChatMessage chatMessage = chatMessageService.save(new ChatMessage(
+                chatMessageDto.getType(),
+                DateTimeUtils.convertToLocalDateTime(chatMessageDto.getTimestamp()),
+                chatMessageDto.getContent(),
+                user,
+                chat
+        ));
+        chatMessageDto.setId(chatMessage.getId());
+        System.out.println(chatMessage);
+        chat.getChatMessages().add(chatMessage);
+        chatService.save(chat);
+
+        chat.getUserIds().forEach(id -> {
+            simpMessagingTemplate.convertAndSendToUser(
+                    id.toString(),
+                    "messages",
+                    chatMessageDto
+            );
+        });
     }
 
     @Override

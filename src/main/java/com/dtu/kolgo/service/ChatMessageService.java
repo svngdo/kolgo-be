@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ChatMessageService {
 
-    ChatMessage save(ChatMessageDto dto);
+    ChatMessage save(ChatMessage chatMessage);
 
     List<ChatMessageDto> getAllByChatId(int id);
 
