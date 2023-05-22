@@ -104,13 +104,24 @@ public class KolController {
     /*
         BOOKING
      */
-    @PutMapping("kol/campaigns/{campaignId}")
+    @PutMapping("kol/campaigns/{campaignId}/join")
     public ResponseEntity<?> joinCampaign(
             Principal principal,
             @PathVariable("campaignId") int campaignId
     ) {
         return new ResponseEntity<>(
                 service.joinCampaign(principal, campaignId),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("kol/campaigns/{campaignId}/quit")
+    public ResponseEntity<?> quitCampaign(
+            Principal principal,
+            @PathVariable("campaignId") int campaignId
+    ) {
+        return new ResponseEntity<>(
+                service.quitCampaign(principal, campaignId),
                 HttpStatus.OK
         );
     }

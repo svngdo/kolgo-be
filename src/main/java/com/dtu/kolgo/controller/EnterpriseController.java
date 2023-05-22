@@ -76,6 +76,7 @@ public class EnterpriseController {
             Principal principal,
             @RequestBody @Valid CampaignDto campaignDto
     ) {
+        System.out.println("CREATE CAMPAIGN");
         return new ResponseEntity<>(
                 service.createCampaign(principal, campaignDto),
                 HttpStatus.OK

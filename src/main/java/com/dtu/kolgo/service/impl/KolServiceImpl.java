@@ -175,4 +175,15 @@ public class KolServiceImpl implements KolService {
         return mapper.map(campaign, CampaignDto.class);
     }
 
+    @Override
+    public CampaignDto quitCampaign(Principal principal, int campaignId) {
+        Kol kol = getByPrincipal(principal);
+        Campaign campaign = campaignService.getById(campaignId);
+        if (campaign.getKols() != null && !campaign.getKols().contains(kol)) {
+            campaign.getKols().remove(kol);
+        }
+        campaignService.save(campaign);
+        return mapper.map(campaign, CampaignDto.class);
+    }
+
 }

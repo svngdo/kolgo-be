@@ -7,7 +7,10 @@ import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.enums.CampaignStatus;
 import com.dtu.kolgo.exception.AccessDeniedException;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.*;
+import com.dtu.kolgo.model.Campaign;
+import com.dtu.kolgo.model.Enterprise;
+import com.dtu.kolgo.model.Field;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.DateTimeUtils;
@@ -114,14 +117,25 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         Enterprise ent = getByUser(user);
 
         String name = campaignDto.getName();
-        List<Field> fields = campaignDto.getFieldIds().stream().map(fieldService::getById).toList();
+        List<Field> fields = new ArrayList<>() {{
+            campaignDto.getFieldIds().forEach(id -> {
+                this.add(fieldService.getById(id));
+            });
+        }};
         LocalDateTime timestamp = DateTimeUtils.convertToLocalDateTime(campaignDto.getTimestamp());
         LocalDateTime startTime = DateTimeUtils.convertToLocalDateTime(campaignDto.getStartTime());
         LocalDateTime finishTime = DateTimeUtils.convertToLocalDateTime(campaignDto.getFinishTime());
         String location = campaignDto.getLocation();
         String description = campaignDto.getDescription();
         String details = campaignDto.getDetails();
-        CampaignStatus status = campaignDto.getStatus();
+        CampaignStatus status;
+
+        if (startTime.isAfter(LocalDateTime.now())) {
+            status = CampaignStatus.UPCOMING;
+        } else if (startTime.isBefore(LocalDateTime.now()) && finishTime.isAfter(LocalDateTime.now())) {
+            status = CampaignStatus.IN_PROGRESS;
+        } else
+            status = CampaignStatus.COMPLETED;
 
         Campaign campaign = campaignService.save(new Campaign(
                 name,

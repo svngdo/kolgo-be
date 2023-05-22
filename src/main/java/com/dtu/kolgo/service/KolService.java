@@ -34,4 +34,5 @@ public interface KolService {
 
     CampaignDto joinCampaign(Principal principal, int campaignId);
 
+    CampaignDto quitCampaign(Principal principal, int campaignId);
 }
