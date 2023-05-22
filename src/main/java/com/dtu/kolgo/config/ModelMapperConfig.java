@@ -1,8 +1,10 @@
 package com.dtu.kolgo.config;
 
+import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.dto.message.ChatDto;
+import com.dtu.kolgo.model.Campaign;
 import com.dtu.kolgo.model.Chat;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.Kol;
@@ -40,6 +42,8 @@ public class ModelMapperConfig {
                 .addMapping(Enterprise::getFieldNames, EnterpriseDto::setFieldNames);
         modelMapper.typeMap(Chat.class, ChatDto.class)
                 .addMapping(Chat::getUserIds, ChatDto::setUserIds);
+        modelMapper.typeMap(Campaign.class, CampaignDto.class)
+                .addMapping(Campaign::getImageNames, CampaignDto::setImages);
 
         return modelMapper;
     }

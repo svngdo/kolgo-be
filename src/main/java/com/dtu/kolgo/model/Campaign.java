@@ -64,4 +64,12 @@ public class Campaign extends BaseInt {
         return DateTimeUtils.convertToString(finishTime);
     }
 
+    public List<String> getImageNames() {
+        return images.stream().map(Image::getName).toList();
+    }
+
+    public List<Short> getFieldIds() {
+        return fields.stream().map(BaseShort::getId).toList();
+    }
+
 }

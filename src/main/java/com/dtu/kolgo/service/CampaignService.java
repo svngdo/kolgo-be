@@ -13,7 +13,7 @@ public interface CampaignService {
 
     List<Campaign> getAll();
 
-    List<CampaignDto> getAllDto();
+    List<CampaignDto> getDtos();
 
     Campaign getById(int id);
 

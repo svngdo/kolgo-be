@@ -31,7 +31,7 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public List<CampaignDto> getAllDto() {
+    public List<CampaignDto> getDtos() {
         return repo.findAll()
                 .stream()
                 .map(campaign -> mapper.map(campaign, CampaignDto.class))

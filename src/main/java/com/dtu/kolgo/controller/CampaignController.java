@@ -17,7 +17,7 @@ public class CampaignController {
     @GetMapping("campaigns")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(
-                service.getAllDto(),
+                service.getDtos(),
                 HttpStatus.OK
         );
     }

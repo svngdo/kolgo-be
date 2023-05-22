@@ -36,5 +36,6 @@ public class CampaignDto {
     private CampaignStatus status;
     private EnterpriseDto enterprise;
     private List<KolDto> kols;
+    private List<String> images;
 
 }
