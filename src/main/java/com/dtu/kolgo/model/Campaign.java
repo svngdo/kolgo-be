@@ -72,4 +72,8 @@ public class Campaign extends BaseInt {
         return fields.stream().map(BaseShort::getId).toList();
     }
 
+    public List<String> getFieldNames() {
+        return fields.stream().map(Field::getName).toList();
+    }
+
 }

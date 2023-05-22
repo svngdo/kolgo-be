@@ -37,9 +37,7 @@ public class ModelMapperConfig {
                 .addMapping(src -> src.getUser().getLastName(), EnterpriseDto::setLastName)
                 .addMapping(src -> src.getUser().getEmail(), EnterpriseDto::setEmail)
                 .addMapping(src -> src.getUser().getAvatar(), EnterpriseDto::setAvatar)
-                .addMapping(src -> src.getUser().getRole(), EnterpriseDto::setRole)
-                .addMapping(Enterprise::getFieldIds, EnterpriseDto::setFieldIds)
-                .addMapping(Enterprise::getFieldNames, EnterpriseDto::setFieldNames);
+                .addMapping(src -> src.getUser().getRole(), EnterpriseDto::setRole);
         modelMapper.typeMap(Chat.class, ChatDto.class)
                 .addMapping(Chat::getUserIds, ChatDto::setUserIds);
         modelMapper.typeMap(Campaign.class, CampaignDto.class)

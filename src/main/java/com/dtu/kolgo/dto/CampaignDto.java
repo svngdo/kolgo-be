@@ -23,6 +23,7 @@ public class CampaignDto {
     private String name;
     @NotNull
     private List<Short> fieldIds;
+    private List<String> fieldNames;
     @NotBlank
     private String timestamp;
     @NotBlank
