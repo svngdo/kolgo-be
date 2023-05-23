@@ -6,6 +6,7 @@ import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.model.Enterprise;
 import com.dtu.kolgo.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -41,4 +42,8 @@ public interface EnterpriseService {
     CampaignDto getCampaignDtoByPrincipal(Principal principal, int campaignId);
 
     ApiResponse deleteCampaign(Principal principal, int campaignId);
+
+    List<String> updateCampaignsImages(Principal principal, int campaignId, List<MultipartFile> images);
+
+    EnterpriseDto updateById(int id, EnterpriseDto dto);
 }

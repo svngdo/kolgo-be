@@ -41,6 +41,17 @@ public class KolController {
         );
     }
 
+    @PutMapping("kols/{id}")
+    public ResponseEntity<?> updateKol(
+            @PathVariable("id") int id,
+            @RequestBody @Valid KolDto dto
+    ) {
+        return new ResponseEntity<>(
+                service.updateById(id, dto),
+                HttpStatus.OK
+        );
+    }
+
     @GetMapping("kols/{id}/bookings")
     public ResponseEntity<?> getBookings(
             @PathVariable("id") int id

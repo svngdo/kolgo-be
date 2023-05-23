@@ -6,28 +6,34 @@ import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.enums.CampaignStatus;
 import com.dtu.kolgo.exception.AccessDeniedException;
+import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
-import com.dtu.kolgo.model.Campaign;
-import com.dtu.kolgo.model.Enterprise;
-import com.dtu.kolgo.model.Field;
-import com.dtu.kolgo.model.User;
+import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.EnterpriseRepository;
 import com.dtu.kolgo.service.*;
 import com.dtu.kolgo.util.DateTimeUtils;
+import com.dtu.kolgo.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class EnterpriseServiceImpl implements EnterpriseService {
+
+    @Value("${file.image-path}")
+    private String imagePath;
 
     private final EnterpriseRepository repo;
     private final FieldService fieldService;
@@ -35,6 +41,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private final ModelMapper mapper;
     private final CityService cityService;
     private final CampaignService campaignService;
+    private final ImageService imageService;
 
     @Override
     public ApiResponse save(Enterprise ent) {
@@ -89,18 +96,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public ApiResponse updateByPrincipal(Principal principal, EnterpriseDto dto) {
         Enterprise ent = getByPrincipal(principal);
 
-        ent.getUser().setFirstName(dto.getFirstName());
-        ent.getUser().setLastName(dto.getLastName());
-        ent.setName(dto.getName());
-        ent.setPhone(dto.getPhone());
-        ent.setTaxId(dto.getTaxId());
-        ent.setCity(cityService.getById(dto.getCityId()));
-        ent.setAddressDetails(dto.getAddressDetails());
-        ent.setFields(new ArrayList<>() {{
-            dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
-        }});
-
-        repo.save(ent);
+        updateById(ent.getId(), dto);
 
         return new ApiResponse("Updated profile successfully");
     }
@@ -212,6 +208,43 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         }
         campaignService.delete(campaignId);
         return new ApiResponse("Delete campaign successfully");
+    }
+
+    @Override
+    public List<String> updateCampaignsImages(Principal principal, int campaignId, List<MultipartFile> images) {
+        Enterprise ent = getByPrincipal(principal);
+        if (images == null) {
+            throw new InvalidException("Images is null");
+        }
+        Campaign campaign = campaignService.getById(campaignId);
+        images.forEach(image -> {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+            Image img = imageService.save(new Image(fileName));
+            campaign.getImages().add(img);
+            String uploadDir = imagePath;
+            FileUtils.saveImage(uploadDir, fileName, image);
+        });
+        campaignService.save(campaign);
+
+        return campaign.getImageNames();
+    }
+
+    @Override
+    public EnterpriseDto updateById(int id, EnterpriseDto dto) {
+        Enterprise ent = getById(id);
+
+        ent.getUser().setFirstName(dto.getFirstName());
+        ent.getUser().setLastName(dto.getLastName());
+        ent.setName(dto.getName());
+        ent.setPhone(dto.getPhone());
+        ent.setTaxId(dto.getTaxId());
+        ent.setCity(cityService.getById(dto.getCityId()));
+        ent.setAddressDetails(dto.getAddressDetails());
+        ent.setFields(new ArrayList<>() {{
+            dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
+        }});
+
+        return mapper.map(repo.save(ent), EnterpriseDto.class);
     }
 
 }

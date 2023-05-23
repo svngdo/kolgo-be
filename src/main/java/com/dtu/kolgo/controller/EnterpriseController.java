@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -36,6 +37,17 @@ public class EnterpriseController {
     ) {
         return new ResponseEntity<>(
                 service.getDetailsById(id),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("ents/{id}")
+    public ResponseEntity<?> updateEnterprise(
+            @PathVariable("id")int id,
+            @RequestBody @Valid EnterpriseDto dto
+    ) {
+        return new ResponseEntity<>(
+                service.updateById(id, dto),
                 HttpStatus.OK
         );
     }
@@ -112,6 +124,18 @@ public class EnterpriseController {
     ) {
         return new ResponseEntity<>(
                 service.updateCampaign(principal, campaignId, campaignDto),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("ent/campaigns/{campaignId}/images")
+    public ResponseEntity<?> updateCampaignImages(
+            Principal principal,
+            @PathVariable("campaignId") int campaignId,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
+    ) {
+        return new ResponseEntity<>(
+                service.updateCampaignsImages(principal, campaignId, images),
                 HttpStatus.OK
         );
     }

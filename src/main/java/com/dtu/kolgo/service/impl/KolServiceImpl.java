@@ -90,21 +90,7 @@ public class KolServiceImpl implements KolService {
     public ApiResponse updateByPrincipal(Principal principal, KolDto dto) {
         Kol kol = getByPrincipal(principal);
 
-        kol.getUser().setFirstName(dto.getFirstName());
-        kol.getUser().setLastName(dto.getLastName());
-        kol.setPhone(dto.getPhone());
-        kol.setGender(dto.getGender());
-        kol.setCity(cityService.getById(dto.getCityId()));
-        kol.setAddressDetails(dto.getAddressDetails());
-        kol.setFields(new ArrayList<>() {{
-            dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
-        }});
-        kol.setFacebookUrl(dto.getFacebookUrl());
-        kol.setInstagramUrl(dto.getInstagramUrl());
-        kol.setTiktokUrl(dto.getTiktokUrl());
-        kol.setYoutubeUrl(dto.getYoutubeUrl());
-
-        repo.save(kol);
+        updateById(kol.getId(), dto);
 
         return new ApiResponse("Update KOL successfully !!");
     }
@@ -182,6 +168,27 @@ public class KolServiceImpl implements KolService {
         }
         campaignService.save(campaign);
         return mapper.map(campaign, CampaignDto.class);
+    }
+
+    @Override
+    public KolDto updateById(int id, KolDto dto) {
+        Kol kol = getById(id);
+
+        kol.getUser().setFirstName(dto.getFirstName());
+        kol.getUser().setLastName(dto.getLastName());
+        kol.setPhone(dto.getPhone());
+        kol.setGender(dto.getGender());
+        kol.setCity(cityService.getById(dto.getCityId()));
+        kol.setAddressDetails(dto.getAddressDetails());
+        kol.setFields(new ArrayList<>() {{
+            dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
+        }});
+        kol.setFacebookUrl(dto.getFacebookUrl());
+        kol.setInstagramUrl(dto.getInstagramUrl());
+        kol.setTiktokUrl(dto.getTiktokUrl());
+        kol.setYoutubeUrl(dto.getYoutubeUrl());
+
+        return mapper.map(repo.save(kol), KolDto.class);
     }
 
 }
