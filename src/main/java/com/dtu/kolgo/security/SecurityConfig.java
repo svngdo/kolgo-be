@@ -30,6 +30,7 @@ public class SecurityConfig {
             "/users/**",
             "/kols/**",
             "/ents/**",
+            "/campaigns/**",
             "/cities/**",
             "/fields/**",
             "/images/**",
@@ -39,7 +40,6 @@ public class SecurityConfig {
             "/auth/**"
     };
     private final String[] AUTH_WHITELIST = {
-            "/campaigns/**",
             "/user/**",
             "/bookings/**",
             "/notification/**",

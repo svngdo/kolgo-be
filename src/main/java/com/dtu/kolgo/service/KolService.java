@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 public interface KolService {
 
@@ -26,7 +25,7 @@ public interface KolService {
 
     ApiResponse updateByPrincipal(Principal principal, KolDto dto);
 
-    Map<String, Object> updateImages(Principal principal, List<MultipartFile> images);
+    List<String> updateImages(Principal principal, List<MultipartFile> images);
 
     List<BookingDto> getBookingsById(int id);
 

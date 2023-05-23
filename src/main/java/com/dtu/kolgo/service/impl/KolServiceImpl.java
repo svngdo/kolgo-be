@@ -110,23 +110,21 @@ public class KolServiceImpl implements KolService {
     }
 
     @Override
-    public Map<String, Object> updateImages(Principal principal, List<MultipartFile> images) {
+    public List<String> updateImages(Principal principal, List<MultipartFile> images) {
         Kol kol = getByPrincipal(principal);
         if (images == null) {
             throw new InvalidException("Images is null");
         }
-        List<String> imageList = new ArrayList<>();
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
             Image img = imageService.save(new Image(fileName));
             kol.getImages().add(img);
             String uploadDir = imagePath;
             FileUtils.saveImage(uploadDir, fileName, image);
-            imageList.add(fileName);
         });
-        return new HashMap<>() {{
-            put("images", imageList);
-        }};
+        repo.save(kol);
+
+        return kol.getImageNames();
     }
 
     @Override
