@@ -1,5 +1,6 @@
 package com.dtu.kolgo.controller;
 
+import com.dtu.kolgo.dto.CampaignCreateDto;
 import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.service.EnterpriseService;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -86,11 +86,11 @@ public class EnterpriseController {
     @PostMapping("ent/campaigns")
     public ResponseEntity<?> createCampaign(
             Principal principal,
-            @RequestBody @Valid CampaignDto campaignDto
+            @RequestBody @Valid CampaignCreateDto campaignCreateDto
     ) {
         System.out.println("CREATE CAMPAIGN");
         return new ResponseEntity<>(
-                service.createCampaign(principal, campaignDto),
+                service.createCampaign(principal, campaignCreateDto),
                 HttpStatus.OK
         );
     }
@@ -124,18 +124,6 @@ public class EnterpriseController {
     ) {
         return new ResponseEntity<>(
                 service.updateCampaign(principal, campaignId, campaignDto),
-                HttpStatus.OK
-        );
-    }
-
-    @PutMapping("ent/campaigns/{campaignId}/images")
-    public ResponseEntity<?> updateCampaignImages(
-            Principal principal,
-            @PathVariable("campaignId") int campaignId,
-            @RequestParam(value = "images", required = false) List<MultipartFile> images
-    ) {
-        return new ResponseEntity<>(
-                service.updateCampaignsImages(principal, campaignId, images),
                 HttpStatus.OK
         );
     }
