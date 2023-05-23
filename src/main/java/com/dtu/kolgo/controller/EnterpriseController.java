@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -86,11 +87,12 @@ public class EnterpriseController {
     @PostMapping("ent/campaigns")
     public ResponseEntity<?> createCampaign(
             Principal principal,
-            @RequestBody @Valid CampaignCreateDto campaignCreateDto
+            @RequestParam("images") List<MultipartFile> images,
+            @ModelAttribute @Valid CampaignCreateDto campaignCreateDto
     ) {
         System.out.println("CREATE CAMPAIGN");
         return new ResponseEntity<>(
-                service.createCampaign(principal, campaignCreateDto),
+                service.createCampaign(principal, campaignCreateDto, images),
                 HttpStatus.OK
         );
     }

@@ -109,7 +109,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public CampaignDto createCampaign(Principal principal, CampaignCreateDto campaignCreateDto) {
+    public CampaignDto createCampaign(Principal principal, CampaignCreateDto campaignCreateDto, List<MultipartFile> images) {
         User user = userService.getByPrincipal(principal);
         Enterprise ent = getByUser(user);
 
@@ -151,7 +151,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 new ArrayList<>()
         ));
 
-        updateCampaignsImages(principal, campaign.getId(), campaignCreateDto.getImages());
+        updateCampaignsImages(principal, campaign.getId(), images);
 
         if (ent.getCampaigns() != null) {
             ent.getCampaigns().add(campaign);

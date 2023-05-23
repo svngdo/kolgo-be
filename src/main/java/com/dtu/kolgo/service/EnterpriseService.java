@@ -34,7 +34,7 @@ public interface EnterpriseService {
 
     ApiResponse deleteById(int id);
 
-    CampaignDto createCampaign(Principal principal, CampaignCreateDto campaignCreateDto);
+    CampaignDto createCampaign(Principal principal, CampaignCreateDto campaignCreateDto, List<MultipartFile> images);
 
     CampaignDto updateCampaign(Principal principal, int campaignId, CampaignDto campaignDto);
 
