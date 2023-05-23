@@ -29,6 +29,8 @@ public class Kol extends BaseInt {
     private City city;
     @Column(name = "address_details")
     private String addressDetails;
+    @Column(name = "introduction")
+    private String introduction;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "kol_fields",
             joinColumns = @JoinColumn(name = "kol_id", referencedColumnName = "id"),

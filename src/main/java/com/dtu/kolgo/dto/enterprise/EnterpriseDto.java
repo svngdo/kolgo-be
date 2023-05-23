@@ -31,6 +31,8 @@ public class EnterpriseDto {
     private String cityName;
     private String addressDetails;
     @NotBlank
+    private String introduction;
+    @NotBlank
     private List<Short> fieldIds;
     private List<String> fieldNames;
 

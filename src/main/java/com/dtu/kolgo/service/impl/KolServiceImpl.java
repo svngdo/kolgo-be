@@ -180,6 +180,7 @@ public class KolServiceImpl implements KolService {
         kol.setGender(dto.getGender());
         kol.setCity(cityService.getById(dto.getCityId()));
         kol.setAddressDetails(dto.getAddressDetails());
+        kol.setIntroduction(dto.getIntroduction());
         kol.setFields(new ArrayList<>() {{
             dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));
         }});

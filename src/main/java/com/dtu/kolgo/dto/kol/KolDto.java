@@ -30,6 +30,8 @@ public class KolDto {
     private Short cityId;
     private String cityName;
     private String addressDetails;
+    @NotBlank
+    private String introduction;
     @NotNull
     private List<Short> fieldIds;
     private List<String> fieldNames;

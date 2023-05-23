@@ -239,6 +239,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         ent.setPhone(dto.getPhone());
         ent.setTaxId(dto.getTaxId());
         ent.setCity(cityService.getById(dto.getCityId()));
+        ent.setIntroduction(dto.getIntroduction());
         ent.setAddressDetails(dto.getAddressDetails());
         ent.setFields(new ArrayList<>() {{
             dto.getFieldIds().forEach(id -> this.add(fieldService.getById(id)));

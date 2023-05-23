@@ -24,6 +24,8 @@ public class Enterprise extends BaseInt {
     private City city;
     @Column(name = "address_details")
     private String addressDetails;
+    @Column(name = "introduction")
+    private String introduction;
     @Column(name = "phone")
     private String phone;
     @Column(name = "tax_id")

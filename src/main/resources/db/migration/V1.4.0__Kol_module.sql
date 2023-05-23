@@ -7,6 +7,7 @@ create table if not exists kols
     phone           varchar(20)  null,
     city_id         int          null references cities (id) on delete set null,
     address_details varchar(255) null,
+    introduction    text         null,
     post_price      numeric      not null default 0,
     video_price     numeric      not null default 0,
     facebook_url    varchar,
