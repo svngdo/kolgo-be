@@ -176,11 +176,28 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 this.add(field);
             });
         }});
-        campaign.setTimestamp(DateTimeUtils.convertToLocalDateTime(campaignCreateUpdateDto.getTimestamp()));
         campaign.setLocation(campaignCreateUpdateDto.getLocation());
         campaign.setDescription(campaignCreateUpdateDto.getDescription());
         campaign.setDetails(campaignCreateUpdateDto.getDetails());
-        campaign.setStatus(campaignCreateUpdateDto.getStatus());
+
+        LocalDateTime timestamp = DateTimeUtils.convertToLocalDateTime(campaignCreateUpdateDto.getTimestamp());
+        LocalDateTime startTime = DateTimeUtils.convertToLocalDateTime(campaignCreateUpdateDto.getStartTime());
+        LocalDateTime finishTime = DateTimeUtils.convertToLocalDateTime(campaignCreateUpdateDto.getFinishTime());
+
+        campaign.setTimestamp(timestamp);
+        campaign.setStartTime(startTime);
+        campaign.setFinishTime(finishTime);
+
+        CampaignStatus status;
+
+        if (startTime.isAfter(LocalDateTime.now())) {
+            status = CampaignStatus.UPCOMING;
+        } else if (startTime.isBefore(LocalDateTime.now()) && finishTime.isAfter(LocalDateTime.now())) {
+            status = CampaignStatus.IN_PROGRESS;
+        } else
+            status = CampaignStatus.COMPLETED;
+
+        campaign.setStatus(status);
 
         updateCampaignsImages(principal, campaignId, images);
 
@@ -219,10 +236,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public List<String> updateCampaignsImages(Principal principal, int campaignId, List<MultipartFile> images) {
         Enterprise ent = getByPrincipal(principal);
-        if (images == null) {
+        if (images != null) {
             throw new InvalidException("Images is null");
         }
         Campaign campaign = campaignService.getById(campaignId);
+        campaign.setImages(new ArrayList<>());
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
             Image img = imageService.save(new Image(fileName));

@@ -1,6 +1,5 @@
 package com.dtu.kolgo.dto.campaign;
 
-import com.dtu.kolgo.enums.CampaignStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -30,6 +29,5 @@ public class CampaignCreateUpdateDto {
     private String location;
     private String description;
     private String details;
-    private CampaignStatus status;
 
 }

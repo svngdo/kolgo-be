@@ -43,7 +43,7 @@ public class EnterpriseController {
 
     @PutMapping("ents/{id}")
     public ResponseEntity<?> updateEnterprise(
-            @PathVariable("id")int id,
+            @PathVariable("id") int id,
             @RequestBody @Valid EnterpriseDto dto
     ) {
         return new ResponseEntity<>(
@@ -121,7 +121,7 @@ public class EnterpriseController {
     public ResponseEntity<?> updateCampaign(
             Principal principal,
             @PathVariable("campaignId") int campaignId,
-            @RequestParam("images") List<MultipartFile> images,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
             @ModelAttribute @Valid CampaignCreateUpdateDto campaignCreateUpdateDto
     ) {
         return new ResponseEntity<>(
