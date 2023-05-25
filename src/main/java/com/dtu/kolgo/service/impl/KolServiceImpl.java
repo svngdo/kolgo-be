@@ -164,7 +164,7 @@ public class KolServiceImpl implements KolService {
     public CampaignDto quitCampaign(Principal principal, int campaignId) {
         Kol kol = getByPrincipal(principal);
         Campaign campaign = campaignService.getById(campaignId);
-        if (campaign.getKols() != null && !campaign.getKols().contains(kol)) {
+        if (campaign.getKols() != null) {
             campaign.getKols().remove(kol);
         }
         campaignService.save(campaign);

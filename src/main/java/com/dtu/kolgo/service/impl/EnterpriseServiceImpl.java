@@ -236,7 +236,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public List<String> updateCampaignsImages(Principal principal, int campaignId, List<MultipartFile> images) {
         Enterprise ent = getByPrincipal(principal);
-        if (images != null) {
+        if (images == null) {
             throw new InvalidException("Images is null");
         }
         Campaign campaign = campaignService.getById(campaignId);
