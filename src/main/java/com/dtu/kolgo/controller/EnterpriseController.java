@@ -86,7 +86,7 @@ public class EnterpriseController {
     @PostMapping("ent/campaigns")
     public ResponseEntity<?> createCampaign(
             Principal principal,
-            @RequestParam("files") List<MultipartFile> images,
+            @RequestParam("images") List<MultipartFile> images,
             @ModelAttribute @Valid CampaignCreateUpdateDto campaignCreateUpdateDto
     ) {
         System.out.println("CREATE CAMPAIGN");
@@ -121,7 +121,7 @@ public class EnterpriseController {
     public ResponseEntity<?> updateCampaign(
             Principal principal,
             @PathVariable("campaignId") int campaignId,
-            @RequestParam("files") List<MultipartFile> images,
+            @RequestParam("images") List<MultipartFile> images,
             @RequestBody @Valid CampaignCreateUpdateDto campaignCreateUpdateDto
     ) {
         return new ResponseEntity<>(
