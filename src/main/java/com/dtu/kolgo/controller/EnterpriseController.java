@@ -122,7 +122,7 @@ public class EnterpriseController {
             Principal principal,
             @PathVariable("campaignId") int campaignId,
             @RequestParam("images") List<MultipartFile> images,
-            @RequestBody @Valid CampaignCreateUpdateDto campaignCreateUpdateDto
+            @ModelAttribute @Valid CampaignCreateUpdateDto campaignCreateUpdateDto
     ) {
         return new ResponseEntity<>(
                 service.updateCampaign(principal, campaignId, campaignCreateUpdateDto, images),
