@@ -11,7 +11,7 @@ create table if not exists payments
     description text         not null,
     timestamp   timestamp with time zone default now(),
     status      varchar(20)  not null
-        constraint valid_payment_status check ( status in ('FAILED, SUCCESS, REFUNDED') ),
+        constraint valid_payment_status check ( status in ('FAILED', 'SUCCESS', 'REFUNDED') ),
     user_id     int          not null references users (id)
 );
 

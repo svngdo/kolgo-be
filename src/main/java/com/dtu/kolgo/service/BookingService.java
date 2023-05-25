@@ -14,6 +14,8 @@ public interface BookingService {
 
     Booking getById(int id);
 
+    Booking getByTxnRef(String txnRef);
+
     BookingDto getDtoById(int id);
 
 }

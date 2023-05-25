@@ -64,7 +64,7 @@ public class VnPayService {
             String vnp_ReturnUrl = returnUrl;
             String vnp_ExpireDate = LocalDateTime.now().plusMinutes(15).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             String vnp_TxnRef = DateTimeUtils.convertToString(LocalDateTime.now());
-            Integer bookingId = Integer.valueOf(req.getParameter("txnRef"));
+            int bookingId = Integer.parseInt(req.getParameter("txnRef"));
 
             vnpParams.put("vnp_Version", vnp_Version);
             vnpParams.put("vnp_Command", vnp_Command);

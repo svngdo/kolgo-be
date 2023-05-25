@@ -15,4 +15,5 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findByKol_User(User user);
 
+    Booking findByTxnRef(String txnRef);
 }

@@ -33,10 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -153,9 +150,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<BookingDto> getBookingsByPrincipal(Principal principal) {
+    public List<BookingDto> getBookingsByPrincipal(Principal principal, String txnRef) {
         User user = getByPrincipal(principal);
-        return user.getBookings().stream()
+        List<Booking> bookings = new ArrayList<>();
+        if (txnRef != null && !txnRef.isEmpty()) {
+            bookings = user.getBookings().stream().filter(booking -> booking.getTxnRef() != null && booking.getTxnRef().equals(txnRef)).toList();
+        }
+        return bookings.stream()
                 .map(booking -> mapper.map(booking, BookingDto.class))
                 .toList();
     }
@@ -216,7 +217,7 @@ public class UserServiceImpl implements UserService {
         User user = getByPrincipal(principal);
         Booking booking = bookingService.getById(bookingId);
 
-        validateBookingAndPayment(booking, user.getBookings());
+        validateBookingUser(booking, user);
 
         Payment payment = paymentService.save(new Payment(
                 paymentDto.getMethod(),

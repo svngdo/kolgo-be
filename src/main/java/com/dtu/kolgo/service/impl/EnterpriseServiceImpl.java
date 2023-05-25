@@ -7,7 +7,6 @@ import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.enums.CampaignStatus;
 import com.dtu.kolgo.exception.AccessDeniedException;
-import com.dtu.kolgo.exception.InvalidException;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.*;
 import com.dtu.kolgo.repository.EnterpriseRepository;
@@ -236,10 +235,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public List<String> updateCampaignsImages(Principal principal, int campaignId, List<MultipartFile> images) {
         Enterprise ent = getByPrincipal(principal);
-        if (images == null) {
-            throw new InvalidException("Images is null");
-        }
         Campaign campaign = campaignService.getById(campaignId);
+        if (images == null) {
+            return campaign.getImageNames();
+        }
         campaign.setImages(new ArrayList<>());
         images.forEach(image -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));

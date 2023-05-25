@@ -40,7 +40,7 @@ public interface UserService {
 
     ApiResponse deleteById(int userId);
 
-    List<BookingDto> getBookingsByPrincipal(Principal principal);
+    List<BookingDto> getBookingsByPrincipal(Principal principal, String txnRef);
 
     List<PaymentDto> getPaymentsByPrincipal(Principal principal);
 

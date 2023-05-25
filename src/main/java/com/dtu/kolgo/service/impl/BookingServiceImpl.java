@@ -40,6 +40,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public Booking getByTxnRef(String txnRef) {
+        return repo.findByTxnRef(txnRef);
+    }
+
+    @Override
     public BookingDto getDtoById(int id) {
         Booking booking = getById(id);
         return mapper.map(booking, BookingDto.class);

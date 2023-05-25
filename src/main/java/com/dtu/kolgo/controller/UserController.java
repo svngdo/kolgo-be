@@ -61,10 +61,11 @@ public class UserController {
 
     @GetMapping("user/bookings")
     public ResponseEntity<?> getBookings(
-            Principal principal
+            Principal principal,
+            @RequestParam(value = "txnRef", required = false) String txnRef
     ) {
         return new ResponseEntity<>(
-                service.getBookingsByPrincipal(principal),
+                service.getBookingsByPrincipal(principal, txnRef),
                 HttpStatus.OK
         );
     }
@@ -99,6 +100,7 @@ public class UserController {
             @RequestBody @Valid PaymentDto paymentDto
     ) {
         return new ResponseEntity<>(
+                service.addBookingPayment(principal, bookingId, paymentDto),
                 HttpStatus.OK
         );
     }
