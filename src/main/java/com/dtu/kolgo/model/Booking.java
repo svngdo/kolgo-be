@@ -34,6 +34,8 @@ public class Booking extends BaseInt {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private BookingStatus status;
+    @Column(name = "txn_ref")
+    private String txnRef;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

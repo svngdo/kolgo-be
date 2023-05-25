@@ -86,12 +86,12 @@ public class EnterpriseController {
     @PostMapping("ent/campaigns")
     public ResponseEntity<?> createCampaign(
             Principal principal,
-            @RequestParam("images") List<MultipartFile> images,
+            @RequestParam("files") List<MultipartFile> files,
             @ModelAttribute @Valid CampaignDto campaignDto
     ) {
         System.out.println("CREATE CAMPAIGN");
         return new ResponseEntity<>(
-                service.createCampaign(principal, campaignDto, images),
+                service.createCampaign(principal, campaignDto, files),
                 HttpStatus.OK
         );
     }
@@ -121,11 +121,11 @@ public class EnterpriseController {
     public ResponseEntity<?> updateCampaign(
             Principal principal,
             @PathVariable("campaignId") int campaignId,
-            @RequestParam("images") List<MultipartFile> images,
+            @RequestParam("files") List<MultipartFile> files,
             @RequestBody @Valid CampaignDto campaignDto
     ) {
         return new ResponseEntity<>(
-                service.updateCampaign(principal, campaignId, campaignDto, images),
+                service.updateCampaign(principal, campaignId, campaignDto, files),
                 HttpStatus.OK
         );
     }

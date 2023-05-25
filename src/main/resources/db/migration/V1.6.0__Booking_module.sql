@@ -37,6 +37,7 @@ create table if not exists bookings
     timestamp    timestamp with time zone default now(),
     status       varchar(20) not null
         constraint valid_booking_status check ( status in ('PENDING', 'ACCEPTED', 'PAID', 'REJECTED', 'CANCELED')),
+    txn_ref      varchar(14) null,
     user_id      int         not null references users (id),
     kol_id       int         not null references kols (id),
     payment_id   int         null references payments (id),

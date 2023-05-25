@@ -1,6 +1,9 @@
 package com.dtu.kolgo.vnpay;
 
 import com.dtu.kolgo.exception.InvalidException;
+import com.dtu.kolgo.model.Booking;
+import com.dtu.kolgo.service.BookingService;
+import com.dtu.kolgo.util.DateTimeUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +38,7 @@ public class VnPayService {
     private String cancelUrl;
 
     private final VnPayUtil vnPayUtil;
+    private final BookingService bookingService;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) {
         try {
@@ -59,11 +63,8 @@ public class VnPayService {
             String vnp_OrderType = "Other";
             String vnp_ReturnUrl = returnUrl;
             String vnp_ExpireDate = LocalDateTime.now().plusMinutes(15).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-            String vnp_TxnRef = req.getParameter("txnRef");
-
-            if (vnp_TxnRef == null || vnp_TxnRef.length() == 0) {
-                throw new InvalidException("Invalid txnRef");
-            }
+            String vnp_TxnRef = DateTimeUtils.convertToString(LocalDateTime.now());
+            Integer bookingId = Integer.valueOf(req.getParameter("txnRef"));
 
             vnpParams.put("vnp_Version", vnp_Version);
             vnpParams.put("vnp_Command", vnp_Command);
@@ -80,11 +81,12 @@ public class VnPayService {
             vnpParams.put("vnp_ExpireDate", vnp_ExpireDate);
             vnpParams.put("vnp_TxnRef", vnp_TxnRef);
 
+            Booking booking = bookingService.getById(bookingId);
+            booking.setTxnRef(vnp_TxnRef);
+            bookingService.save(booking);
+
             String paymentUrl = vnPayUtil.createRequestUrl(vnpParams);
-            log.info(paymentUrl);
             Map<String, Object> response = new HashMap<>() {{
-                put("code", "00");
-                put("message", "success");
                 put("paymentUrl", paymentUrl);
             }};
             log.info(response.toString());

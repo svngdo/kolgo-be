@@ -140,6 +140,7 @@ public class KolServiceImpl implements KolService {
                 bookingDto.getDescription(),
                 timestamp,
                 BookingStatus.PENDING,
+                null,
                 user,
                 kol,
                 null,
