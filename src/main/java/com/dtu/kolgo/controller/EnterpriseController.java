@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.campaign.CampaignCreateUpdateDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.service.EnterpriseService;
 import jakarta.validation.Valid;
@@ -87,11 +87,11 @@ public class EnterpriseController {
     public ResponseEntity<?> createCampaign(
             Principal principal,
             @RequestParam("files") List<MultipartFile> files,
-            @ModelAttribute @Valid CampaignDto campaignDto
+            @ModelAttribute @Valid CampaignCreateUpdateDto campaignCreateUpdateDto
     ) {
         System.out.println("CREATE CAMPAIGN");
         return new ResponseEntity<>(
-                service.createCampaign(principal, campaignDto, files),
+                service.createCampaign(principal, campaignCreateUpdateDto, files),
                 HttpStatus.OK
         );
     }
@@ -122,10 +122,10 @@ public class EnterpriseController {
             Principal principal,
             @PathVariable("campaignId") int campaignId,
             @RequestParam("files") List<MultipartFile> files,
-            @RequestBody @Valid CampaignDto campaignDto
+            @RequestBody @Valid CampaignCreateUpdateDto campaignCreateUpdateDto
     ) {
         return new ResponseEntity<>(
-                service.updateCampaign(principal, campaignId, campaignDto, files),
+                service.updateCampaign(principal, campaignId, campaignCreateUpdateDto, files),
                 HttpStatus.OK
         );
     }

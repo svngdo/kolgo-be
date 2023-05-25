@@ -1,7 +1,7 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.campaign.CampaignDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;

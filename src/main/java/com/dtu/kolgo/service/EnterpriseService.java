@@ -1,7 +1,8 @@
 package com.dtu.kolgo.service;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.campaign.CampaignCreateUpdateDto;
+import com.dtu.kolgo.dto.campaign.CampaignDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.model.Enterprise;
@@ -33,9 +34,9 @@ public interface EnterpriseService {
 
     ApiResponse deleteById(int id);
 
-    CampaignDto createCampaign(Principal principal, CampaignDto campaignDto, List<MultipartFile> images);
+    CampaignDto createCampaign(Principal principal, CampaignCreateUpdateDto campaignCreateUpdateDto, List<MultipartFile> images);
 
-    CampaignDto updateCampaign(Principal principal, int campaignId, CampaignDto campaignDto, List<MultipartFile> images);
+    CampaignDto updateCampaign(Principal principal, int campaignId, CampaignCreateUpdateDto campaignCreateUpdateDto, List<MultipartFile> images);
 
     List<CampaignDto> getCampaignDtos(Principal principal);
 

@@ -1,6 +1,6 @@
 package com.dtu.kolgo.dto.enterprise;
 
-import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.campaign.CampaignDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

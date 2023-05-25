@@ -1,6 +1,6 @@
 package com.dtu.kolgo.controller;
 
-import com.dtu.kolgo.dto.CampaignDto;
+import com.dtu.kolgo.dto.campaign.CampaignDto;
 import com.dtu.kolgo.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

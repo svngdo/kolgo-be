@@ -1,4 +1,4 @@
-package com.dtu.kolgo.dto;
+package com.dtu.kolgo.dto.campaign;
 
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
 import com.dtu.kolgo.dto.kol.KolDto;
