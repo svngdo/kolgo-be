@@ -1,7 +1,6 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.CampaignCreateDto;
 import com.dtu.kolgo.dto.CampaignDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDetailsDto;
 import com.dtu.kolgo.dto.enterprise.EnterpriseDto;
@@ -109,22 +108,22 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public CampaignDto createCampaign(Principal principal, CampaignCreateDto campaignCreateDto, List<MultipartFile> images) {
+    public CampaignDto createCampaign(Principal principal, CampaignDto campaignDto, List<MultipartFile> images) {
         User user = userService.getByPrincipal(principal);
         Enterprise ent = getByUser(user);
 
-        String name = campaignCreateDto.getName();
+        String name = campaignDto.getName();
         List<Field> fields = new ArrayList<>() {{
-            campaignCreateDto.getFieldIds().forEach(id -> {
+            campaignDto.getFieldIds().forEach(id -> {
                 this.add(fieldService.getById(id));
             });
         }};
-        LocalDateTime timestamp = DateTimeUtils.convertToLocalDateTime(campaignCreateDto.getTimestamp());
-        LocalDateTime startTime = DateTimeUtils.convertToLocalDateTime(campaignCreateDto.getStartTime());
-        LocalDateTime finishTime = DateTimeUtils.convertToLocalDateTime(campaignCreateDto.getFinishTime());
-        String location = campaignCreateDto.getLocation();
-        String description = campaignCreateDto.getDescription();
-        String details = campaignCreateDto.getDetails();
+        LocalDateTime timestamp = DateTimeUtils.convertToLocalDateTime(campaignDto.getTimestamp());
+        LocalDateTime startTime = DateTimeUtils.convertToLocalDateTime(campaignDto.getStartTime());
+        LocalDateTime finishTime = DateTimeUtils.convertToLocalDateTime(campaignDto.getFinishTime());
+        String location = campaignDto.getLocation();
+        String description = campaignDto.getDescription();
+        String details = campaignDto.getDetails();
         CampaignStatus status;
 
         if (startTime.isAfter(LocalDateTime.now())) {
@@ -133,8 +132,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             status = CampaignStatus.IN_PROGRESS;
         } else
             status = CampaignStatus.COMPLETED;
-
-
 
         Campaign campaign = campaignService.save(new Campaign(
                 name,
@@ -161,15 +158,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             }});
         }
 
-
-
         repo.save(ent);
 
         return mapper.map(campaign, CampaignDto.class);
     }
 
     @Override
-    public CampaignDto updateCampaign(Principal principal, int campaignId, CampaignDto campaignDto) {
+    public CampaignDto updateCampaign(Principal principal, int campaignId, CampaignDto campaignDto, List<MultipartFile> images) {
         Enterprise ent = getByPrincipal(principal);
         Campaign campaign = campaignService.getById(campaignId);
 
@@ -185,6 +180,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         campaign.setDescription(campaignDto.getDescription());
         campaign.setDetails(campaignDto.getDetails());
         campaign.setStatus(campaignDto.getStatus());
+
+        updateCampaignsImages(principal, campaignId, images);
 
         campaignService.save(campaign);
 
