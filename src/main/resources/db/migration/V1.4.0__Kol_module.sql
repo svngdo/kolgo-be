@@ -29,7 +29,7 @@ create table if not exists kol_fields
 
 create table if not exists kol_images
 (
-    kol_id   int not null references kols (id),
-    image_id int not null references images (id),
+    kol_id   int not null references kols (id) on delete cascade,
+    image_id int not null references images (id) on delete cascade,
     primary key (kol_id, image_id)
 )

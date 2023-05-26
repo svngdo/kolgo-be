@@ -22,8 +22,8 @@ create table if not exists campaign_fields
 
 create table if not exists campaign_images
 (
-    campaign_id int not null references campaigns (id),
-    image_id    int not null references images (id),
+    campaign_id int not null references campaigns (id) on delete cascade,
+    image_id    int not null references images (id) on delete cascade,
     primary key (campaign_id, image_id)
 );
 
