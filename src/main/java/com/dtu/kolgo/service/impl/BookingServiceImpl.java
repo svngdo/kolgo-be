@@ -4,6 +4,7 @@ import com.dtu.kolgo.dto.booking.BookingDto;
 import com.dtu.kolgo.exception.NotFoundException;
 import com.dtu.kolgo.model.Booking;
 import com.dtu.kolgo.model.Kol;
+import com.dtu.kolgo.model.User;
 import com.dtu.kolgo.repository.BookingRepository;
 import com.dtu.kolgo.service.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +30,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getDtosByKol(Kol kol) {
         return repo.findAllByKol(kol).stream()
-                .map(booking -> mapper.map(booking, BookingDto.class)).collect(Collectors.toList());
+                .map(booking -> mapper.map(booking, BookingDto.class)).toList();
+    }
+
+    @Override
+    public List<Booking> getAllByKolUser(User user) {
+        return repo.findAllByKol_User(user);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.dtu.kolgo.dto.user.PasswordUpdateDto;
 import com.dtu.kolgo.dto.user.UserDto;
 import com.dtu.kolgo.enums.BookingStatus;
 import com.dtu.kolgo.enums.PaymentStatus;
+import com.dtu.kolgo.enums.Role;
 import com.dtu.kolgo.exception.AccessDeniedException;
 import com.dtu.kolgo.exception.ExistsException;
 import com.dtu.kolgo.exception.InvalidException;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -152,10 +154,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<BookingDto> getBookingsByPrincipal(Principal principal, String txnRef) {
         User user = getByPrincipal(principal);
-        List<Booking> bookings = new ArrayList<>();
+        List<Booking> bookings = new ArrayList<>(user.getBookings());
         if (txnRef != null && !txnRef.isEmpty()) {
-            bookings = user.getBookings().stream().filter(booking -> booking.getTxnRef() != null && booking.getTxnRef().equals(txnRef)).toList();
+            bookings = bookings.stream().filter(booking -> booking.getTxnRef() != null && booking.getTxnRef().equals(txnRef)).collect(Collectors.toList());
         }
+
+        if (user.getRole() == Role.KOL) {
+            List<Booking> kolBookings = bookingService.getAllByKolUser(user);
+            if (kolBookings != null) {
+                bookings.addAll(kolBookings);
+            }
+        }
+
         return bookings.stream()
                 .map(booking -> mapper.map(booking, BookingDto.class))
                 .toList();
