@@ -36,4 +36,5 @@ public interface KolService {
     CampaignDto quitCampaign(Principal principal, int campaignId);
 
     KolDto updateById(int id, KolDto dto);
+
 }

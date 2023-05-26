@@ -1,8 +1,8 @@
 package com.dtu.kolgo.service.impl;
 
 import com.dtu.kolgo.dto.ApiResponse;
-import com.dtu.kolgo.dto.campaign.CampaignDto;
 import com.dtu.kolgo.dto.booking.BookingDto;
+import com.dtu.kolgo.dto.campaign.CampaignDto;
 import com.dtu.kolgo.dto.kol.KolDetailsDto;
 import com.dtu.kolgo.dto.kol.KolDto;
 import com.dtu.kolgo.enums.BookingStatus;
@@ -23,7 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +79,14 @@ public class KolServiceImpl implements KolService {
         KolDto dto = mapper.map(kol, KolDto.class);
         List<BookingDto> bookings = kol.getBookings().stream().map(booking -> mapper.map(booking, BookingDto.class)).toList();
         List<CampaignDto> campaigns = kol.getCampaigns().stream().map(campaign -> mapper.map(campaign, CampaignDto.class)).toList();
-        return new KolDetailsDto(dto, bookings, campaigns);
+        return KolDetailsDto.builder()
+                .kol(dto)
+//                .facebookFollowersCount(kol.getFacebookFollowersCount())
+                .tiktokFollowersCount(kol.getTikTokFollowersCount())
+                .bookings(bookings)
+                .campaigns(campaigns)
+                .build();
+//        return new KolDetailsDto(dto, , bookings, campaigns);
     }
 
     @Override
